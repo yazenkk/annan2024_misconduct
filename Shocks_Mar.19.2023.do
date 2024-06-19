@@ -1,6 +1,14 @@
-**JPE2023-Annan
-**y = shocks mitigation: financial resilience*
-**Phone Surveys + Intensive Tracking: April 2020+
+/*
+JPE2023-Annan
+y = shocks mitigation: financial resilience*
+Phone Surveys + Intensive Tracking: April 2020+
+
+Input:
+	- FFPhone in 2020/CustomersData.dta
+	- data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta
+Output:
+	- NA
+*/
 
 set seed 100001
 ***************

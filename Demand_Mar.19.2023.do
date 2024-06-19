@@ -1,6 +1,20 @@
-**JPE2023-Annan
-**y = demand: usage + savings*
-**Phone Surveys + Intensive Tracking: April 2020+
+/*
+JPE2023-Annan
+y = demand: usage + savings*
+Title: Phone Surveys + Intensive Tracking: April 2020+
+
+Input:
+	- FFPhone in 2020/CustomersData.dta
+	- data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta
+	- data-Mgt/Stats?/ofdrate_mktadminTransactData.dta
+
+Output:
+	- FFPhone in 2020/_impact-evaluation/te_all_graph.eps
+	- FFPhone in 2020/_impact-evaluation/te_pt_graph.eps
+	- FFPhone in 2020/_impact-evaluation/te_m&r_graph.eps
+	- FFPhone in 2020/_impact-evaluation/te_both_graph.eps
+
+*/
 
 set seed 100001
 ***************

@@ -1,4 +1,33 @@
-*followup surveys [Managers + controlVendos], JPE Revision
+/*
+Title: followup surveys [Managers + controlVendos], JPE Revision
+
+Input:
+	- _project/_xREPUTATION/_submission/JPE/surveys-followups/
+		- organized_surveys_cVENDORS_xlsx.xlsx
+		- organized_surveys_MANAGERS.xlsx
+Output:
+	Data:
+	- _project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/
+		- vendors_maindata_p
+		- vendors_maindata_q
+		- vendors_maindata_elas
+		- managers_maindata_p
+		- managers_maindata_q
+	Graphs:
+		- vendors_misconduct_hypothesis_graph.gph
+		- vendors_inadequateCampaigns_hypotheses_graph
+		- vendors_beliefs_prices_graph.eps
+		- vendors_pForecast.gph
+		- vendors_qForecast.gph
+		- vendors_pXqForecast.eps
+		- vendors_elasForecast.eps
+		- managersXvendors_misconduct_hypothesis_graph.eps
+		- managersXvendors_inadequateCampaigns_hypotheses_graph.eps
+		- managers_pForecast.gph
+		- managers_qForecast.gph
+		- managers_pXqForecast.eps		
+*/
+
 
 ********************
 *Vendors Perspective

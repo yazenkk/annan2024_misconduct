@@ -1,6 +1,15 @@
-**JPE2023-Annan
-**y = revenues: momo + non-momo*
-**Phone Surveys + Intensive Tracking: April 2020+
+/*
+JPE2023-Annan
+y = revenues: momo + non-momo*
+Phone Surveys + Intensive Tracking: April 2020+
+
+Input:
+	- FFPhone in 2020/MerchantsData.dta
+	- data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta
+Output:
+	- NA
+*/
+
 
 cd "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/FFPhone in 2020/phonesurveys?"
 

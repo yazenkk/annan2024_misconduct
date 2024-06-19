@@ -1,5 +1,28 @@
-**JPE2023-Annan
+/*JPE2023-Annan
 **y = Misconduct*
+
+Outline:
+	- Main results
+	- Spillovers
+	- Heterogeneity: Vendor Competition & Gender
+
+Input:
+	- FINAL AUDIT DATA/_Francis/analyzed_EndlineAuditData.dta
+	- data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta
+	- data-Mgt/Stats?/adminTransactData
+	- data-Mgt/Stats?/InterventionsLocalitiesList.dta
+	
+	- FINAL AUDIT DATA/_Francis/analyzed_EndlineAuditData.dta
+	- data-Mgt/Stats?/pct_female_MktcensusStar
+	- sampling?/Treatments_4gps_9dist
+	
+	- FINAL AUDIT DATA/_Francis/analyzed_EndlineAuditData.dta
+	- FINAL AUDIT DATA/_Francis/mkt_aiVendorBetter.dta
+	
+Output:
+	- data-Mgt/Stats?/InterventionsLocalitiesList.dta
+
+*/
 clear all
 use "/Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/FINAL AUDIT DATA/_Francis/analyzed_EndlineAuditData.dta", clear
 

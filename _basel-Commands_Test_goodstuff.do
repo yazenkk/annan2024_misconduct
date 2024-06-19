@@ -1,3 +1,54 @@
+/*
+Title: 
+
+Input:
+	- data-Mgt/Stats?/_M1.dta
+	- data-Mgt/Stats?/_CM1.dta
+	- data-Mgt/Exported Raw Data - Live/CusData/CM1.dta
+	- data-Mgt/Exported Raw Data - Live/CusData/CM`k'.dta
+	- data-Mgt/Exported Raw Data - Live/Merchant/M1.dta
+	- data-Mgt/Exported Raw Data - Live/Merchant/M`k'.dta
+	- sampling?/sel_9Distr_137Local_List
+	
+Output:
+	Data:
+		- _CM_all_2_18.dta
+		- _M_all_2_18.dta
+		- Mkt_fieldData.dta/csv
+		- Mkt_fieldData_census.dta
+		- repMkt
+		- repMkt_w_xtics
+		- end_AuditsTomake_list.xls
+		- ONLY_repMkt
+		- ONLY_4TrtGroups_9dist
+		- interventionsTomake_list_local_onlyTs
+		- junk_interventionsTomake_list_local_onlyTs
+		- data-Mgt/Stats?/vendorsRoster_by_locality_T98/_`v'_vList_`loccodex'.xls
+		- data-Mgt/Stats?/vendorsRoster_by_locality_Ctrl32/_`v'_ctrl_vList_`loccodex'.xls
+		- data-Mgt/Stats?/junk_interventionsTomake_list_local_onlyCtrl_+questions.xls
+		- riskiesTomake_list
+		- JPEr_control_rep_vVendors_survey.xls
+		- JPEr_control_ALL_vVendors_survey.xls
+		
+	Graphs:
+		- FFPhone in 2020/_impact-evaluation/ai_customerVsvendor_graph.eps
+		- FFPhone in 2020/_impact-evaluation/mispercep_misconduct_graph.eps
+		- _dailyNobCustomers.eps
+		- _dailyTotMoney.eps
+		- _dailyNobCustomers_NonM.eps
+		- _dailyTotMoney_nonM.eps
+		- _wklyNobUsage.eps
+		- _wklyTotUseVol.eps
+		- _wklyNobUsage_nonM.eps
+		- _wklyTotUseVol_nonM.eps
+		- _xdevsKdensStr.eps
+		- _xdevsKdensAsy.eps
+		- FFPhone in 2020/_impact-evaluation/trust_transacting_graph.eps
+		- _project/pct_female_hist.eps
+		- _project/hhibyGender.eps
+		- _project/hhibyGender_cdf.eps
+	
+*/
 clear all
 
 

@@ -1,3 +1,16 @@
+/*
+Title: R3-JPE: LOCALITY_SPECIFIC MAPS
+Note: maps generated in ArcGIS
+
+Input:
+	Data:
+	- data-Mgt/Stats_(2)/
+		- Mkt_fieldData_census
+		- RepMkt_TrtID_gps
+Output:
+	- vendorxcustomer_gps.xls
+*/
+
 clear all
 
 
@@ -7,7 +20,6 @@ cd "/Users/niite/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/data-Mgt
 ls
 
 
-**R3-JPE: LOCALITY_SPECIFIC MAPS
 *get mkt: gps?
 *step 1?
 use Mkt_fieldData_census, clear

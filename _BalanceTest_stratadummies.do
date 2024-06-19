@@ -1,3 +1,14 @@
+/*
+Title: Balance tests?
+
+Input:
+	- Mkt_fieldData_sample_repMkt,dta
+	- interventionsTomake_list_local
+Output:
+	- Regressions, no table (esttab etc) yet
+	
+*/
+
 clear all
 cd "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/data-Mgt/Stats?"
 

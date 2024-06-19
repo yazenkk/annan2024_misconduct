@@ -1,5 +1,19 @@
-**JPE2023-Annan
-**y = beliefs*
+/*
+JPE2023-Annan
+y = beliefs*
+
+Title: ?
+
+Input:
+	- FFPhone in 2020/Customer_+_Mktcensus_+_Interventions.dta
+	- FINAL AUDIT DATA/_Francis/ofdrate_mktAudit_endline.dta
+Output: 
+	- FFPhone in 2020/_impact-evaluation/te_belief_all_graph.eps
+	- FFPhone in 2020/_impact-evaluation/te_belief_pt_graph.eps
+	- FFPhone in 2020/_impact-evaluation/te_belief_m&r_graph.eps
+	- FFPhone in 2020/_impact-evaluation/te_belief_both_graph.eps
+*/
+
 **Consumers subjective beliefs: shifts + updates*
 use "/Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/FFPhone in 2020/Customer_+_Mktcensus_+_Interventions.dta", clear
 gen ge01 =cdistrict_name 
