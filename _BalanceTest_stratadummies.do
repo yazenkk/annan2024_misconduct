@@ -10,10 +10,11 @@ Output:
 */
 
 clear all
-cd "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/data-Mgt/Stats?"
+cd "$dta_loc/data-Mgt/Stats?"
 
 ***ADD STRATA DUMMIES R3 (JPE)***
 
+** Table B.3 -------------------------------------------------------------------
 **Balance Tests II (program assignments): JULY 4 2020 = APR 3 2023
 use Mkt_fieldData_sample_repMkt, clear
 merge m:m loccode vendor_id using "interventionsTomake_list_local"
@@ -60,7 +61,7 @@ test mfemale mmarried makan mage mEducAny mselfemployed mselfIncome mbusTrained
 
 
 
-
+** Table B.4 -------------------------------------------------------------------
 **Demand side: customers...?
 reg cfemale i.strataFE i.treatment, cluster(loccode)
 reg cmarried i.strataFE i.treatment, cluster(loccode)

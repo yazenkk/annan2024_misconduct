@@ -14,7 +14,7 @@ Output:
 	Data:
 		- _CM_all_2_18.dta
 		- _M_all_2_18.dta
-		- _M_all_2_18 copy.dta (no source)
+		- _M_all_2_18 copy.dta (no so)
 		- Mkt_fieldData.dta/csv
 		- Mkt_fieldData_census.dta
 		- repMkt
@@ -211,8 +211,8 @@ bys Mkt: gen cnoofCustPerMkt = _N
 sum cnoofLocalities
 sum cnoofCustPerMkt
 
-save Mkt_fieldData, replace
-outsheet using Mkt_fieldData.csv, replace
+// save Mkt_fieldData, replace
+// outsheet using Mkt_fieldData.csv, replace
 
 **summaries
 **get customers
@@ -472,7 +472,7 @@ gen lower = misconduct - se
 
 generate himiscon90 = misconduct + invttail(n-1,0.05)*(sd / sqrt(n))
 generate lowmiscon90 = misconduct - invttail(n-1,0.05)*(sd / sqrt(n))
-graph twoway (bar meanwrite race) (rcap hiwrite lowrite race), by(ses)
+graph twoway (bar meanwrite race) (rcap hiwrite lowrite race), by(se) // (YK: se rather than ses?)
 
 gen catt=(cat=="true") if !missing(cat)
 ** Figure B.10 ----------------------------------------------------------------
@@ -1675,7 +1675,7 @@ outsheet using interventionsTomake_list_local_onlyTs.xls, replace
 
 *********************
 **modifications? Sammy...
-keep if ln=="ANYINASIN" vlocation: (oposite presby church)*
+keep if ln=="ANYINASIN" // vlocation: (oposite presby church)*
 *****************
 ******************
 

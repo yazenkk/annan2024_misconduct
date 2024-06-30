@@ -33,8 +33,9 @@ Output:
 *Vendors Perspective
 ********************
 clear all
-import excel "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/organized_surveys_cVENDORS_xlsx.xlsx", sheet("JPEr_control_rep_vendors_survey") firstrow
+import excel "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/organized_surveys_cVENDORS_xlsx.xlsx", sheet("JPEr_control_rep_vendors_survey") firstrow
 
+** Figure B.11 -----------------------------------------------------------------
 *1. Why pre-experment overcharging? we advance a number of hypothesis 
 *[based on focus market group discussions + baseline data descriptives + reviewer suggestions], top 1-4 (out of 9 hyp) are:
 *(i) uninformed customers [formally evaluated above - 3 highs]
@@ -57,10 +58,11 @@ foreach var of varlist QL1_1 QL1_2 QL1_3 QL1_4 QL1_5 QL1_6{
 graph hbar (sum) rec_QL1_1 - rec_QL1_6, nofill asyvars ///
  blabel(group, position(inside) format(%4.0f) box fcolor(white) lcolor(white)) ytitle("Why Misconduct: Rank scores for possible hypotheses", size(vsmall)) blabel(bar) ///
  legend(pos(4) row(6) stack label(1 "Inadequate campaigns by provider MTN in rural areas") label(2 "Poorly informed consumers - prices and redress channels") label(3 "Possibly misguided vendor beliefs about pricing") label(4 "Low vendor commissions as short-run incentive") label(5 "Limited competition - vendor options and alternatives") label(6 "Low perceived cost of misconduct") size(tiny)) note(" " "{bf:Vendors views}, [N=58 Vendors]")
-*gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_misconduct_hypothesis_graph.eps", replace
-gr save "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_misconduct_hypothesis_graph.gph", replace
+*gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_misconduct_hypothesis_graph.eps", replace
+gr save "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_misconduct_hypothesis_graph.gph", replace
 
 
+** Figure C.2 ------------------------------------------------------------------
 *2a...then why MTN hasnt - survey evidence?
 gr bar QL2_1 QL2_2 QL2_3 QL2_4 //top 1 (out of 4 reasons): Too costly (+ lack of workable sol that can scale in rural areas[evaluated in sect YY])
 foreach var of varlist QL2_1 QL2_2 QL2_3 QL2_4{
@@ -70,11 +72,11 @@ foreach var of varlist QL2_1 QL2_2 QL2_3 QL2_4{
 graph hbar (sum) rec_QL2_1 - rec_QL2_4, nofill asyvars ///
  blabel(group, position(inside) format(%4.0f) box fcolor(white) lcolor(white)) ytitle("Why Inadequate Campaigns: Rank scores for reasons", size(vsmall)) blabel(bar) ///
  legend(pos(4) row(6) stack label(1 "Too costly to deliver rural anti-overcharging campaigns") label(2 "MTN is not aware of vendors overcharging in rural areas") label(3 "Too many vendors  to come up with workable solutions at scale") label(4 "MTN do not care") size(tiny)) note(" " "{bf:Vendors views}, [N=58 Vendors]")
-*gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_inadequateCampaigns_hypotheses_graph.eps", replace
-gr save "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_inadequateCampaigns_hypotheses_graph.gph", replace
+*gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_inadequateCampaigns_hypotheses_graph.eps", replace
+gr save "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_inadequateCampaigns_hypotheses_graph.gph", replace
 
 
-
+** Figure C.1 ------------------------------------------------------------------
 **2b: possibly misguided firm beliefs about pricing...[formal evaluation]
 **(a)cVendors subjective beliefs about profit-max prices: QP1 QP2 QP3
 tab QP1, miss //most vendors 59% perceive (higher_p, lowQ >> lower_p, highQ), n=58
@@ -89,7 +91,7 @@ ttest higher_p == lower_p, unpaired //pval=0.0642
 graph hbar higher_p lower_p, bar(1, color(black)) bar(2, color(gs8)) nofill asyvars ///
  blabel(group, position(inside) format(%4.2f) box fcolor(white) lcolor(white)) ytitle("Beliefs about Profit-Maximizing Prices: Share indicating higher vs lower price", size(small)) blabel(bar) ///
  legend(pos(7) row(1) stack label(1 "Higher price") label(2 "Lower price"))
-gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_beliefs_prices_graph.eps", replace
+gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_beliefs_prices_graph.eps", replace
 
 
 
@@ -136,7 +138,7 @@ replace trt="2" if trt=="2_1num"
 replace trt="3" if trt=="3_1num"
 destring trt, replace
 
-saveold "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_maindata_p", replace
+saveold "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_maindata_p", replace
 
 statsby, by(trt): ci QT
 label define lbl 1 "Price Transparency" 2 "Monitor & Report" 3 "Joint: PT + MR"
@@ -145,8 +147,8 @@ levelsof trt, local(levels)
 *plotregion(style(none))
 *twoway bar mean trt, barw(0.8) bfcolor(green*0.2) ylab(0(-10)-70) yline(0, lp(dash)) || rcap lb ub trt, xlabel(`levels', valuelabel angle(45) labsize(small)) scheme(s1color) legend(off) ytitle("Forecasted treatment effect (%)", size(med)) xtitle("Treatment program") note(" " "{bf:Prices:} Misconduct: 0-1, [N=58 Vendors]" "{bf:Observed Treatment Effects:}" "PT= -57%, MR= -81%, Joint= -72%; [Pooled= -72%]", position(7))
 twoway bar mean trt, barw(0.8) bfcolor(green*0.2) ylab(0(-10)-70) yline(0, lp(dash)) || rcap lb ub trt, xlabel(`levels', valuelabel angle(45) labsize(small)) scheme(s1color) legend(off) ytitle("Forecasted treatment effect (%)", size(med)) xtitle("Treatment program") note(" " "{bf:Prices:} Misconduct: 0-1, [N=58 Vendors]" "{bf:Observed Treatment Effects:}" "PT= -62%, MR= -73%, Joint= -72%; [Pooled= -72%]", position(7))
-*gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_pForecast.eps", replace
-gr save "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_pForecast.gph", replace
+*gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_pForecast.eps", replace
+gr save "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_pForecast.gph", replace
 restore
 
 
@@ -162,7 +164,7 @@ replace trt="2" if trt=="2_3num"
 replace trt="3" if trt=="3_3num"
 destring trt, replace
 
-saveold "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_maindata_q", replace
+saveold "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_maindata_q", replace
 
 statsby, by(trt): ci QT
 label define lbl 1 "Price Transparency" 2 "Monitor & Report" 3 "Joint: PT + MR"
@@ -171,14 +173,14 @@ levelsof trt, local(levels)
 
 *twoway bar mean trt, barw(0.8) bfcolor(green*0.2) ylab(-2(2)10) yline(0, lp(dash)) || rcap lb ub trt, xlabel(`levels', valuelabel angle(45) labsize(small)) scheme(s1color) legend(off) ytitle("Forecasted treatment effect (%)", size(med)) xtitle("Treatment program") note(" " "{bf:Quantities:} Consumer Transactions (weekly), [N=58 Vendors]" "{bf:Observed Treatment Effects:}" "PT= +28%, MR= +43%, Joint= +51%; [Pooled= +40%]", position(7))
 twoway bar mean trt, barw(0.8) bfcolor(green*0.2) ylab(-2(2)10) yline(0, lp(dash)) || rcap lb ub trt, xlabel(`levels', valuelabel angle(45) labsize(small)) scheme(s1color) legend(off) ytitle("Forecasted treatment effect (%)", size(med)) xtitle("Treatment program") note(" " "{bf:Quantities:} Consumer Transactions (weekly), [N=58 Vendors]" "{bf:Observed Treatment Effects:}" "PT= +26%, MR= +58%, Joint= +54%; [Pooled= +45%]", position(7))
-*gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_qForecast.eps", replace
-gr save "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_qForecast.gph", replace
+*gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_qForecast.eps", replace
+gr save "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_qForecast.gph", replace
 restore
 
 *vendors: (p,q) combined....
 ****************************
-gr combine "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_pForecast.gph" "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_qForecast.gph"
-gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_pXqForecast.eps", replace
+gr combine "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_pForecast.gph" "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_qForecast.gph"
+gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_pXqForecast.eps", replace
 *p details
 tab QT1_1num //36% vendors = 0 effect
 tab QT2_1num //0% vendors = 0 effect
@@ -205,7 +207,7 @@ replace trt="3" if trt=="3_num"
 destring trt, replace
 sum elas
 
-saveold "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_maindata_elas", replace
+saveold "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_maindata_elas", replace
 
 statsby, by(trt): ci elas
 label define lbl 1 "Price Transparency" 2 "Monitor & Report" 3 "Joint: PT + MR"
@@ -213,8 +215,8 @@ label value trt lbl
 levelsof trt, local(levels)
 
 twoway bar mean trt, barw(0.8) bfcolor(green*0.2)  yline(0, lp(dash)) || rcap lb ub trt, xlabel(`levels', valuelabel angle(45) labsize(small)) scheme(s1color) legend(off) ytitle("Forecasted elasticity", size(med)) xtitle("Treatment program") note(" " "{bf:Elasticity:} % Quantity / % Price, [N=58 Vendors]" "{bf:Observed Elasticity:}" "PT= 0.65, MR= 1.45, Joint= 1.35; [Pooled= 1.13]", position(7))
-gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_elasForecast.eps", replace
-gr save "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_elasForecast.gph", replace
+gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_elasForecast.eps", replace
+gr save "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_elasForecast.gph", replace
 restore
 
 
@@ -225,7 +227,7 @@ restore
 *Managers Perspective
 **********************
 clear all
-import excel "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/organized_surveys_MANAGERS.xlsx", sheet("Sheet0") firstrow
+import excel "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/organized_surveys_MANAGERS.xlsx", sheet("Sheet0") firstrow
 
 *1. Why pre-experment overcharging? we advance a number of hypothesis 
 gr bar (sum) QL1_1-QL1_9 //here: top 1-4: uninformed consumers>misguided vendor beliefs>limited campaings>low commissions>competition>low perceived cost
@@ -238,12 +240,12 @@ foreach var of varlist QL1_1 QL1_2 QL1_3 QL1_4 QL1_5 QL1_6{
 graph hbar (sum) rec_QL1_1 - rec_QL1_6, nofill asyvars ///
  blabel(group, position(inside) format(%4.0f) box fcolor(white) lcolor(white)) ytitle("Why Misconduct: Rank scores for possible hypotheses", size(vsmall)) blabel(bar) ///
  legend(pos(4) row(6) stack label(1 "Inadequate campaigns by provider MTN in rural areas") label(2 "Poorly informed consumers - prices and redress channels") label(3 "Possibly misguided vendor beliefs about pricing") label(4 "Low vendor commissions as short-run incentive") label(5 "Limited competition - vendor options and alternatives") label(6 "Low perceived cost of misconduct") size(tiny)) note(" " "{bf:Managers views}, [N=29 Managers]")
-*gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_misconduct_hypothesis_graph.eps", replace
-gr save "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_misconduct_hypothesis_graph.gph", replace
+*gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_misconduct_hypothesis_graph.eps", replace
+gr save "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_misconduct_hypothesis_graph.gph", replace
 
 *combine [managers + vendors]: why pre-experiment....
-gr combine "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_misconduct_hypothesis_graph.gph" "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_misconduct_hypothesis_graph.gph"
-gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managersXvendors_misconduct_hypothesis_graph.eps", replace
+gr combine "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_misconduct_hypothesis_graph.gph" "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_misconduct_hypothesis_graph.gph"
+gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managersXvendors_misconduct_hypothesis_graph.eps", replace
 
 
 *2a...then why MTN hasnt - survey evidence?
@@ -256,12 +258,12 @@ foreach var of varlist QL2_1 QL2_2 QL2_3 QL2_4{
 graph hbar (sum) rec_QL2_1 - rec_QL2_4, nofill asyvars ///
  blabel(group, position(inside) format(%4.0f) box fcolor(white) lcolor(white)) ytitle("Why Inadequate Campaigns: Rank scores for reasons", size(vsmall)) blabel(bar) ///
  legend(pos(4) row(6) stack label(1 "Too costly to deliver rural anti-overcharging campaigns") label(2 "MTN is not aware of vendors overcharging in rural areas") label(3 "Too many vendors  to come up with workable solutions at scale") label(4 "MTN do not care") size(tiny)) note(" " "{bf:Managers views}, [N=29 Managers]")
-*gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_inadequateCampaigns_hypotheses_graph.eps", replace
-gr save "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_inadequateCampaigns_hypotheses_graph.gph", replace
+*gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_inadequateCampaigns_hypotheses_graph.eps", replace
+gr save "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_inadequateCampaigns_hypotheses_graph.gph", replace
 
 *combine [managers + vendors]: why MTN hasnt....
-gr combine "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_inadequateCampaigns_hypotheses_graph.gph" "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_inadequateCampaigns_hypotheses_graph.gph"
-gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managersXvendors_inadequateCampaigns_hypotheses_graph.eps", replace
+gr combine "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_inadequateCampaigns_hypotheses_graph.gph" "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/vendors_inadequateCampaigns_hypotheses_graph.gph"
+gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managersXvendors_inadequateCampaigns_hypotheses_graph.eps", replace
 
 
 **2b. why MTN hasnt....Or manager's hasnt [formal evaluation]
@@ -295,7 +297,7 @@ replace trt="2" if trt=="2_1num"
 replace trt="3" if trt=="3_1num"
 destring trt, replace
 
-saveold "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_maindata_p", replace
+saveold "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_maindata_p", replace
 
 statsby, by(trt): ci QT
 label define lbl 1 "Price Transparency" 2 "Monitor & Report" 3 "Joint: PT + MR"
@@ -304,8 +306,8 @@ levelsof trt, local(levels)
 *plotregion(style(none))
 *twoway bar mean trt, barw(0.8) bfcolor(green*0.2)  yline(0, lp(dash)) || rcap lb ub trt, xlabel(`levels', valuelabel angle(45) labsize(small)) scheme(s1color) legend(off) ytitle("Forecasted treatment effect (%)", size(med)) xtitle("Treatment program") note(" " "{bf:Prices:} Misconduct: 0-1, [N=29 Managers]" "{bf:Observed Treatment Effects:}" "PT= -57%, MR= -81%, Joint= -72%; [Pooled= -72%]", position(7))
 twoway bar mean trt, barw(0.8) bfcolor(green*0.2)  yline(0, lp(dash)) || rcap lb ub trt, xlabel(`levels', valuelabel angle(45) labsize(small)) scheme(s1color) legend(off) ytitle("Forecasted treatment effect (%)", size(med)) xtitle("Treatment program") note(" " "{bf:Prices:} Misconduct: 0-1, [N=29 Managers]" "{bf:Observed Treatment Effects:}" "PT= -62%, MR= -73, Joint= -72%; [Pooled= -72%]", position(7))
-*gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_pForecast.eps", replace
-gr save "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_pForecast.gph", replace
+*gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_pForecast.eps", replace
+gr save "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_pForecast.gph", replace
 restore
 
 ******************
@@ -320,7 +322,7 @@ replace trt="2" if trt=="2_3num"
 replace trt="3" if trt=="3_3num"
 destring trt, replace
 
-saveold "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_maindata_q", replace
+saveold "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_maindata_q", replace
 
 statsby, by(trt): ci QT
 label define lbl 1 "Price Transparency" 2 "Monitor & Report" 3 "Joint: PT + MR"
@@ -329,14 +331,14 @@ levelsof trt, local(levels)
 
 *twoway bar mean trt, barw(0.8) bfcolor(green*0.2) yline(0, lp(dash)) || rcap lb ub trt, xlabel(`levels', valuelabel angle(45) labsize(small)) scheme(s1color) legend(off) ytitle("Forecasted treatment effect (%)", size(med)) xtitle("Treatment program") note(" " "{bf:Quantities:} Consumer Transactions (weekly), [N=29 Managers]" "{bf:Observed Treatment Effects:}" "PT= +28%, MR= +43%, Joint= +51%; [Pooled= +40%]", position(7))
 twoway bar mean trt, barw(0.8) bfcolor(green*0.2) yline(0, lp(dash)) || rcap lb ub trt, xlabel(`levels', valuelabel angle(45) labsize(small)) scheme(s1color) legend(off) ytitle("Forecasted treatment effect (%)", size(med)) xtitle("Treatment program") note(" " "{bf:Quantities:} Consumer Transactions (weekly), [N=29 Managers]" "{bf:Observed Treatment Effects:}" "PT= +26%, MR= +58%, Joint= +54%; [Pooled= +45%]", position(7))
-*gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_qForecast.eps", replace
-gr save "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_qForecast.gph", replace
+*gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_qForecast.eps", replace
+gr save "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_qForecast.gph", replace
 restore
 
 *managers: (p,q) combined....
 *****************************
-gr combine "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_pForecast.gph" "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_qForecast.gph"
-gr export "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_pXqForecast.eps", replace
+gr combine "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_pForecast.gph" "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_qForecast.gph"
+gr export "$dta_loc/_project/_xREPUTATION/_submission/JPE/surveys-followups/revision_results/managers_pXqForecast.eps", replace
 *p details
 tab QT1_1num //52% managers = 0 effect
 tab QT2_1num //45% managers = 0 effect

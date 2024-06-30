@@ -10,9 +10,8 @@ Output:
 	- NA
 */
 
-set seed 100001
 ***************
-use "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/FFPhone in 2020/CustomersData.dta", clear
+use "$dta_loc/FFPhone in 2020/CustomersData.dta", clear
 gen districtName = cdistrict_name 
 gen ln = clocality_name
 gen districtID= cdistrict_code 
@@ -22,7 +21,7 @@ gen _localityid= substr(_customer2020_id,1,12)
 gen _customerid= substr(_customer2020_id,-3,.)
 destring _localityid _customerid, gen(loccode customer_id) //create matches with census data
 
-merge m:m loccode customer_id using "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta"
+merge m:m loccode customer_id using "$dta_loc/data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta"
 
 
 **attrition stats: numbers
@@ -174,6 +173,7 @@ replace c_pov_likelihood_t1 =0.0 if (c_rScore_t1>=80 & c_rScore_t1<=100)
 sum c_pov_likelihood_t0 c_pov_likelihood_t1
 
 
+** Table 9+10 ---------------------------------------------------------------------
 sum ushocks_exp_t1 revenue_t1 health_t1 hhexpense_t1 c_pov_likelihood_t1 if trtment==0
 regress ushocks_exp_t1 ushocks_exp_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(loccodex) level(95)
 regress revenue_t1 urevenue_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(loccodex) level(95)
@@ -210,6 +210,7 @@ test _b[trt2]=_b[trt3]
 test _b[trt2] + _b[trt3] =_b[trt4]
 
 ?
+** Table C10 ---------------------------------------------------------------------
 *Robustness checks - Inference, Multiple Testing, Attrition, LASSO Estimation
 *POOLED
 ***wild cluster bootstrap, pval

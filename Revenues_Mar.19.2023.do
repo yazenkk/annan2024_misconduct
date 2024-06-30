@@ -10,13 +10,9 @@ Output:
 	- NA
 */
 
-
-cd "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/FFPhone in 2020/phonesurveys?"
-
-set seed 100001
 **************
 ***************
-use "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/FFPhone in 2020/MerchantsData.dta", clear
+use "$dta_loc/FFPhone in 2020/MerchantsData.dta", clear
 
 gen duration_min = end_time-start_time
 *hist duration_min, disc xlabel(0(1)60, angle(vertical) labsize(vsmall)) title(Merchants -interview duration)
@@ -26,7 +22,7 @@ gen districtName = district_name
 gen ln = locality_name1
 gen districtID= district_code 
 
-merge m:m districtID ln using "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta"
+merge m:m districtID ln using "$dta_loc/data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta"
 *keep if _merge ==3
 bys districtName ln: keep if _n==1  //only vendors + dropouts
 
@@ -106,6 +102,7 @@ gen migratepermanent = (m5q4 ==2)
 **control means?
 sum mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1 if trtment==0
 ?
+** Table 6 ---------------------------------------------------------------------
 regress mmtotamt_cust_t1 mmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment, r
 regress bus_exit i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment, r
 
@@ -125,7 +122,7 @@ test _b[trt2] + _b[trt3] =_b[trt4]
 
 
 
-
+** Table 8 ---------------------------------------------------------------------
 *SPILLOVERS - non momo sales -- MAIN TEXT
 *bundling w non momo?
 tab m3q1 //75-79% of sample bundled stores
@@ -156,6 +153,7 @@ test _b[trt2] + _b[trt3] =_b[trt4]
 
 
 
+** Table C7 ---------------------------------------------------------------------
 *ROBUSTNESS checks - Inference, Multiple Testing, Attrition, LASSO Estimation
 *POOLED
 ***wild cluster bootstrap, pval
@@ -279,6 +277,7 @@ restore
 ?
 
 
+** Table C9 ---------------------------------------------------------------------
 *Robustness checks [SPILLOVER EFFECTS = NON MOMO SALES] - Inference, Multiple Testing, Attrition, LASSO Estimation
 *NON MOMO SALES*
 *bundling w non momo?
@@ -412,6 +411,7 @@ restore
 ?
 
 
+** Table C16 ---------------------------------------------------------------------
 **No Marketing Effects: # of customers
 *extensive margin - no effect
 sum v1a1 if trtment==0 & dropouts==0
