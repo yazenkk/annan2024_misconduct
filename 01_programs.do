@@ -16,3 +16,4 @@ net install lassopack, ///
 	from("https://raw.githubusercontent.com/statalasso/lassopack/master/") 
 	
 ssc install randtreat
+ssc install _gwtmean
