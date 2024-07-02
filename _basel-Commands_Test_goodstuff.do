@@ -229,17 +229,17 @@ regress m_deviations mfemale
 **Testing AI?
 twoway (hist c_x200 if c_x200<200, color(green)) ///
 (hist m_x200 if m_x200<200, fcolor(green) color(blue)), legend(order(1 "Customers" 2 "Merchants" ))
-graph export "$output_loc/_x200.eps", replace
+graph export "$output_loc/baseline/_x200.eps", replace
 
 
 twoway (hist c_x1200 if c_x1200<200, color(green)) ///
 (hist m_x1200 if m_x1200<200, fcolor(grey) color(blue)), legend(order(1 "Customers" 2 "Merchants" ))
-graph export "$output_loc/_x1200.eps", replace
+graph export "$output_loc/baseline/_x1200.eps", replace
 
 *replace _asymLocally1200=. if (c_x1200<-800 | c_x1200>800)
 twoway (hist c_deviations if c_deviations<200, color(green)) ///
 (hist m_deviations if m_deviations<200, fcolor(grey) color(blue)), legend(order(1 "Customers" 2 "Merchants" )) title("Knowledge Tests:") subtitle("Deviations from Correct Transactional Charges") note("NOTE: Customers are 52.3% of the time Incorrect. Merchants are 33.1% of the time Incorrect")
-graph export "$output_loc/_xdevs.eps", replace
+graph export "$output_loc/baseline/_xdevs.eps", replace
 
 
 **incorrections Counts...
@@ -285,7 +285,7 @@ sum mkt_m_corrects if (mkt_m_corrects > 0), d
 *Median: c=42 vs v=79
 **Trim: zero vendor knowledge in a whole locality is sugestive of potential vendor misconduct, so drop those
 distplot mkt_c_corrects mkt_m_corrects if (mkt_m_corrects > 0), xline(0.48, lp(solid) lw(vthin)) text(0.8 0.38 "Customers: Overall share", size(vsmall)) xline(0.73, lp(dash) lw(vthin)) lp(solid dash) text(0.1 0.82 "Vendors: Overall share", size(vsmall))  xtitle("Share with correct answers") ytitle("Cumulative Probability") legend(pos(7) row(1) stack label(1 "Customers") label(2 "Vendors"))
-gr export "$output_loc/ai_customerVsvendor_graph.eps", replace
+gr export "$output_loc/baseline/ai_customerVsvendor_graph.eps", replace
 **NOTE: Trimmed to exlude unrealistic zero vendor knowlege at the mkt level
 
 
@@ -313,7 +313,7 @@ gen catt=(cat=="true") if !missing(cat)
 graph hbar misconduct, over(cat, sort(1)) bar(1, color(black)) bar(2, color(gs8)) nofill asyvars ///
  blabel(group, position(inside) format(%4.2f) box fcolor(white) lcolor(white)) ytitle("Misconduct Incidence: Share of transactions overcharged", size(small)) blabel(bar) ///
  legend(pos(7) row(1) stack label(1 "Perceived misconduct") label(2 "Objective (true) misconduct"))
-gr export "$output_loc/mispercep_misconduct_graph.eps", replace
+gr export "$output_loc/baseline/mispercep_misconduct_graph.eps", replace
 
 ttesti 663 0.22 0.41 1921 0.59 0.49
 
@@ -416,35 +416,35 @@ reg _Xcfraud c_badMktStructure _asymLocally, cluster(loccode)
 gen dailyNobCustomers=m2q4a
 gen dailyTotMoney=m2q4b
 hist dailyNobCustomers, title(Merchants: dailyNobCustomers)
-graph export "$output_loc/_dailyNobCustomers.eps", replace
+graph export "$output_loc/baseline/_dailyNobCustomers.eps", replace
 hist dailyTotMoney, title(Merchants: dailyTotMoney)
-graph export "$output_loc/_dailyTotMoney.eps", replace
+graph export "$output_loc/baseline/_dailyTotMoney.eps", replace
 
 **Ib. nonMMoney sales?
 gen dailyNobCustomers_nonM =m3q3a1 
 gen dailyTotMoney_nonM =m3q3a2
 hist dailyNobCustomers_nonM, title(Merchants: dailyNobCustomers_nonM)
-graph export "$output_loc/_dailyNobCustomers_NonM.eps", replace
+graph export "$output_loc/baseline/_dailyNobCustomers_NonM.eps", replace
 hist dailyTotMoney_nonM, title(Merchants: dailyTotMoney_nonM)
-graph export "$output_loc/_dailyTotMoney_nonM.eps", replace
+graph export "$output_loc/baseline/_dailyTotMoney_nonM.eps", replace
 
 
 **IIa. Take-up & MMoney adoption decisions?
 gen wklyNobUsage=c4q11a
 gen wklyTotUseVol=c4q11b
 hist wklyNobUsage, title(Customers: wklyNobUsage)
-graph export "$output_loc/_wklyNobUsage.eps", replace
+graph export "$output_loc/baseline/_wklyNobUsage.eps", replace
 hist wklyTotUseVol, title(Customers: wklyTotUseVol)
-graph export "$output_loc/_wklyTotUseVol.eps", replace
+graph export "$output_loc/baseline/_wklyTotUseVol.eps", replace
 
 
 **IIb. Take-up & NonMMoney adoption decisions?
 gen wklyNobUsage_nonM=c4q18a
 gen wklyTotUseVol_nonM=c4q18b
 hist wklyNobUsage_nonM, title(Customers: wklyNobUsage_nonM)
-graph export "$output_loc/_wklyNobUsage_nonM.eps", replace
+graph export "$output_loc/baseline/_wklyNobUsage_nonM.eps", replace
 hist wklyTotUseVol_nonM, title(Customers: wklyTotUseVol_nonM)
-graph export "$output_loc/_wklyTotUseVol_nonM.eps", replace
+graph export "$output_loc/baseline/_wklyTotUseVol_nonM.eps", replace
 
 
 *IIc. borrow + save behavior?
@@ -477,11 +477,11 @@ ytitle("Market: Fraction experiencing attempt fraud")) ///
 *kdensity?
 tw (kdensity _MktFraudI if _MktbadStr==0, lcolor(black) xtitle("Market: Attempted fraud rate")) ///
 (kdensity _MktFraudI if _MktbadStr==1, lcolor(blue) ytitle("Probability") legend(label(1 "Bad Mkt structure=No") label(2 "Bad Mkt structure=Yes")))
-graph export "$output_loc/_xdevsKdensStr.eps", replace
+graph export "$output_loc/baseline/_xdevsKdensStr.eps", replace
 
 tw (kdensity _MktFraudI if _MktAsym==0, lcolor(black) xtitle("Market:  Attempted fraud rate")) ///
 (kdensity _MktFraudI if _MktAsym==1, lcolor(blue) ytitle("Probability") legend(label(1 "Incorrect knowledge=No") label(2 "Incorrect knowledge=Yes")))
-graph export "$output_loc/_xdevsKdensAsy.eps", replace
+graph export "$output_loc/baseline/_xdevsKdensAsy.eps", replace
 
 
 **III. Selection in fraud? any evidence of discrimination, gender?

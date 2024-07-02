@@ -52,7 +52,6 @@ tab CustPer_w_Mkt
 **get "rep market" per each locality?
 preserve 
 	bys loccode vendor_id: keep if _n==1
-	br loccode vendor_id Mkt
 
 	set seed 12345
 	bys loccode: gen rand_num = uniform()
@@ -72,12 +71,11 @@ preserve
 	drop if (m1q0d=="")
 	drop if (m1q0d=="PABI" | m1q0d=="XXX" | vn=="XXXXXX")
 	tab sample_repMkt, miss //130 loc or repMkts now...
-	*br if (m1q0d=="" | m1q0d=="PABI" | m1q0d=="XXX" | vn=="XXXXXX")
-	save repMkt, replace
+	save "$dta_loc_repl/01_intermediate/repMkt", replace
 restore
 
 **QUEST: ***balance achieved -- DIFF from population?
-merge m:1 loccode vendor_id using "repMkt.dta"
+merge m:1 loccode vendor_id using "$dta_loc_repl/01_intermediate/repMkt.dta"
 
 ** save
 save "$dta_loc_repl/01_intermediate/repMkt_w_xtics", replace

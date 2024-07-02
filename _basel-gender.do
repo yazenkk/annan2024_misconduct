@@ -10,7 +10,7 @@ Prepare data by gender
 use "$dta_loc_repl/01_intermediate/Mkt_fieldData_census", clear
 gen double localityCode_j=loccode
 drop _merge
-merge m:1 localityCode_j using "$dta_loc/sampling?/sel_9Distr_137Local_List"
+merge m:1 localityCode_j using "$dta_loc_repl/00_Raw_anon/sel_9Distr_137Local_List"
 keep if _merge==3
 
 **all vendors per locality =137 all here**

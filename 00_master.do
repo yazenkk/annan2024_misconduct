@@ -30,3 +30,23 @@ set seed 100001 // from scripts: demand, revenues
 ** install programs
 // do "$do_loc/01_programs"
 
+** baseline data prep
+do "$do_loc/_basel-Commands_Test_goodstuff"
+do "$do_loc/_basel-gender"
+do "$do_loc/_basel-repMkt"
+
+** treatment assigmnent
+do "$do_loc/_basel-interventions2" 		// generate AuditsTomake_list and ONLY_4TrtGroups_9dist
+do "$do_loc/_basel-interventions2" 		// generate interventionsTomake_list_local
+
+** combine
+do "$do_loc/_basel2-adminTransactData" 	// generate adminTransactData and ofdrate_mktadminTransactData
+do "$do_loc/_basel2-combine" 			// combine int + mkt census
+do "$do_loc/_basel2-combine2" 			// combine int + mkt census + customer
+do "$do_loc/_basel2-mkt_ai" 		 	// generate ofdrate_mktAudit_endline
+do "$do_loc/_baselother-customer" 		// generate CustomersData data
+do "$do_loc/_baselother-FinalAuditData" // generate ofdrate_mktAudit_endline
+
+version 10
+do "$do_loc/_followups-organized_surveys"
+version 18

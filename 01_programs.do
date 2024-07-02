@@ -17,3 +17,4 @@ net install lassopack, ///
 	
 ssc install randtreat
 ssc install _gwtmean
+ssc install ciplot
