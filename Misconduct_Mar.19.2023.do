@@ -330,6 +330,7 @@ pwcorr mkt_c_fracprimandlesssEduc mkt_c_fracAnyEducNo mkt_c_corrects2No,sig //po
 gen sv_fAmt_T0 = sv_fAmt_T
 replace sv_fAmt_T0=0 if fYes_T==0
 
+** Table C.13 ------------------------------------------------------------------
 *CUSTOMERS - base Illiteracy effects
 reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt  c.trt#c.mkt_c_fracAnyEducNo mkt_c_fracAnyEducNo, r cluster(xv_locality) level(95)
 reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt c.trt#c.mkt_c_fracAnyEducNo mkt_c_fracAnyEducNo, r cluster(xv_locality) level(95)

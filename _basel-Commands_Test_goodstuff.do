@@ -54,7 +54,7 @@ clear all
 
 
 cd "$dta_loc/data-Mgt/Stats?"
-
+/*
 ****
 *log using "_rGroup-finfraud-base.log", replace
 *Merchants?
@@ -167,18 +167,18 @@ save interventionsTomake_list_local_AssocData, replace
 
 save "_M_all_2_18.dta", replace
 outsheet using _M_all_2_18.csv, replace
+*/
 
-
-
+/*
 *TROUBLE FOR VENDORS UP?
-use "_M_all_2_18 copy.dta", clear
-
+use "_M_all_2_18 copy.dta", clear // (!delete this dataset)
+cf _all using "_M_all_2_18.dta", verbose // same as the one saved above
 
 tab vendor, miss
 
 **number M per local?
 bys loccode: gen MktPerLocal = _N
-hist MktPerLocal
+// hist MktPerLocal
 sum MktPerLocal // 1 to 12 with avg=5 merchants
 
 **Next, add customers?
@@ -211,8 +211,8 @@ bys Mkt: gen cnoofCustPerMkt = _N
 sum cnoofLocalities
 sum cnoofCustPerMkt
 
-save Mkt_fieldData, replace
-outsheet using Mkt_fieldData.csv, replace
+// save Mkt_fieldData, replace
+// outsheet using Mkt_fieldData.csv, replace
 
 **summaries
 **get customers
@@ -307,7 +307,7 @@ reg cfAttempts cfemale cakan cmarried cage cEducAny cselfemployed cselfIncome cM
 gen c_chargeC200 = c8q1b
 
 replace c_chargeC200=. if (c_chargeC200==0 | c_chargeC200>=99)
-br c_chargeC200
+// br c_chargeC200
 
 *replace c_chargeC200=. if (c_chargeC200==0 | c_chargeC200==99)
 *hist c_chargeC200, xline(2, lwidth(vthick) lcolor(blue)) fcolor(none) title("Knowledge Test: Customers, MTN Charge for GHC200") ///
@@ -327,7 +327,7 @@ gen c_x1200=c_chargeC1200-10
 
 gen c_deviations = c_x200
 replace c_deviations= c_x1200 if missing(c_deviations)
-hist c_deviations
+// hist c_deviations
 
 **gender difference in customer knowledge?
 reg c_deviations cfemale
@@ -381,19 +381,19 @@ regress m_deviations mfemale
 
 twoway (hist c_x200 if c_x200<200, color(green)) ///
 (hist m_x200 if m_x200<200, fcolor(green) color(blue)), legend(order(1 "Customers" 2 "Merchants" ))
-graph export _x200.eps, replace
+*graph export _x200.eps, replace
 *sum c_x200 m_x200 //variability?
 
 
 twoway (hist c_x1200 if c_x1200<200, color(green)) ///
 (hist m_x1200 if m_x1200<200, fcolor(grey) color(blue)), legend(order(1 "Customers" 2 "Merchants" ))
-graph export _x1200.eps, replace
+*graph export _x1200.eps, replace
 *sum c_x1200 m_x1200 //variability?
 
 *replace _asymLocally1200=. if (c_x1200<-800 | c_x1200>800)
 twoway (hist c_deviations if c_deviations<200, color(green)) ///
 (hist m_deviations if m_deviations<200, fcolor(grey) color(blue)), legend(order(1 "Customers" 2 "Merchants" )) title("Knowledge Tests:") subtitle("Deviations from Correct Transactional Charges") note("NOTE: Customers are 52.3% of the time Incorrect. Merchants are 33.1% of the time Incorrect")
-graph export _xdevs.eps, replace
+*graph export _xdevs.eps, replace
 *sum c_deviations m_deviations //variability?
 
 
@@ -440,7 +440,7 @@ sum mkt_m_corrects if (mkt_m_corrects > 0), d
 *Median: c=42 vs v=79
 **Trim: zero vendor knowledge in a whole locality is sugestive of potential vendor misconduct, so drop those
 distplot mkt_c_corrects mkt_m_corrects if (mkt_m_corrects > 0), xline(0.48, lp(solid) lw(vthin)) text(0.8 0.38 "Customers: Overall share", size(vsmall)) xline(0.73, lp(dash) lw(vthin)) lp(solid dash) text(0.1 0.82 "Vendors: Overall share", size(vsmall))  xtitle("Share with correct answers") ytitle("Cumulative Probability") legend(pos(7) row(1) stack label(1 "Customers") label(2 "Vendors"))
-gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/ai_customerVsvendor_graph.eps", replace
+*gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/ai_customerVsvendor_graph.eps", replace
 **NOTE: Trimmed to exlude unrealistic zero vendor knowlege at the mkt level
  
  
@@ -472,14 +472,14 @@ gen lower = misconduct - se
 
 generate himiscon90 = misconduct + invttail(n-1,0.05)*(sd / sqrt(n))
 generate lowmiscon90 = misconduct - invttail(n-1,0.05)*(sd / sqrt(n))
-graph twoway (bar meanwrite race) (rcap hiwrite lowrite race), by(ses)
+*graph twoway (bar meanwrite race) (rcap hiwrite lowrite race), by(se) // (YK: change to SE. meanwrite DNE)
 
 gen catt=(cat=="true") if !missing(cat)
 ** Figure B.10 ----------------------------------------------------------------
 graph hbar misconduct, over(cat, sort(1)) bar(1, color(black)) bar(2, color(gs8)) nofill asyvars ///
  blabel(group, position(inside) format(%4.2f) box fcolor(white) lcolor(white)) ytitle("Misconduct Incidence: Share of transactions overcharged", size(small)) blabel(bar) ///
  legend(pos(7) row(1) stack label(1 "Perceived misconduct") label(2 "Objective (true) misconduct"))
-gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/mispercep_misconduct_graph.eps", replace
+*gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/mispercep_misconduct_graph.eps", replace
 
 *ttesti 663 0.22 0.41 1921 0.19 0.40
 ttesti 663 0.22 0.41 1921 0.59 0.49
@@ -493,30 +493,31 @@ gen _dVm=(m_deviations !=0)
 reg _dVc cfemale cakan cmarried cage cEduc cMMoneyregistered cselfemployed cselfIncome
 reg _dVm mfemale makan mmarried mage mEduc mbusTrained cselfemployed cselfIncome
 
-*********************************************
+/*********************************************
+** YK: where is this reported?
 preserve
-keep c_deviations m_deviations
-gen id=_n 
-save deviations, replace
+	keep c_deviations m_deviations
+	gen id=_n 
+	save deviations, replace
 
-use deviations, clear
-keep id c_deviations
-gen group=0
-gen deviations=c_deviations
-save c_deviations, replace
+	use deviations, clear
+	keep id c_deviations
+	gen group=0
+	gen deviations=c_deviations
+	save c_deviations, replace
 
-use deviations, clear
-keep id m_deviations
-gen group=1
-gen deviations=m_deviations
-save m_deviations, replace
+	use deviations, clear
+	keep id m_deviations
+	gen group=1
+	gen deviations=m_deviations
+	save m_deviations, replace
 
-append using c_deviations
-ksmirnov deviations, by(group) //strong nonparametric rejection 1% level...
+	append using c_deviations
+	ksmirnov deviations, by(group) //strong nonparametric rejection 1% level...
 
 restore
-**********************************************
-
+**********************************************/
+e
 **Fraud: Measure II
 gen c_localpFraudi = (c4q17==1)
 replace c_localpFraudi=. if missing(c4q1)
@@ -582,35 +583,35 @@ reg _Xcfraud c_badMktStructure _asymLocally, cluster(loccode)
 gen dailyNobCustomers=m2q4a
 gen dailyTotMoney=m2q4b
 hist dailyNobCustomers, title(Merchants: dailyNobCustomers)
-graph export _dailyNobCustomers.eps, replace
+*graph export _dailyNobCustomers.eps, replace
 hist dailyTotMoney, title(Merchants: dailyTotMoney)
-graph export _dailyTotMoney.eps, replace
+*graph export _dailyTotMoney.eps, replace
 
 **Ib. nonMMoney sales?
 gen dailyNobCustomers_nonM =m3q3a1 
 gen dailyTotMoney_nonM =m3q3a2
 hist dailyNobCustomers_nonM, title(Merchants: dailyNobCustomers_nonM)
-graph export _dailyNobCustomers_NonM.eps, replace
+*graph export _dailyNobCustomers_NonM.eps, replace
 hist dailyTotMoney_nonM, title(Merchants: dailyTotMoney_nonM)
-graph export _dailyTotMoney_nonM.eps, replace
+*graph export _dailyTotMoney_nonM.eps, replace
 
 
 **IIa. Take-up & MMoney adoption decisions?
 gen wklyNobUsage=c4q11a
 gen wklyTotUseVol=c4q11b
 hist wklyNobUsage, title(Customers: wklyNobUsage)
-graph export _wklyNobUsage.eps, replace
+*graph export _wklyNobUsage.eps, replace
 hist wklyTotUseVol, title(Customers: wklyTotUseVol)
-graph export _wklyTotUseVol.eps, replace
+*graph export _wklyTotUseVol.eps, replace
 
 
 **IIb. Take-up & NonMMoney adoption decisions?
 gen wklyNobUsage_nonM=c4q18a
 gen wklyTotUseVol_nonM=c4q18b
 hist wklyNobUsage_nonM, title(Customers: wklyNobUsage_nonM)
-graph export _wklyNobUsage_nonM.eps, replace
+*graph export _wklyNobUsage_nonM.eps, replace
 hist wklyTotUseVol_nonM, title(Customers: wklyTotUseVol_nonM)
-graph export _wklyTotUseVol_nonM.eps, replace
+*graph export _wklyTotUseVol_nonM.eps, replace
 
 
 *IIc. borrow + save behavior?
@@ -643,11 +644,11 @@ ytitle("Market: Fraction experiencing attempt fraud")) ///
 *kdensity?
 tw (kdensity _MktFraudI if _MktbadStr==0, lcolor(black) xtitle("Market: Attempted fraud rate")) ///
 (kdensity _MktFraudI if _MktbadStr==1, lcolor(blue) ytitle("Probability") legend(label(1 "Bad Mkt structure=No") label(2 "Bad Mkt structure=Yes")))
-graph export _xdevsKdensStr.eps, replace
+*graph export _xdevsKdensStr.eps, replace
 
 tw (kdensity _MktFraudI if _MktAsym==0, lcolor(black) xtitle("Market:  Attempted fraud rate")) ///
 (kdensity _MktFraudI if _MktAsym==1, lcolor(blue) ytitle("Probability") legend(label(1 "Incorrect knowledge=No") label(2 "Incorrect knowledge=Yes")))
-graph export _xdevsKdensAsy.eps, replace
+*graph export _xdevsKdensAsy.eps, replace
 
 
 **III. Selection in fraud? any evidence of discrimination, gender?
@@ -769,7 +770,7 @@ reg _Xcfraud _Mktpov_LowM mismatch_Mktfemale mismatch_Mktakan cmarried cage _Mkt
 **Get unique vender (aka Mkt) ID?
 egen universalid = concat(loccode vendor_id)
 
-br distcode loccode vendor_id universalid Mkt
+*br distcode loccode vendor_id universalid Mkt
 saveold Mkt_fieldData_census, replace
 
 /*
@@ -794,7 +795,7 @@ gr bar trustNo trustYes
 graph hbar trustNo trustYes, bar(1, color(black)) bar(2, color(gs8)) nofill asyvars ///
  blabel(group, position(inside) format(%4.2f) box fcolor(white) lcolor(white)) ytitle("Trust in Transacting:  Share indicating no vs yes", size(small)) blabel(bar) ///
  legend(pos(7) row(1) stack label(1 "Trust=No") label(2 "Trust=Yes"))
-gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/trust_transacting_graph.eps", replace
+*gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/trust_transacting_graph.eps", replace
 
 
 
@@ -918,29 +919,29 @@ tab CustPer_w_Mkt
 
 **get "rep market" per each locality?
 preserve 
-bys loccode vendor_id: keep if _n==1
-br loccode vendor_id Mkt
+	bys loccode vendor_id: keep if _n==1
+	br loccode vendor_id Mkt
 
-set seed 12345
-bys loccode: gen rand_num = uniform()
-bys loccode: gen x = _N
-by loccode (rand_num), sort: gen sample_repMkt = _n==x
-tab sample_repMkt, miss
+	set seed 12345
+	bys loccode: gen rand_num = uniform()
+	bys loccode: gen x = _N
+	by loccode (rand_num), sort: gen sample_repMkt = _n==x
+	tab sample_repMkt, miss
 
-*gen rand_num = uniform()
-*by loccode (rand_num), sort: gen sample_repMkt = _n==1
-*tab sample_repMkt, miss
+	*gen rand_num = uniform()
+	*by loccode (rand_num), sort: gen sample_repMkt = _n==1
+	*tab sample_repMkt, miss
 
-keep ln loccode vendor_id vn Mkt rand_num sample_repMkt* m1q9a m1q9b m1q0d worse_pov_FemaleV worse_incomeGp_FemaleV worse_incomeGp_FemaleV15 base_belief_overcharge ocbase_belief_overcharge fcbase_belief_overcharge mcbase_belief_overcharge under_bbelief under_bbelief_fc
-*keep ln loccode vendor_id vn cn Mkt rand_num sample_repMkt m1q9a c1q8a m1q9b c1q8b m1q0d c1q0b
-br
+	keep ln loccode vendor_id vn Mkt rand_num sample_repMkt* m1q9a m1q9b m1q0d worse_pov_FemaleV worse_incomeGp_FemaleV worse_incomeGp_FemaleV15 base_belief_overcharge ocbase_belief_overcharge fcbase_belief_overcharge mcbase_belief_overcharge under_bbelief under_bbelief_fc
+	*keep ln loccode vendor_id vn cn Mkt rand_num sample_repMkt m1q9a c1q8a m1q9b c1q8b m1q0d c1q0b
+	br
 
-**more cleaning? 3 more drops...no info
-drop if (m1q0d=="")
-drop if (m1q0d=="PABI" | m1q0d=="XXX" | vn=="XXXXXX")
-tab sample_repMkt, miss //130 loc or repMkts now...
-*br if (m1q0d=="" | m1q0d=="PABI" | m1q0d=="XXX" | vn=="XXXXXX")
-save repMkt, replace
+	**more cleaning? 3 more drops...no info
+	drop if (m1q0d=="")
+	drop if (m1q0d=="PABI" | m1q0d=="XXX" | vn=="XXXXXX")
+	tab sample_repMkt, miss //130 loc or repMkts now...
+	*br if (m1q0d=="" | m1q0d=="PABI" | m1q0d=="XXX" | vn=="XXXXXX")
+	save repMkt, replace
 restore
 
 
@@ -949,8 +950,9 @@ restore
 merge m:1 loccode vendor_id using "repMkt.dta"
 save repMkt_w_xtics, replace
 
+*/
 
-
+use "repMkt_w_xtics", clear // YK
 **Supply: merchant side
 **2a merchant xtics?
 **mfemale?
@@ -1188,6 +1190,7 @@ tab c4q17, miss
 *keep if sample_repMkt==1
 keep if _merge==3
 drop _merge
+e
 saveold Mkt_fieldData_sample_repMkt, replace
 
 */
@@ -1203,7 +1206,7 @@ reg cfAccountUse cfemale, cluster(loccode)
 reg everOvercharged cfemale, cluster(loccode)
 
 
-
+/* // already generated above
 gen cfAttempts =(c5q7a==1 | c5q7b==1 | c5q7c==1)
 replace cfAttempts=. if missing(c5q7a)
 replace cfAttempts=. if missing(c5q7b)
@@ -1217,6 +1220,7 @@ replace cfAccountUse=. if missing(c5q7b)
 
 gen cfIncorrects =(c5q7c==1)
 replace cfIncorrects=. if missing(c5q7c)
+*/
 
 sum cfAttempts cfAccountUse cfCallers cfIncorrects
 
@@ -1675,7 +1679,7 @@ outsheet using interventionsTomake_list_local_onlyTs.xls, replace
 
 *********************
 **modifications? Sammy...
-keep if ln=="ANYINASIN" vlocation: (oposite presby church)*
+keep if ln=="ANYINASIN" // vlocation: (oposite presby church)* // YK: zero observations
 *****************
 ******************
 
@@ -1941,7 +1945,7 @@ bys loccode: replace pct_female = pct_female*100
 bys loccode: gen sN =_N
 replace pct_female=. if sN <2
 twoway histogram pct_female, frac ytitle("Fraction of localities") xtitle("% Female vendors per locality")
-gr export "$dta_loc/_project/pct_female_hist.eps", replace
+*gr export "$dta_loc/_project/pct_female_hist.eps", replace
 
 
 **Competition, hhi
@@ -1971,7 +1975,7 @@ gr export "$dta_loc/_project/hhibyGender.eps", replace
 drop if missing(HHI)
 drop if missing(mfemale)
 cdfplot HHI, by(mfemale) opt1(lc(blue red)) xtitle("Herfindahl-Hirschman index: n (Males)=231, n (Females)=157") ytitle("CDF") legend(pos(3) col(1) stack label(1 "Males") label(2 "Females"))
-gr export "$dta_loc/_project/hhibyGender_cdf.eps", replace
+*gr export "$dta_loc/_project/hhibyGender_cdf.eps", replace
 
 reg HHI mfemale, r
 reg HHI mfemale, cluster(loccode)
