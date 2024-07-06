@@ -20,7 +20,6 @@ destring _localityid _customerid, gen(loccode customer_id) //create matches with
 
 *merge m:m loccode customer_id using "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta"
 merge m:m loccode customer_id using "/Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta"
-merge m:m loccode customer_id using "$dta_loc_repl/01_intermediate/Mkt_census_xtics_+_interventions_localized.dta"
 
 *keep if _merge ==3
 *drop if _n>950
