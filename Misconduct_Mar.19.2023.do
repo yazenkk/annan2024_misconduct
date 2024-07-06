@@ -23,8 +23,7 @@ Output:
 	- data-Mgt/Stats?/InterventionsLocalitiesList.dta
 
 */
-clear all
-use "$dta_loc/FINAL AUDIT DATA/_Francis/analyzed_EndlineAuditData.dta", clear
+use "$dta_loc_repl/01_intermediate/analyzed_EndlineAuditData.dta", clear
 
 /*
 *(1) voxdev blogpost
@@ -50,14 +49,14 @@ tab treatment //ctr 31, pt 31, mr 32, joint 34< 35
 
 
 *ADD ff TO Balance Table  - AUDIT + SHOCK OUTCOMES
-use "$dta_loc/data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta", clear
+use "$dta_loc_repl/01_intermediate/Mkt_census_xtics_+_interventions_localized.dta", clear
 gen ge01 = districtName
 keep intervention  locality_name ge01
 bys ge01 locality_name: keep if _n==1
-saveold "$dta_loc/data-Mgt/Stats?/InterventionsLocalitiesList.dta", replace
+saveold "$dta_loc_repl/01_intermediate/InterventionsLocalitiesList.dta", replace
 
-use "$dta_loc/data-Mgt/Stats?/adminTransactData", clear
-merge m:1 ge01 locality_name using "$dta_loc/data-Mgt/Stats?/InterventionsLocalitiesList.dta", generate(_merge_bal)
+use "$dta_loc_repl/01_intermediate/adminTransactData", clear
+merge m:1 ge01 locality_name using "$dta_loc_repl/01_intermediate/InterventionsLocalitiesList.dta", generate(_merge_bal)
 gen trt=0
 replace trt=1 if intervention=="PriceTransparency, PT"
 replace trt=2 if intervention=="MKtMonitoring, MM"
@@ -76,7 +75,7 @@ gen uprices_t0=(c6q1e==1)
 gen ushocks_t0=(c6q1f==1)
 gen ushocks_exp_t0 = (udeath_t0==1 | urevenue_t0==1 | usickness_t0==1 | uweather_t0==1 | uprices_t0==1 | ushocks_t0==1)
 *reg ushocks_exp_t0 strataFE i.trt if _merge==3, r
-?
+
 
 
 ** Table 2 (? confirm) ---------------------------------------------------------------------
@@ -112,7 +111,7 @@ test _b[trt2]=_b[trt4]
 test _b[trt3]=_b[trt4]
 test _b[trt2]=_b[trt3]
 test _b[trt2] + _b[trt3] =_b[trt4]
-?
+
 
 
 ** Table 7 (? confirm) ---------------------------------------------------------------------

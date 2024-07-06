@@ -16,9 +16,7 @@ Output:
 
 */
 
-set seed 100001
-***************
-use "$dta_loc/FFPhone in 2020/CustomersData.dta", clear
+use "$dta_loc_repl/01_intermediate/CustomersData.dta", clear
 gen districtName = cdistrict_name 
 gen ln = clocality_name
 gen districtID= cdistrict_code 
@@ -28,7 +26,7 @@ gen _localityid= substr(_customer2020_id,1,12)
 gen _customerid= substr(_customer2020_id,-3,.)
 destring _localityid _customerid, gen(loccode customer_id) //create matches with census data
 
-merge m:m loccode customer_id using "$dta_loc/data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta"
+merge m:m loccode customer_id using "$dta_loc_repl/01_intermediate/Mkt_census_xtics_+_interventions_localized.dta"
 
 *keep if _merge ==3
 *drop if _n>950
@@ -77,7 +75,7 @@ reg dropouts i.trt, cluster(loccodex)
 
 *distplot c0a, saving("distplot_ccalls", replace) //customers answer quicker than vendors/business (as expected)
 hist c0a, percent xtitle("Customers: Number of phone call times before answering survey")
-*gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/customer_calltimeS.eps", replace
+gr export "$output_loc/main_results/customer_calltimeS.eps", replace
 
 **differential attrition/ drop outs?
 tab _merge
@@ -152,16 +150,16 @@ gr export $dta_loc/_project/_xREPUTATION/slides/results/gr_serviceusage.eps, rep
 gr save $dta_loc/_project/_xREPUTATION/slides/results/gr_serviceusage, replace
 */
 cdfplot ihs_mmtotamt_t1, by(trtment) opt1(lc() lp(solid dash)) xtitle("{stMono:asinh}(Total Transactions per week)") ytitle("Cummulative Probability") legend(pos(7) row(1) stack label(1 "Control") label(2 "Any treatment"))
-gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/te_all_graph.eps", replace
+gr export "$output_loc/main_results/te_all_graph.eps", replace
 
 cdfplot ihs_mmtotamt_t1 if (trt==0 | trt==1), by(trtment) opt1(lc() lp(solid dash)) xtitle("{stMono:asinh}(Total Transactions per week)") ytitle("Cumulative Probability") legend(pos(7) row(1) stack label(1 "Control") label(2 "Transparency alone (PT)"))
-gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/te_pt_graph.eps", replace
+gr export "$output_loc/main_results/te_pt_graph.eps", replace
 
 cdfplot ihs_mmtotamt_t1 if (trt==0 | trt==2), by(trtment) opt1(lc() lp(solid dash)) xtitle("{stMono:asinh}(Total Transactions per week)") ytitle("Cumulative Probability") legend(pos(7) row(1) stack label(1 "Control") label(2 "Monitoring alone (MR)"))
-gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/te_m&r_graph.eps", replace
+gr export "$output_loc/main_results/te_m&r_graph.eps", replace
 
 cdfplot ihs_mmtotamt_t1 if (trt==0 | trt==3), by(trtment) opt1(lc() lp(solid dash)) xtitle("{stMono:asinh}(Total Transactions per week)") ytitle("Cumulative Probability") legend(pos(7) row(1) stack label(1 "Control") label(2 "Combined (PT + MR)"))
-gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/te_both_graph.eps", replace
+gr export "$output_loc/main_results/te_both_graph.eps", replace
 
 sum ihs_mmtotamt_t1, d
 gen Trim1=ihs_mmtotamt_t1 if ihs_mmtotamt_t1>=r(p5) & ihs_mmtotamt_t1<=r(p95)
@@ -184,7 +182,7 @@ replace ihs_mmtotamt_t1=r(mean) if missing(ihs_mmtotamt_t1) & _merge==3
 sum mmtotamt_t0
 replace mmtotamt_t0=r(mean) if missing(mmtotamt_t0) & _merge==3
 gen ihs_mmtotamt_t0 = asinh(mmtotamt_t0)
-?
+
 
 ** Table 5 ---------------------------------------------------------------------
 sum ihs_mmtotamt_t1 if trtment==0
@@ -233,7 +231,7 @@ test _b[1.trt]=_b[3.trt]
 test _b[2.trt]=_b[3.trt]
 test _b[1.trt]=_b[2.trt]
 test _b[1.trt] + _b[2.trt] =_b[3.trt]
-?
+
 
 ** Table C.5 -------------------------------------------------------------------
 *Robustness checks - Inference, Multiple Testing, Attrition, LASSO Estimation
@@ -271,16 +269,16 @@ bys trtment: tab attempts
 **Simply trim as follows:
 foreach x of varlist ihs_mmtotamt_t1 mmUser_t1 save_t1 score_MMoneyDd_t1 {
 	preserve
-	display "`x'"
-	gen itemA= `x' if trtment==1 & attempts<=3 
-	egen iranklo_Aa =rank(itemA) if trtment==1, unique //from above
-	egen iranklo_Ab =rank(-itemA) if trtment==1, unique //from below
-	gen yupperA= `x'
-	replace yupperA=. if (trtment==1 & iranklo_Aa<=20) | (trtment==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
-	gen ylowerA= `x'
-	replace ylowerA=. if (trtment==1 & iranklo_Ab<=20) | (trtment==1 & attempts>3)
-	reg ylowerA  trtment, r
-	reg yupperA trtment, r
+		display "`x'"
+		gen itemA= `x' if trtment==1 & attempts<=3 
+		egen iranklo_Aa =rank(itemA) if trtment==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trtment==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trtment==1 & iranklo_Aa<=20) | (trtment==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trtment==1 & iranklo_Ab<=20) | (trtment==1 & attempts>3)
+		reg ylowerA  trtment, r
+		reg yupperA trtment, r
 	restore
 } 
 *
@@ -314,70 +312,70 @@ rwolf ihs_mmtotamt_t1 mmUser_t1 save_t1 score_MMoneyDd_t1, indepvar(trt2 trt3 tr
 **attrition bounds
 **1. [Lee Bounds]**
 foreach x of varlist trt2 trt3 trt4 {
-leebounds ihs_mmtotamt_t1 `x', level(95) cieffect tight() 
+	leebounds ihs_mmtotamt_t1 `x', level(95) cieffect tight() 
 }
 *
 foreach x of varlist trt2 trt3 trt4 {
-leebounds mmUser_t1 `x', level(95) cieffect tight() 
+	leebounds mmUser_t1 `x', level(95) cieffect tight() 
 }
 *
 foreach x of varlist trt2 trt3 trt4 {
-leebounds save_t1 `x', level(95) cieffect tight() 
+	leebounds save_t1 `x', level(95) cieffect tight() 
 }
 *
 foreach x of varlist trt2 trt3 trt4 {
-leebounds score_MMoneyDd_t1 `x', level(95) cieffect tight() 
+	leebounds score_MMoneyDd_t1 `x', level(95) cieffect tight() 
 }
 *
 **2. [Behajel et al. Bounds]**
 foreach x of varlist ihs_mmtotamt_t1 mmUser_t1 save_t1 score_MMoneyDd_t1 {
 	preserve
-	display "`x'"
-	gen itemA= `x' if trt2==1 & attempts<=3 
-	egen iranklo_Aa =rank(itemA) if trt2==1, unique //from above
-	egen iranklo_Ab =rank(-itemA) if trt2==1, unique //from below
-	gen yupperA= `x'
-	replace yupperA=. if (trt2==1 & iranklo_Aa<=20) | (trt2==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
-	gen ylowerA= `x'
-	replace ylowerA=. if (trt2==1 & iranklo_Ab<=20) | (trt2==1 & attempts>3)
-	reg ylowerA  trt2, r
-	reg yupperA trt2, r
+		display "`x'"
+		gen itemA= `x' if trt2==1 & attempts<=3 
+		egen iranklo_Aa =rank(itemA) if trt2==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trt2==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trt2==1 & iranklo_Aa<=20) | (trt2==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trt2==1 & iranklo_Ab<=20) | (trt2==1 & attempts>3)
+		reg ylowerA  trt2, r
+		reg yupperA trt2, r
 	restore
 }
 *
 
 foreach x of varlist ihs_mmtotamt_t1 mmUser_t1 save_t1 score_MMoneyDd_t1 {
 	preserve
-	display "`x'"
-	gen itemA= `x' if trt3==1 & attempts<=3 
-	egen iranklo_Aa =rank(itemA) if trt3==1, unique //from above
-	egen iranklo_Ab =rank(-itemA) if trt3==1, unique //from below
-	gen yupperA= `x'
-	replace yupperA=. if (trt3==1 & iranklo_Aa<=20) | (trt3==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
-	gen ylowerA= `x'
-	replace ylowerA=. if (trt3==1 & iranklo_Ab<=20) | (trt3==1 & attempts>3)
-	reg ylowerA  trt3, r
-	reg yupperA trt3, r
+		display "`x'"
+		gen itemA= `x' if trt3==1 & attempts<=3 
+		egen iranklo_Aa =rank(itemA) if trt3==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trt3==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trt3==1 & iranklo_Aa<=20) | (trt3==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trt3==1 & iranklo_Ab<=20) | (trt3==1 & attempts>3)
+		reg ylowerA  trt3, r
+		reg yupperA trt3, r
 	restore
 }
 *
 
 foreach x of varlist ihs_mmtotamt_t1 mmUser_t1 save_t1 score_MMoneyDd_t1 {
 	preserve
-	display "`x'"
-	gen itemA= `x' if trt4==1 & attempts<=3 
-	egen iranklo_Aa =rank(itemA) if trt4==1, unique //from above
-	egen iranklo_Ab =rank(-itemA) if trt4==1, unique //from below
-	gen yupperA= `x'
-	replace yupperA=. if (trt4==1 & iranklo_Aa<=20) | (trt4==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
-	gen ylowerA= `x'
-	replace ylowerA=. if (trt4==1 & iranklo_Ab<=20) | (trt4==1 & attempts>3)
-	reg ylowerA  trt4, r
-	reg yupperA trt4, r
+		display "`x'"
+		gen itemA= `x' if trt4==1 & attempts<=3 
+		egen iranklo_Aa =rank(itemA) if trt4==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trt4==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trt4==1 & iranklo_Aa<=20) | (trt4==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trt4==1 & iranklo_Ab<=20) | (trt4==1 & attempts>3)
+		reg ylowerA  trt4, r
+		reg yupperA trt4, r
 	restore
 }
 *
-?
+
 
 
 **Quantifying: Bias belief vs Direct Price Effects

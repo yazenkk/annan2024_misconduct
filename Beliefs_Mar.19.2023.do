@@ -15,14 +15,14 @@ Output:
 */
 
 **Consumers subjective beliefs: shifts + updates*
-use "$dta_loc/FFPhone in 2020/Customer_+_Mktcensus_+_Interventions.dta", clear
+use "$dta_loc_repl/01_intermediate/Customer_+_Mktcensus_+_Interventions.dta", clear
 gen ge01 =cdistrict_name 
 gen ge02 =clocality_name 
 gen ge03 =vn
 drop _merge
 *drop if missing(_customer2020_id)
 **bring in audit-objective endline data: "use sep 06 fd data"
-merge m:1 ge01 ge02 using "$dta_loc/FINAL AUDIT DATA/_Francis/ofdrate_mktAudit_endline.dta"
+merge m:1 ge01 ge02 using "$dta_loc_repl/01_intermediate/ofdrate_mktAudit_endline.dta"
 *merge m:1 ge01 ge02 using "$dta_loc/FINAL AUDIT DATA/_Francis/MisconObj_Endline.dta"
 *drop if missing(_customer2020_id)
 gen dropout_belief = missing(_customer2020_id)
@@ -79,7 +79,7 @@ test 1.trt+2.trt=3.trt
 bys cdistrict_name clocality_name: egen mx = mean(honestVendors1) if dropout_belief==0
 bys trt: sum mx
 cdfplot mx if (trt==0 | trt==1 | trt==2 | trt==3), by(trtment) opt1(lc() lp(solid dash)) xtitle("Share that perceive vendors are honest") ytitle("Cumulative Probability") legend(pos(7) row(1) stack label(1 "Control") label(2 "Any treatment"))
-gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/te_belief_all_graph.eps", replace
+gr export "$output_loc/main_results/te_belief_all_graph.eps", replace
 ksmirnov mx, by(trtment) exact //p-val=0.000
 
 *(1) voxdev
@@ -87,20 +87,20 @@ bys trtment: sum mx
 quietly eststo Control: mean mx if trtment==0
 quietly eststo Treatment: mean mx if trtment==1
 coefplot Control Treatment, vertical xlabel("") xtitle(Share that perceive vendors are honest) ytitle(Mean) recast(bar) barwidth(0.25) fcolor(*.5) ciopts(recast(rcap)) citop citype(logit) level(95)  graphregion(color(white)) ylab(,nogrid)
-gr export $dta_loc/_project/_xREPUTATION/slides/results/gr_conduct_perceptions.eps, replace
-gr save $dta_loc/_project/_xREPUTATION/slides/results/gr_conduct_perceptions, replace
+gr export $output_loc/main_results/gr_conduct_perceptions.eps, replace
+gr save $output_loc/main_results/gr_conduct_perceptions, replace
 
 
 cdfplot mx if (trt==0 | trt==1), by(trtment) opt1(lc() lp(solid dash)) xtitle("Share that perceive vendors are honest") ytitle("Cumulative Probability") legend(pos(7) row(1) stack label(1 "Control") label(2 "Transparency alone (PT)"))
-gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/te_belief_pt_graph.eps", replace
+gr export "$output_loc/main_results/te_belief_pt_graph.eps", replace
 ksmirnov mx if (trt==0 | trt==1), by(trtment) exact //p-val=0.000
 
 cdfplot mx if (trt==0 | trt==2), by(trtment) opt1(lc() lp(solid dash)) xtitle("Share that perceive vendors are honest") ytitle("Cumulative Probability") legend(pos(7) row(1) stack label(1 "Control") label(2 "Monitoring alone (MR)"))
-gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/te_belief_m&r_graph.eps", replace
+gr export "$output_loc/main_results/te_belief_m&r_graph.eps", replace
 ksmirnov mx if (trt==0 | trt==2), by(trtment) exact //p-val=0.000
 
 cdfplot mx if (trt==0 | trt==3), by(trtment) opt1(lc() lp(solid dash)) xtitle("Share that perceive vendors are honest") ytitle("Cumulative Probability") legend(pos(7) row(1) stack label(1 "Control") label(2 "Combined (PT + MR)"))
-gr export "$dta_loc/FFPhone in 2020/_impact-evaluation/te_belief_both_graph.eps", replace
+gr export "$output_loc/main_results/te_belief_both_graph.eps", replace
 ksmirnov mx if (trt==0 | trt==3), by(trtment) exact //p-val=0.000
 
 

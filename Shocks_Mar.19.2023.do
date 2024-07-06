@@ -11,7 +11,7 @@ Output:
 */
 
 ***************
-use "$dta_loc/FFPhone in 2020/CustomersData.dta", clear
+use "$dta_loc_repl/01_intermediate/CustomersData.dta", clear
 gen districtName = cdistrict_name 
 gen ln = clocality_name
 gen districtID= cdistrict_code 
@@ -21,7 +21,7 @@ gen _localityid= substr(_customer2020_id,1,12)
 gen _customerid= substr(_customer2020_id,-3,.)
 destring _localityid _customerid, gen(loccode customer_id) //create matches with census data
 
-merge m:m loccode customer_id using "$dta_loc/data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta"
+merge m:m loccode customer_id using "$dta_loc_repl/01_intermediate/Mkt_census_xtics_+_interventions_localized.dta"
 
 
 **attrition stats: numbers
@@ -209,7 +209,7 @@ test _b[trt3]=_b[trt4]
 test _b[trt2]=_b[trt3]
 test _b[trt2] + _b[trt3] =_b[trt4]
 
-?
+
 ** Table C10 ---------------------------------------------------------------------
 *Robustness checks - Inference, Multiple Testing, Attrition, LASSO Estimation
 *POOLED
@@ -231,19 +231,19 @@ bys trtment: tab attempts
 **so trim (95-92)/95 =3% of trt group, x 667= 20 customers out
 **Simply trim as follows:
 foreach x of varlist ushocks_exp_t1 {
-preserve
-display "`x'"
-gen itemA= `x' if trtment==1 & attempts<=3 
-egen iranklo_Aa =rank(itemA) if trtment==1, unique //from above
-egen iranklo_Ab =rank(-itemA) if trtment==1, unique //from below
-gen yupperA= `x'
-replace yupperA=. if (trtment==1 & iranklo_Aa<=20) | (trtment==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
-gen ylowerA= `x'
-replace ylowerA=. if (trtment==1 & iranklo_Ab<=20) | (trtment==1 & attempts>3)
-reg ylowerA  trtment, r
-reg yupperA trtment, r
-restore
-		} 
+	preserve
+		display "`x'"
+		gen itemA= `x' if trtment==1 & attempts<=3 
+		egen iranklo_Aa =rank(itemA) if trtment==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trtment==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trtment==1 & iranklo_Aa<=20) | (trtment==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trtment==1 & iranklo_Ab<=20) | (trtment==1 & attempts>3)
+		reg ylowerA  trtment, r
+		reg yupperA trtment, r
+	restore
+} 
 *
 
 *SEPARATE
@@ -259,56 +259,56 @@ rwolf ushocks_exp_t1 revenue_t1 health_t1 hhexpense_t1 c_pov_likelihood_t1, inde
 **attrition bounds
 **1. [Lee Bounds]**
 foreach x of varlist trt2 trt3 trt4 {
-leebounds ushocks_exp_t1 `x', level(95) cieffect tight() 
-		}
+	leebounds ushocks_exp_t1 `x', level(95) cieffect tight() 
+}
 *
 /* dropped to save table space
 **2. [Behajel et al. Bounds]**
 foreach x of varlist ushocks_exp_t1 {
-preserve
-display "`x'"
-gen itemA= `x' if trt2==1 & attempts<=3 
-egen iranklo_Aa =rank(itemA) if trt2==1, unique //from above
-egen iranklo_Ab =rank(-itemA) if trt2==1, unique //from below
-gen yupperA= `x'
-replace yupperA=. if (trt2==1 & iranklo_Aa<=20) | (trt2==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
-gen ylowerA= `x'
-replace ylowerA=. if (trt2==1 & iranklo_Ab<=20) | (trt2==1 & attempts>3)
-reg ylowerA  trt2, r
-reg yupperA trt2, r
-restore
-		}
+	preserve
+		display "`x'"
+		gen itemA= `x' if trt2==1 & attempts<=3 
+		egen iranklo_Aa =rank(itemA) if trt2==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trt2==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trt2==1 & iranklo_Aa<=20) | (trt2==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trt2==1 & iranklo_Ab<=20) | (trt2==1 & attempts>3)
+		reg ylowerA  trt2, r
+		reg yupperA trt2, r
+	restore
+}
 *
 foreach x of varlist ushocks_exp_t1 {
-preserve
-display "`x'"
-gen itemA= `x' if trt3==1 & attempts<=3 
-egen iranklo_Aa =rank(itemA) if trt3==1, unique //from above
-egen iranklo_Ab =rank(-itemA) if trt3==1, unique //from below
-gen yupperA= `x'
-replace yupperA=. if (trt3==1 & iranklo_Aa<=20) | (trt3==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
-gen ylowerA= `x'
-replace ylowerA=. if (trt3==1 & iranklo_Ab<=20) | (trt3==1 & attempts>3)
-reg ylowerA  trt3, r
-reg yupperA trt3, r
-restore
-		}
+	preserve
+		display "`x'"
+		gen itemA= `x' if trt3==1 & attempts<=3 
+		egen iranklo_Aa =rank(itemA) if trt3==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trt3==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trt3==1 & iranklo_Aa<=20) | (trt3==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trt3==1 & iranklo_Ab<=20) | (trt3==1 & attempts>3)
+		reg ylowerA  trt3, r
+		reg yupperA trt3, r
+	restore
+}
 *
 
 foreach x of varlist ushocks_exp_t1 {
-preserve
-display "`x'"
-gen itemA= `x' if trt4==1 & attempts<=3 
-egen iranklo_Aa =rank(itemA) if trt4==1, unique //from above
-egen iranklo_Ab =rank(-itemA) if trt4==1, unique //from below
-gen yupperA= `x'
-replace yupperA=. if (trt4==1 & iranklo_Aa<=20) | (trt4==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
-gen ylowerA= `x'
-replace ylowerA=. if (trt4==1 & iranklo_Ab<=20) | (trt4==1 & attempts>3)
-reg ylowerA  trt4, r
-reg yupperA trt4, r
-restore
-		}
+	preserve
+		display "`x'"
+		gen itemA= `x' if trt4==1 & attempts<=3 
+		egen iranklo_Aa =rank(itemA) if trt4==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trt4==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trt4==1 & iranklo_Aa<=20) | (trt4==1 & attempts>3) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trt4==1 & iranklo_Ab<=20) | (trt4==1 & attempts>3)
+		reg ylowerA  trt4, r
+		reg yupperA trt4, r
+	restore
+}
 */
 *
 

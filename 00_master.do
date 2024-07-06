@@ -29,6 +29,8 @@ set seed 100001 // from scripts: demand, revenues
 
 ** install programs
 // do "$do_loc/01_programs"
+do "$do_loc/02_anonymize"
+
 
 ** baseline data prep
 do "$do_loc/_basel-Commands_Test_goodstuff"
@@ -36,17 +38,29 @@ do "$do_loc/_basel-gender"
 do "$do_loc/_basel-repMkt"
 
 ** treatment assigmnent
-do "$do_loc/_basel-interventions2" 		// generate AuditsTomake_list and ONLY_4TrtGroups_9dist
+do "$do_loc/_basel-interventions1" 		// generate AuditsTomake_list and ONLY_4TrtGroups_9dist
 do "$do_loc/_basel-interventions2" 		// generate interventionsTomake_list_local
 
 ** combine
 do "$do_loc/_basel2-adminTransactData" 	// generate adminTransactData and ofdrate_mktadminTransactData
 do "$do_loc/_basel2-combine" 			// combine int + mkt census
-do "$do_loc/_basel2-combine2" 			// combine int + mkt census + customer
-do "$do_loc/_basel2-mkt_ai" 		 	// generate ofdrate_mktAudit_endline
+do "$do_loc/_basel2-combine2" 			// combine int + mkt census + customer (commented out sqreg and gen. item=y)
+do "$do_loc/_basel2-mkt_ai" 		 	// generate mkt_aiVendorBetter
 do "$do_loc/_baselother-customer" 		// generate CustomersData data
+do "$do_loc/_baselother-merchant" 		// generate MerchantsData data
 do "$do_loc/_baselother-FinalAuditData" // generate ofdrate_mktAudit_endline
 
 version 10
 do "$do_loc/_followups-organized_surveys"
 version 18
+
+** CONTINUE HERE
+// do misconduct, beliefs, etc
+
+do "$do_loc/Beliefs_Mar.19.2023"
+do "$do_loc/Demand_Mar.19.2023"
+do "$do_loc/Misconduct_Mar.19.2023"
+do "$do_loc/Revenues_Mar.19.2023"
+do "$do_loc/Shocks_Mar.19.2023"
+
+

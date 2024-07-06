@@ -7,12 +7,12 @@ Input:
 	- FFPhone in 2020/MerchantsData.dta
 	- data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta
 Output:
-	- NA
+	-[regressions]
 */
 
 **************
 ***************
-use "$dta_loc/FFPhone in 2020/MerchantsData.dta", clear
+use "$dta_loc_repl/01_intermediate/MerchantsData.dta", clear
 
 gen duration_min = end_time-start_time
 *hist duration_min, disc xlabel(0(1)60, angle(vertical) labsize(vsmall)) title(Merchants -interview duration)
@@ -22,7 +22,7 @@ gen districtName = district_name
 gen ln = locality_name1
 gen districtID= district_code 
 
-merge m:m districtID ln using "$dta_loc/data-Mgt/Stats?/Mkt_census_xtics_+_interventions_localized.dta"
+merge m:m districtID ln using "$dta_loc_repl/01_intermediate/Mkt_census_xtics_+_interventions_localized.dta"
 *keep if _merge ==3
 bys districtName ln: keep if _n==1  //only vendors + dropouts
 
@@ -64,8 +64,9 @@ reg dropouts i.trt, r
 
 
 distplot v0a //customers answer quicker than vendors/business (as expected)
-*hist v0a, gap(10) percent xtitle("Vendors: Number of phone call times before answering survey")
-*gr export "/Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/FFPhone in 2020/_impact-evaluation/vendor_calltimeS.eps", replace
+hist v0a, gap(10) percent xtitle("Vendors: Number of phone call times before answering survey")
+gr export "$output_loc/main_results/vendor_calltimeS.eps", replace
+
 
 tab date_of_interview
 tab date_of_interview, missing
@@ -101,7 +102,7 @@ gen migratepermanent = (m5q4 ==2)
 
 **control means?
 sum mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1 if trtment==0
-?
+
 ** Table 6 ---------------------------------------------------------------------
 regress mmtotamt_cust_t1 mmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment, r
 regress bus_exit i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment, r
@@ -179,19 +180,19 @@ bys trtment: tab attempts
 **Simply trim as follows:
 *(drop bus_exit, makes no sense b/cx 129/130)
 foreach x of varlist mmtotamt_cust_t1  {
-preserve
-display "`x'"
-gen itemA= `x' if trtment==1 & attempts<=4 
-egen iranklo_Aa =rank(itemA) if trtment==1, unique //from above
-egen iranklo_Ab =rank(-itemA) if trtment==1, unique //from below
-gen yupperA= `x'
-replace yupperA=. if (trtment==1 & iranklo_Aa<=2) | (trtment==1 & attempts>4) //trim differences within 3 attempts and cut off all above 3-attempts
-gen ylowerA= `x'
-replace ylowerA=. if (trtment==1 & iranklo_Ab<=2) | (trtment==1 & attempts>4)
-reg ylowerA  trtment, r
-reg yupperA trtment, r
-restore
-		} 
+	preserve
+		display "`x'"
+		gen itemA= `x' if trtment==1 & attempts<=4 
+		egen iranklo_Aa =rank(itemA) if trtment==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trtment==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trtment==1 & iranklo_Aa<=2) | (trtment==1 & attempts>4) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trtment==1 & iranklo_Ab<=2) | (trtment==1 & attempts>4)
+		reg ylowerA  trtment, r
+		reg yupperA trtment, r
+	restore
+} 
 *
 
 **SEPARATE
@@ -212,11 +213,11 @@ rwolf mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trt
 **attrition bounds
 **1. [Lee Bounds]**
 foreach x of varlist trt2 trt3 trt4 {
-leebounds mmtotamt_cust_t1 `x', level(95) cieffect tight() 
+	leebounds mmtotamt_cust_t1 `x', level(95) cieffect tight() 
 }
 *
 foreach x of varlist trt2 trt3 trt4 {
-leebounds bus_exit `x', level(95) cieffect tight() 
+	leebounds bus_exit `x', level(95) cieffect tight() 
 }
 *
 /* dropped to save table space
@@ -274,7 +275,7 @@ restore
 		} 
 */
 *
-?
+
 
 
 ** Table C9 ---------------------------------------------------------------------
@@ -315,19 +316,19 @@ bys trtment: tab attempts
 **Simply trim as follows:
 *(drop bus_exit, makes no sense b/cx 129/130)
 foreach x of varlist nonmmtotamt_cust_t1 totamt_cust_t1  {
-preserve
-display "`x'"
-gen itemA= `x' if trtment==1 & attempts<=4 
-egen iranklo_Aa =rank(itemA) if trtment==1, unique //from above
-egen iranklo_Ab =rank(-itemA) if trtment==1, unique //from below
-gen yupperA= `x'
-replace yupperA=. if (trtment==1 & iranklo_Aa<=2) | (trtment==1 & attempts>4) //trim differences within 3 attempts and cut off all above 3-attempts
-gen ylowerA= `x'
-replace ylowerA=. if (trtment==1 & iranklo_Ab<=2) | (trtment==1 & attempts>4)
-reg ylowerA  trtment, r
-reg yupperA trtment, r
-restore
-		} 
+	preserve
+		display "`x'"
+		gen itemA= `x' if trtment==1 & attempts<=4 
+		egen iranklo_Aa =rank(itemA) if trtment==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trtment==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trtment==1 & iranklo_Aa<=2) | (trtment==1 & attempts>4) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trtment==1 & iranklo_Ab<=2) | (trtment==1 & attempts>4)
+		reg ylowerA  trtment, r
+		reg yupperA trtment, r
+	restore
+} 
 *
 
 **SEPARATE
@@ -348,11 +349,11 @@ rwolf mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trt
 **attrition bounds
 **1. [Lee Bounds]**
 foreach x of varlist trt2 trt3 trt4 {
-leebounds nonmmtotamt_cust_t1 `x', level(95) cieffect tight() 
+	leebounds nonmmtotamt_cust_t1 `x', level(95) cieffect tight() 
 }
 *
 foreach x of varlist trt2 trt3 trt4 {
-leebounds totamt_cust_t1 `x', level(95) cieffect tight() 
+	leebounds totamt_cust_t1 `x', level(95) cieffect tight() 
 }
 *
 **2. [Behajel et al. Bounds]**
@@ -364,51 +365,51 @@ leebounds totamt_cust_t1 `x', level(95) cieffect tight()
 **Simply trim as follows:
 *(drop bus_exit, makes no sense b/cx 129/130)
 foreach x of varlist nonmmtotamt_cust_t1 totamt_cust_t1  {
-preserve
-display "`x'"
-gen itemA= `x' if trt2==1 & attempts<=4 
-egen iranklo_Aa =rank(itemA) if trt2==1, unique //from above
-egen iranklo_Ab =rank(-itemA) if trt2==1, unique //from below
-gen yupperA= `x'
-replace yupperA=. if (trt2==1 & iranklo_Aa<=2) | (trt2==1 & trt2>4) //trim differences within 3 attempts and cut off all above 3-attempts
-gen ylowerA= `x'
-replace ylowerA=. if (trt2==1 & iranklo_Ab<=2) | (trt2==1 & trt2>4)
-reg ylowerA  trt2, r
-reg yupperA trt2, r
-restore
-		} 
+	preserve
+		display "`x'"
+		gen itemA= `x' if trt2==1 & attempts<=4 
+		egen iranklo_Aa =rank(itemA) if trt2==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trt2==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trt2==1 & iranklo_Aa<=2) | (trt2==1 & trt2>4) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trt2==1 & iranklo_Ab<=2) | (trt2==1 & trt2>4)
+		reg ylowerA  trt2, r
+		reg yupperA trt2, r
+	restore
+} 
 *
 foreach x of varlist nonmmtotamt_cust_t1 totamt_cust_t1  {
-preserve
-display "`x'"
-gen itemA= `x' if trt3==1 & attempts<=4 
-egen iranklo_Aa =rank(itemA) if trt3==1, unique //from above
-egen iranklo_Ab =rank(-itemA) if trt3==1, unique //from below
-gen yupperA= `x'
-replace yupperA=. if (trt3==1 & iranklo_Aa<=2) | (trt3==1 & trt3>4) //trim differences within 3 attempts and cut off all above 3-attempts
-gen ylowerA= `x'
-replace ylowerA=. if (trt3==1 & iranklo_Ab<=2) | (trt3==1 & trt3>4)
-reg ylowerA  trt3, r
-reg yupperA trt3, r
-restore
-		} 
+	preserve
+		display "`x'"
+		gen itemA= `x' if trt3==1 & attempts<=4 
+		egen iranklo_Aa =rank(itemA) if trt3==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trt3==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trt3==1 & iranklo_Aa<=2) | (trt3==1 & trt3>4) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trt3==1 & iranklo_Ab<=2) | (trt3==1 & trt3>4)
+		reg ylowerA  trt3, r
+		reg yupperA trt3, r
+	restore
+} 
 *
 foreach x of varlist nonmmtotamt_cust_t1 totamt_cust_t1  {
-preserve
-display "`x'"
-gen itemA= `x' if trt4==1 & attempts<=4 
-egen iranklo_Aa =rank(itemA) if trt4==1, unique //from above
-egen iranklo_Ab =rank(-itemA) if trt4==1, unique //from below
-gen yupperA= `x'
-replace yupperA=. if (trt4==1 & iranklo_Aa<=2) | (trt4==1 & trt4>4) //trim differences within 3 attempts and cut off all above 3-attempts
-gen ylowerA= `x'
-replace ylowerA=. if (trt4==1 & iranklo_Ab<=2) | (trt4==1 & trt4>4)
-reg ylowerA  trt4, r
-reg yupperA trt4, r
-restore
-		} 
+	preserve
+		display "`x'"
+		gen itemA= `x' if trt4==1 & attempts<=4 
+		egen iranklo_Aa =rank(itemA) if trt4==1, unique //from above
+		egen iranklo_Ab =rank(-itemA) if trt4==1, unique //from below
+		gen yupperA= `x'
+		replace yupperA=. if (trt4==1 & iranklo_Aa<=2) | (trt4==1 & trt4>4) //trim differences within 3 attempts and cut off all above 3-attempts
+		gen ylowerA= `x'
+		replace ylowerA=. if (trt4==1 & iranklo_Ab<=2) | (trt4==1 & trt4>4)
+		reg ylowerA  trt4, r
+		reg yupperA trt4, r
+	restore
+} 
 *
-?
+
 
 
 ** Table C16 ---------------------------------------------------------------------
@@ -420,7 +421,7 @@ regress v1a1 m2q4a i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 t
 
 regress v1a1 m2q4a i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 i.trt, robust //no effect
 *regress v1a1 mmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 i.trt, robust //no effect
-?
+
 
 
 

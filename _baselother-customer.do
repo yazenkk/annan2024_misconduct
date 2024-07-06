@@ -1,5 +1,11 @@
 /*
 Customers data
+
+Source: Commands_Test_f_evaluation_vendors.do
+Input:
+	- Customer
+Output:
+	- CustomersData
 */
 
 

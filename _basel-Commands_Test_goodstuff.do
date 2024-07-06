@@ -331,21 +331,24 @@ reg _dVm mfemale makan mmarried mage mEduc mbusTrained cselfemployed cselfIncome
 preserve
 	keep c_deviations m_deviations
 	gen id=_n 
-	save deviations, replace
+	tempfile deviations
+	save 	`deviations'
 
-	use deviations, clear
+	use `deviations', clear
 	keep id c_deviations
 	gen group=0
 	gen deviations=c_deviations
-	save c_deviations, replace
+	tempfile c_deviations
+	save `c_deviations'
 
-	use deviations, clear
+	use `deviations', clear
 	keep id m_deviations
 	gen group=1
 	gen deviations=m_deviations
-	save m_deviations, replace
+	tempfile m_deviations
+	save 	`m_deviations'
 
-	append using c_deviations
+	append using `c_deviations'
 	ksmirnov deviations, by(group) //strong nonparametric rejection 1% level...
 
 restore

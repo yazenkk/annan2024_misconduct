@@ -83,6 +83,7 @@ tab dropouts if trtment==0
 tab dropouts if trtment==1
 **so trim 0.05/0.82 = 6.1% of treatment group
 **764 responses, so triming 46 customers
+/* YK commented out 7/6/2024. Figure out where y is from
 gen item= y if trtment==1
 gen iranklo_a =rank(item) if trtment==1, unique
 gen iranklo_b =rank(-item) if trtment==1, unique
@@ -92,6 +93,7 @@ gen ylower= y
 replace ylower=. if trtment==1 & iranklo_b<=46
 areg ylower trtment, a(districtID) robust
 areg yupper trtment, a(districtID) robust
+*/
 
 
 bys trt: sum dropouts 
@@ -162,7 +164,7 @@ reg wklyTotUseVol dropouts, cluster(loccode)
 reg wklyNobUsage_nonM dropouts, cluster(loccode)
 reg wklyTotUseVol_nonM dropouts, cluster(loccode)
 **get distribution effects-main? which bound is more likely?
-sqreg wklyTotUseVol dropouts, q(.25 .5 .75)
+// sqreg wklyTotUseVol dropouts, q(.25 .5 .75)
 
 
 *3c borrow + save behavior?
@@ -171,7 +173,7 @@ gen likelysaveMMoney =c5q5
 reg likelyborrowMMoney dropouts, cluster(loccode)
 reg likelysaveMMoney dropouts, cluster(loccode)
 **get distribution effects-main? which bound is more likely?
-sqreg likelysaveMMoney dropouts, q(.25 .5 .75)
+// sqreg likelysaveMMoney dropouts, q(.25 .5 .75)
 
 /* 
 reg wklyNobBorrow dropouts, cluster(loccode)
