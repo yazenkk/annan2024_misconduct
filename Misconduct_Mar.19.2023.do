@@ -149,7 +149,7 @@ test _b[trt3]=_b[trt4]
 test _b[trt2]=_b[trt3]
 test _b[trt2] + _b[trt3] =_b[trt4]
 */
-?
+
 
 
 
@@ -159,17 +159,17 @@ test _b[trt2] + _b[trt3] =_b[trt4]
 *POOLED
 *wild cluster bootstrap, pval
 reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt, r cluster(uniqueVendorID) level(95)
-boottest trt, rep(1000) level(95) nogr
+boottest trt, rep($bootstrap_reps) level(95) nogr
 reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt, r cluster(uniqueVendorID) level(95)
-boottest trt, rep(1000) level(95) nogr
+boottest trt, rep($bootstrap_reps) level(95) nogr
 reg ihs_fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt, r cluster(uniqueVendorID) level(95)
-boottest trt, rep(1000) level(95) nogr
+boottest trt, rep($bootstrap_reps) level(95) nogr
 *randomization inf: permuntation test, pval
-ritest trt _b[trt], reps(1000) cluster(uniqueVendorID) strata(districtID) seed(546): reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
-ritest trt _b[trt], reps(1000) cluster(uniqueVendorID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
-ritest trt _b[trt], reps(1000) cluster(uniqueVendorID) strata(districtID) seed(546): reg ihs_fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
+ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
+ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
+ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg ihs_fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
 *mht: implement Romano-Wolf (2005) procedure, pval: *[allows for arbitrary dependence and corrects for familywise error rate (FWER) (see: Clarke, Romano, and Wolf (2020))]**
-rwolf fd fdamt ihs_fdamt, indepvar(trt trt2 trt3 trt4) reps(1000) seed(124) controls(i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1) //family (misconduct: 0/1, amount)
+rwolf fd fdamt ihs_fdamt, indepvar(trt trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1) //family (misconduct: 0/1, amount)
 *attrition bounds
 leebounds fd trt, level(95) cieffect tight() 
 leebounds fdamt trt, level(95) cieffect tight() 
@@ -178,23 +178,23 @@ leebounds ihs_fdamt trt, level(95) cieffect tight()
 *SEPARATE*
 *wild cluster bootstrap, pval
 reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4, r cluster(uniqueVendorID) level(95)
-boottest trt2, rep(1000) level(95) nogr
-boottest trt3, rep(1000) level(95) nogr
-boottest trt4, rep(1000) level(95) nogr
+boottest trt2, rep($bootstrap_reps) level(95) nogr
+boottest trt3, rep($bootstrap_reps) level(95) nogr
+boottest trt4, rep($bootstrap_reps) level(95) nogr
 reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4, r cluster(uniqueVendorID) level(95)
-boottest trt2, rep(1000) level(95) nogr
-boottest trt3, rep(1000) level(95) nogr
-boottest trt4, rep(1000) level(95) nogr
+boottest trt2, rep($bootstrap_reps) level(95) nogr
+boottest trt3, rep($bootstrap_reps) level(95) nogr
+boottest trt4, rep($bootstrap_reps) level(95) nogr
 reg ihs_fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4, r cluster(uniqueVendorID) level(95)
-boottest trt2, rep(1000) level(95) nogr
-boottest trt3, rep(1000) level(95) nogr
-boottest trt4, rep(1000) level(95) nogr
+boottest trt2, rep($bootstrap_reps) level(95) nogr
+boottest trt3, rep($bootstrap_reps) level(95) nogr
+boottest trt4, rep($bootstrap_reps) level(95) nogr
 *randomization inf: permutation test, pval
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) cluster(uniqueVendorID) strata(districtID) seed(546): reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) cluster(uniqueVendorID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) cluster(uniqueVendorID) strata(districtID) seed(546): reg ihs_fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg ihs_fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
 *mht: implement Romano-Wolf (2005) procedure, pval
-rwolf fd fdamt ihs_fdamt, indepvar(trt2 trt3 trt4) reps(1000) seed(124) controls(i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1) //family (misconduct: 0/1, amount)
+rwolf fd fdamt ihs_fdamt, indepvar(trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1) //family (misconduct: 0/1, amount)
 *attrition bounds
 leebounds fd trt2, level(95) cieffect tight() 
 leebounds fd trt3, level(95) cieffect tight() 
@@ -207,7 +207,7 @@ leebounds fdamt trt4, level(95) cieffect tight()
 leebounds ihs_fdamt trt2, level(95) cieffect tight() 
 leebounds ihs_fdamt trt3, level(95) cieffect tight() 
 leebounds ihs_fdamt trt4, level(95) cieffect tight() 
-?
+
 
 
 
@@ -219,14 +219,14 @@ leebounds ihs_fdamt trt4, level(95) cieffect tight()
 keep if _merge==1
 *wild cluster bootstrap, pval
 reg fd i.distXtrXdateFes trt, r cluster(uniqueLocalityID) level(95)
-boottest trt, rep(1000) level(95) nogr
+boottest trt, rep($bootstrap_reps) level(95) nogr
 reg fdamt i.distXtrXdateFes trt, r cluster(uniqueLocalityID) level(95)
-boottest trt, rep(1000) level(95) nogr
+boottest trt, rep($bootstrap_reps) level(95) nogr
 *randomization inf: permutation test, pval
-ritest trt _b[trt], reps(1000) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fd i.distXtrXdateFes trt
-ritest trt _b[trt], reps(1000) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes trt
+ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fd i.distXtrXdateFes trt
+ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes trt
 *mht: implement Romano-Wolf (2005) procedure, pval
-rwolf fd fdamt ihs_fdamt, indepvar(trt trt2 trt3 trt4) reps(1000) seed(124) controls(i.distXtrXdateFes) //family (misconduct: 0/1, amount)
+rwolf fd fdamt ihs_fdamt, indepvar(trt trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.distXtrXdateFes) //family (misconduct: 0/1, amount)
 *attrition bounds-lee
 leebounds fd trt, level(95) cieffect tight() 
 leebounds fdamt trt, level(95) cieffect tight() 
@@ -237,48 +237,48 @@ leebounds fdamt trt, level(95) cieffect tight()
 keep if _merge==1
 *wild cluster bootstrap, pval
 reg fd i.distXtrXdateFes trt2 trt3 trt4, r cluster(uniqueLocalityID) level(95)
-boottest trt2, rep(1000) level(95) nogr seed(15465)
-boottest trt3, rep(1000) level(95) nogr seed(15465)
-boottest trt4, rep(1000) level(95) nogr seed(15465)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(15465)
 reg fdamt i.distXtrXdateFes trt2 trt3 trt4, r cluster(uniqueLocalityID) level(95)
-boottest trt2, rep(1000) level(95) nogr seed(15465)
-boottest trt3, rep(1000) level(95) nogr seed(15465)
-boottest trt4, rep(1000) level(95) nogr seed(15465)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(15465)
 *randomization inf: permutation test, pval
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fd i.distXtrXdateFes trt2 trt3 trt4
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fd i.distXtrXdateFes trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes trt2 trt3 trt4
 *mht: implement Romano-Wolf (2005) procedure, pval
-rwolf fd fdamt ihs_fdamt, indepvar(trt trt2 trt3 trt4) reps(1000) seed(124) controls(i.distXtrXdateFes) //family (misconduct: 0/1, amount)
+rwolf fd fdamt ihs_fdamt, indepvar(trt trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.distXtrXdateFes) //family (misconduct: 0/1, amount)
 
 *attrition bounds-lee
 **1. [Lee Bounds]**
 foreach x of varlist trt2 trt3 trt4 {
-leebounds fd `x', level(95) cieffect tight() 
+	leebounds fd `x', level(95) cieffect tight() 
 }
 *
 foreach x of varlist trt2 trt3 trt4 {
-leebounds fdamt `x', level(95) cieffect tight() 
+	leebounds fdamt `x', level(95) cieffect tight() 
 }
 *
 **2. [Behajel et al. Bounds]**
 *denote as "all obs selected" or Not applicable here (no phone calls or repeat visits allowed)
-?
+
 
 
 
 ** (1) Heterogeneity: Vendor Competition & Gender
 *Result: much effects on programs in more competitive local markets (as measure by -HHI)
-use "$dta_loc/FINAL AUDIT DATA/_Francis/analyzed_EndlineAuditData.dta", clear
+use "$dta_loc_repl/01_intermediate/analyzed_EndlineAuditData.dta", clear
 egen uniqueVendorID=group(ge01 ge02 ge03) //NOTE: uniqueVendorID = xv_locality, throughout
 
 drop _merge
-merge m:m ge01 ge02 ge03 using "$dta_loc/data-Mgt/Stats?/pct_female_MktcensusStar"
+merge m:m ge01 ge02 ge03 using "$dta_loc_repl/01_intermediate/pct_female_MktcensusStar"
 **NOTE: loccodee = correct, loccode=incorrect
 *br loccodex loccode loccodee
 drop _merge
 *districtName localityName localityCode
 gen double localityCode_j = loccodee 
-merge m:m localityCode_j using "$dta_loc/sampling?/Treatments_4gps_9dist"
+merge m:m localityCode_j using "$dta_loc_repl/01_intermediate/Treatments_4gps_9dist"
 
 *COMPETITION
 *br loccodee localityCode_j loccode
@@ -309,9 +309,9 @@ reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q
 
 
 ** (2) Heterogeneity: Illiteracy + Bundled stores
-use "$dta_loc/FINAL AUDIT DATA/_Francis/analyzed_EndlineAuditData.dta", clear
+use "$dta_loc_repl/01_intermediate/analyzed_EndlineAuditData.dta", clear
 drop _merge
-merge m:m ge02 using "$dta_loc/FINAL AUDIT DATA/_Francis/mkt_aiVendorBetter.dta"
+merge m:m ge02 using "$dta_loc_repl/01_intermediate/mkt_aiVendorBetter.dta"
 keep if _merge==3
 
 gen bundle=(m3q1==2) if !missing(m3q1) //bundle shops

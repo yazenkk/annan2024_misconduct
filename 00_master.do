@@ -8,6 +8,8 @@ Date: 6/20/2024
 clear all
 set graphics off
 set seed 100001 // from scripts: demand, revenues
+global bootstrap_reps 100
+
 
 ** set globals
 if c(username) == "yazenkashlan" {
@@ -53,13 +55,11 @@ version 10
 do "$do_loc/_followups-organized_surveys"
 version 18
 
-** CONTINUE HERE
-// do misconduct, beliefs, etc
-
-do "$do_loc/Beliefs_Mar.19.2023"
-do "$do_loc/Demand_Mar.19.2023"
-do "$do_loc/Misconduct_Mar.19.2023"
-do "$do_loc/Revenues_Mar.19.2023"
-do "$do_loc/Shocks_Mar.19.2023"
+** Main analysis
+do "$do_loc/Beliefs_Mar.19.2023.do"
+do "$do_loc/Demand_Mar.19.2023.do"
+do "$do_loc/Misconduct_Mar.19.2023.do"
+do "$do_loc/Revenues_Mar.19.2023.do"
+do "$do_loc/Shocks_Mar.19.2023.do"
 
 

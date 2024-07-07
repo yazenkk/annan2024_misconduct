@@ -215,11 +215,11 @@ test _b[trt2] + _b[trt3] =_b[trt4]
 *POOLED
 ***wild cluster bootstrap, pval
 reg ushocks_exp_t1 ushocks_exp_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(loccode) level(95)
-boottest trt, rep(1000) level(95) nogr seed(15465)
+boottest trt, rep($bootstrap_reps) level(95) nogr seed(15465)
 **randomization inf: permuntation test, pval
-ritest trtment _b[trtment], reps(1000) cluster(loccode) strata(districtID) seed(546): reg ushocks_exp_t1 ushocks_exp_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment
+ritest trtment _b[trtment], reps($bootstrap_reps) cluster(loccode) strata(districtID) seed(546): reg ushocks_exp_t1 ushocks_exp_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment
 **mht: implement Romano-Wolf (2005) procedure, pval
-rwolf ushocks_exp_t1 revenue_t1 health_t1 hhexpense_t1 c_pov_likelihood_t1, indepvar(trtment trt2 trt3 trt4) reps(1000) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 4 0-1 shocks, poverty %)
+rwolf ushocks_exp_t1 revenue_t1 health_t1 hhexpense_t1 c_pov_likelihood_t1, indepvar(trtment trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 4 0-1 shocks, poverty %)
 **attrition bounds
 **1. [Lee Bounds]**
 leebounds ushocks_exp_t1 trtment, level(95) cieffect tight()
@@ -249,13 +249,13 @@ foreach x of varlist ushocks_exp_t1 {
 *SEPARATE
 ***wild cluster bootstrap, pval
 reg ushocks_exp_t1 ushocks_exp_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if _merge==3, cluster(loccode) level(95)
-boottest trt2, rep(1000) level(95) nogr seed(15465)
-boottest trt3, rep(1000) level(95) nogr seed(15465)
-boottest trt4, rep(1000) level(95) nogr seed(15465)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(15465)
 **randomization inf: permuntation test, pval
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) cluster(loccode) strata(districtID) seed(546): reg ushocks_exp_t1 ushocks_exp_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(loccode) strata(districtID) seed(546): reg ushocks_exp_t1 ushocks_exp_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4
 **mht: implement Romano-Wolf (2005) procedure, pval
-rwolf ushocks_exp_t1 revenue_t1 health_t1 hhexpense_t1 c_pov_likelihood_t1, indepvar(trt2 trt3 trt4) reps(1000) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 4 0-1 shocks, poverty %)
+rwolf ushocks_exp_t1 revenue_t1 health_t1 hhexpense_t1 c_pov_likelihood_t1, indepvar(trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 4 0-1 shocks, poverty %)
 **attrition bounds
 **1. [Lee Bounds]**
 foreach x of varlist trt2 trt3 trt4 {

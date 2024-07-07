@@ -129,14 +129,14 @@ reg honestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed
 **************
 *wild cluster bootstrap, pval
 reg honestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if dropout_belief==0, r cluster(uniqueLocalityID) level(95)
-boottest trtment, rep(1000) level(95) nogr seed(546)
+boottest trtment, rep($bootstrap_reps) level(95) nogr seed(546)
 *randomization inf: permuntation test, pval
 preserve
 keep if dropout_belief==0 //ON & OFF
-ritest trtment _b[trtment], reps(1000) cluster(uniqueLocalityID) strata(districtID) seed(546): reg honestVendors1 i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment 
+ritest trtment _b[trtment], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg honestVendors1 i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment 
 restore
 *mht: implement Romano-Wolf (2005) procedure, pval
-rwolf honestVendors1 dhonestVendors1 if dropout_belief==0, indepvar(trtment trt2 trt3 trt4) reps(1000) seed(124) controls(i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (1=beliefs & 2=update)
+rwolf honestVendors1 dhonestVendors1 if dropout_belief==0, indepvar(trtment trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (1=beliefs & 2=update)
 *attrition bounds
 leebounds honestVendors1 trtment, level(95) cieffect tight() 
 
@@ -144,16 +144,16 @@ leebounds honestVendors1 trtment, level(95) cieffect tight()
 ****************
 *wild cluster bootstrap, pval
 reg honestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if dropout_belief==0, r cluster(uniqueLocalityID) level(95)
-boottest trt2, rep(1000) level(95) nogr seed(546)
-boottest trt3, rep(1000) level(95) nogr seed(546)
-boottest trt4, rep(1000) level(95) nogr seed(546)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(546)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(546)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(546)
 *randomization inf: permuntation test, pval
 preserve
 keep if dropout_belief==0 //ON & OFF
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) cluster(uniqueLocalityID) strata(districtID) seed(546): reg honestVendors1 i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg honestVendors1 i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 
 restore
 *mht: implement Romano-Wolf (2005) procedure, pval
-rwolf honestVendors1 dhonestVendors1 if dropout_belief==0, indepvar(trt2 trt3 trt4) reps(1000) seed(124) controls(i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (1=beliefs & 2=update)
+rwolf honestVendors1 dhonestVendors1 if dropout_belief==0, indepvar(trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (1=beliefs & 2=update)
 *attrition bounds
 leebounds honestVendors1 trt2, level(95) cieffect tight() 
 leebounds honestVendors1 trt3, level(95) cieffect tight() 
@@ -164,18 +164,18 @@ leebounds honestVendors1 trt4, level(95) cieffect tight()
 ****************
 *wild cluster bootstrap, pval
 reg dhonestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome c.trtment##c.fdH0 if dropout_belief==0, r cluster(uniqueLocalityID) level(95)
-*boottest trtment, rep(1000) level(95) nogr seed(546)
-*boottest fdH0, rep(1000) level(95) nogr seed(546)
-boottest c.trtment#c.fdH0, rep(1000) level(95) nogr seed(546)
+*boottest trtment, rep($bootstrap_reps) level(95) nogr seed(546)
+*boottest fdH0, rep($bootstrap_reps) level(95) nogr seed(546)
+boottest c.trtment#c.fdH0, rep($bootstrap_reps) level(95) nogr seed(546)
 *randomization inf: permuntation test, pval
 preserve
 keep if dropout_belief==0 //ON & OFF
 gen trtmentXfdH0= trtment*fdH0  if dropout_belief==0
-ritest trtment trtmentXfdH0 fdH0 _b[trtment] _b[trtmentXfdH0] _b[fdH0], reps(1000) cluster(uniqueLocalityID) strata(districtID) seed(546): reg dhonestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome c.trtment trtmentXfdH0 fdH0
+ritest trtment trtmentXfdH0 fdH0 _b[trtment] _b[trtmentXfdH0] _b[fdH0], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg dhonestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome c.trtment trtmentXfdH0 fdH0
 restore
 *mht: implement Romano-Wolf (2005) procedure, pval
 gen trtmentXfdH0= trtment*fdH0 if dropout_belief==0
-rwolf dhonestVendors1 honestVendors1 if dropout_belief==0, indepvar(trtment trt2 trt3 trt4 trtmentXfdH0 fdH0) reps(1000) seed(124) controls(i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (1=beliefs & 2=update)
+rwolf dhonestVendors1 honestVendors1 if dropout_belief==0, indepvar(trtment trt2 trt3 trt4 trtmentXfdH0 fdH0) reps($bootstrap_reps) seed(124) controls(i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (1=beliefs & 2=update)
 *attrition bounds
 leebounds dhonestVendors1 trtmentXfdH0, level(95) cieffect tight() 
 
@@ -183,22 +183,22 @@ leebounds dhonestVendors1 trtmentXfdH0, level(95) cieffect tight()
 **************
 *wild cluster bootstrap, pval
 reg dhonestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome c.trt2##c.fdH0 c.trt3##c.fdH0 c.trt4##c.fdH0 if dropout_belief==0, r cluster(uniqueLocalityID) level(95)
-boottest c.trt2#c.fdH0, rep(1000) level(95) nogr seed(546) //ignore rest, not reporting in Table so OK
-boottest c.trt3#c.fdH0, rep(1000) level(95) nogr seed(546)
-boottest c.trt4#c.fdH0, rep(1000) level(95) nogr seed(546)
+boottest c.trt2#c.fdH0, rep($bootstrap_reps) level(95) nogr seed(546) //ignore rest, not reporting in Table so OK
+boottest c.trt3#c.fdH0, rep($bootstrap_reps) level(95) nogr seed(546)
+boottest c.trt4#c.fdH0, rep($bootstrap_reps) level(95) nogr seed(546)
 *randomization inf: permuntation test, pval
 preserve
 keep if dropout_belief==0 //ON & OFF
 gen trt2XfdH0= trt2*fdH0 if dropout_belief==0
 gen trt3XfdH0= trt3*fdH0 if dropout_belief==0
 gen trt4XfdH0= trt4*fdH0 if dropout_belief==0
-ritest trt2 trt3 trt4 trt2XfdH0 trt3XfdH0 trt4XfdH0 fdH0 _b[trt2] _b[trt3] _b[trt4] _b[trt2XfdH0] _b[trt3XfdH0] _b[trt4XfdH0] _b[fdH0], reps(1000) cluster(uniqueLocalityID) strata(districtID) seed(546): reg dhonestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 trt2XfdH0 trt3XfdH0 trt4XfdH0 fdH0
+ritest trt2 trt3 trt4 trt2XfdH0 trt3XfdH0 trt4XfdH0 fdH0 _b[trt2] _b[trt3] _b[trt4] _b[trt2XfdH0] _b[trt3XfdH0] _b[trt4XfdH0] _b[fdH0], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg dhonestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 trt2XfdH0 trt3XfdH0 trt4XfdH0 fdH0
 restore
 *mht: implement Romano-Wolf (2005) procedure, pval
 gen trt2XfdH0= trt2*fdH0 if dropout_belief==0
 gen trt3XfdH0= trt3*fdH0 if dropout_belief==0
 gen trt4XfdH0= trt4*fdH0 if dropout_belief==0
-rwolf dhonestVendors1 honestVendors1 if dropout_belief==0, indepvar(trtment trt2 trt3 trt4 trt2XfdH0 trt3XfdH0 trt4XfdH0 fdH0) reps(1000) seed(124) controls(i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (1=beliefs & 2=update)
+rwolf dhonestVendors1 honestVendors1 if dropout_belief==0, indepvar(trtment trt2 trt3 trt4 trt2XfdH0 trt3XfdH0 trt4XfdH0 fdH0) reps($bootstrap_reps) seed(124) controls(i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (1=beliefs & 2=update)
 *attrition bounds
 leebounds dhonestVendors1 trt2XfdH0, level(95) cieffect tight() 
 leebounds dhonestVendors1 trt2XfdH0, level(95) cieffect tight() 

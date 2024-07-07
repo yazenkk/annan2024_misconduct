@@ -238,22 +238,22 @@ test _b[1.trt] + _b[2.trt] =_b[3.trt]
 *POOLED
 ***wild cluster bootstrap, pval
 reg ihs_mmtotamt_t1 ihs_mmtotamt_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment, cluster(loccode) level(95)
-boottest trt, rep(1000) level(95) nogr seed(15465)
+boottest trt, rep($bootstrap_reps) level(95) nogr seed(15465)
 reg mmUser_t1 mmUser_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment, cluster(loccode) level(95)
-boottest trt, rep(1000) level(95) nogr seed(1546)
+boottest trt, rep($bootstrap_reps) level(95) nogr seed(1546)
 reg save_t1 save_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment, cluster(loccode) level(95)
-boottest trt, rep(1000) level(95) nogr seed(1546)
+boottest trt, rep($bootstrap_reps) level(95) nogr seed(1546)
 reg score_MMoneyDd_t1 score_MMoneyDd_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment, cluster(loccode) level(95)
-boottest trt, rep(1000) level(95) nogr seed(1546)
+boottest trt, rep($bootstrap_reps) level(95) nogr seed(1546)
 **randomization inf: permuntation test, pval
-ritest trtment _b[trtment], reps(1000) cluster(loccode) strata(districtID) seed(546): reg ihs_mmtotamt_t1 ihs_mmtotamt_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment
-ritest trtment _b[trtment], reps(1000) cluster(loccode) strata(districtID) seed(546): reg mmUser_t1 mmUser_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment
-ritest trtment _b[trtment], reps(1000) cluster(loccode) strata(districtID) seed(546): reg save_t1 save_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment
-ritest trtment _b[trtment], reps(1000) cluster(loccode) strata(districtID) seed(546): reg score_MMoneyDd_t1 score_MMoneyDd_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment
+ritest trtment _b[trtment], reps($bootstrap_reps) cluster(loccode) strata(districtID) seed(546): reg ihs_mmtotamt_t1 ihs_mmtotamt_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment
+ritest trtment _b[trtment], reps($bootstrap_reps) cluster(loccode) strata(districtID) seed(546): reg mmUser_t1 mmUser_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment
+ritest trtment _b[trtment], reps($bootstrap_reps) cluster(loccode) strata(districtID) seed(546): reg save_t1 save_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment
+ritest trtment _b[trtment], reps($bootstrap_reps) cluster(loccode) strata(districtID) seed(546): reg score_MMoneyDd_t1 score_MMoneyDd_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment
 **mht: implement Romano-Wolf (2005) procedure, pval
 tab trt if !missing(trt), gen(trt) //gen trts again and verifY
 gen trt01 = (trt !=0) if !missing(trt)
-rwolf ihs_mmtotamt_t1 mmUser_t1 save_t1 score_MMoneyDd_t1, indepvar(trtment trt2 trt3 trt4) reps(1000) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (demand: amount, 01 usage, 01 savings)
+rwolf ihs_mmtotamt_t1 mmUser_t1 save_t1 score_MMoneyDd_t1, indepvar(trtment trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (demand: amount, 01 usage, 01 savings)
 **attrition bounds
 **1. [Lee Bounds]**
 leebounds ihs_mmtotamt_t1 trtment, level(95) cieffect tight() 
@@ -287,28 +287,28 @@ foreach x of varlist ihs_mmtotamt_t1 mmUser_t1 save_t1 score_MMoneyDd_t1 {
 *SEPARATE
 ***wild cluster bootstrap, pval
 reg ihs_mmtotamt_t1 ihs_mmtotamt_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4, cluster(loccode) level(95)
-boottest trt2, rep(1000) level(95) nogr seed(15465)
-boottest trt3, rep(1000) level(95) nogr seed(15465)
-boottest trt4, rep(1000) level(95) nogr seed(15465)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(15465)
 reg mmUser_t1 mmUser_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4, cluster(loccode) level(95)
-boottest trt2, rep(1000) level(95) nogr seed(1546)
-boottest trt3, rep(1000) level(95) nogr seed(1546)
-boottest trt4, rep(1000) level(95) nogr seed(1546)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(1546)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(1546)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(1546)
 reg save_t1 save_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4, cluster(loccode) level(95)
-boottest trt2, rep(1000) level(95) nogr seed(1546)
-boottest trt3, rep(1000) level(95) nogr seed(1546)
-boottest trt4, rep(1000) level(95) nogr seed(1546)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(1546)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(1546)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(1546)
 reg score_MMoneyDd_t1 score_MMoneyDd_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4, cluster(loccode) level(95)
-boottest trt2, rep(1000) level(95) nogr seed(1546)
-boottest trt3, rep(1000) level(95) nogr seed(1546)
-boottest trt4, rep(1000) level(95) nogr seed(1546)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(1546)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(1546)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(1546)
 **randomization inf: permuntation test, pval
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) cluster(loccode) strata(districtID) seed(546): reg ihs_mmtotamt_t1 ihs_mmtotamt_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) cluster(loccode) strata(districtID) seed(546): reg mmUser_t1 mmUser_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) cluster(loccode) strata(districtID) seed(546): reg save_t1 save_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) cluster(loccode) strata(districtID) seed(546): reg score_MMoneyDd_t1 score_MMoneyDd_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(loccode) strata(districtID) seed(546): reg ihs_mmtotamt_t1 ihs_mmtotamt_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(loccode) strata(districtID) seed(546): reg mmUser_t1 mmUser_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(loccode) strata(districtID) seed(546): reg save_t1 save_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(loccode) strata(districtID) seed(546): reg score_MMoneyDd_t1 score_MMoneyDd_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4
 **mht: implement Romano-Wolf (2005) procedure, pval
-rwolf ihs_mmtotamt_t1 mmUser_t1 save_t1 score_MMoneyDd_t1, indepvar(trt2 trt3 trt4) reps(1000) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (demand: amount, 01 usage, 01 savings)
+rwolf ihs_mmtotamt_t1 mmUser_t1 save_t1 score_MMoneyDd_t1, indepvar(trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (demand: amount, 01 usage, 01 savings)
 **attrition bounds
 **1. [Lee Bounds]**
 foreach x of varlist trt2 trt3 trt4 {

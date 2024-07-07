@@ -159,14 +159,14 @@ test _b[trt2] + _b[trt3] =_b[trt4]
 *POOLED
 ***wild cluster bootstrap, pval
 reg mmtotamt_cust_t1 mmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment, r level(95)
-boottest trt, rep(1000) level(95) nogr seed(15465)
+boottest trt, rep($bootstrap_reps) level(95) nogr seed(15465)
 reg bus_exit i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment, r level(95)
-boottest trt, rep(1000) level(95) nogr seed(1546)
+boottest trt, rep($bootstrap_reps) level(95) nogr seed(1546)
 **randomization inf: permuntation test, pval
-ritest trtment _b[trtment], reps(1000) strata(districtID) seed(546): reg mmtotamt_cust_t1 mmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment
-ritest trtment _b[trtment], reps(1000) strata(districtID) seed(546): reg bus_exit i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment
+ritest trtment _b[trtment], reps($bootstrap_reps) strata(districtID) seed(546): reg mmtotamt_cust_t1 mmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment
+ritest trtment _b[trtment], reps($bootstrap_reps) strata(districtID) seed(546): reg bus_exit i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment
 **mht: implement Romano-Wolf (2005) procedure, pval
-rwolf mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trtment trt2 trt3 trt4) reps(1000) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 3 sales measures: momo; non-momo; total + bus exit)
+rwolf mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trtment trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 3 sales measures: momo; non-momo; total + bus exit)
 **attrition bounds
 **1. [Lee Bounds]**
 leebounds mmtotamt_cust_t1 trtment, level(95) cieffect tight() 
@@ -198,18 +198,18 @@ foreach x of varlist mmtotamt_cust_t1  {
 **SEPARATE
 ***wild cluster bootstrap, pval
 reg mmtotamt_cust_t1 mmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4, r level(95)
-boottest trt2, rep(1000) level(95) nogr seed(15465)
-boottest trt3, rep(1000) level(95) nogr seed(15465)
-boottest trt4, rep(1000) level(95) nogr seed(15465)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(15465)
 reg bus_exit i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4, r level(95)
-boottest trt2, rep(1000) level(95) nogr seed(15465)
-boottest trt3, rep(1000) level(95) nogr seed(15465)
-boottest trt4, rep(1000) level(95) nogr seed(15465)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(15465)
 **randomization inf: permuntation test, pval
-ritest  trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) strata(districtID) seed(546): reg mmtotamt_cust_t1 mmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
-ritest  trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) strata(districtID) seed(546): reg bus_exit i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
+ritest  trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) strata(districtID) seed(546): reg mmtotamt_cust_t1 mmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
+ritest  trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) strata(districtID) seed(546): reg bus_exit i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
 **mht: implement Romano-Wolf (2005) procedure, pval
-rwolf mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trt2 trt3 trt4) reps(1000) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 3 sales measures: momo; non-momo; total + bus exit)
+rwolf mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 3 sales measures: momo; non-momo; total + bus exit)
 **attrition bounds
 **1. [Lee Bounds]**
 foreach x of varlist trt2 trt3 trt4 {
@@ -295,14 +295,14 @@ sum nonmmtotamt_cust_t1 totamt_cust_t1 if trtment==0
 *POOLED
 ***wild cluster bootstrap, pval
 reg nonmmtotamt_cust_t1 nonmmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment, r level(95)
-boottest trt, rep(1000) level(95) nogr seed(15465)
+boottest trt, rep($bootstrap_reps) level(95) nogr seed(15465)
 reg totamt_cust_t1 totamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment, r level(95)
-boottest trt, rep(1000) level(95) nogr seed(1546)
+boottest trt, rep($bootstrap_reps) level(95) nogr seed(1546)
 **randomization inf: permuntation test, pval
-ritest trtment _b[trtment], reps(1000) strata(districtID) seed(546): reg nonmmtotamt_cust_t1 nonmmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment
-ritest trtment _b[trtment], reps(1000) strata(districtID) seed(546): reg totamt_cust_t1 totamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment
+ritest trtment _b[trtment], reps($bootstrap_reps) strata(districtID) seed(546): reg nonmmtotamt_cust_t1 nonmmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment
+ritest trtment _b[trtment], reps($bootstrap_reps) strata(districtID) seed(546): reg totamt_cust_t1 totamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment
 **mht: implement Romano-Wolf (2005) procedure, pval
-rwolf nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trtment trt2 trt3 trt4) reps(1000) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 3 sales measures: momo; non-momo; total + bus exit)
+rwolf nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trtment trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 3 sales measures: momo; non-momo; total + bus exit)
 **attrition bounds
 **1. [Lee Bounds]**
 leebounds nonmmtotamt_cust_t1 trtment, level(95) cieffect tight() 
@@ -334,18 +334,18 @@ foreach x of varlist nonmmtotamt_cust_t1 totamt_cust_t1  {
 **SEPARATE
 ***wild cluster bootstrap, pval
 reg nonmmtotamt_cust_t1 nonmmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4, r level(95)
-boottest trt2, rep(1000) level(95) nogr seed(15465)
-boottest trt3, rep(1000) level(95) nogr seed(15465)
-boottest trt4, rep(1000) level(95) nogr seed(15465)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(15465)
 reg totamt_cust_t1 totamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4, r level(95)
-boottest trt2, rep(1000) level(95) nogr seed(15465)
-boottest trt3, rep(1000) level(95) nogr seed(15465)
-boottest trt4, rep(1000) level(95) nogr seed(15465)
+boottest trt2, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt3, rep($bootstrap_reps) level(95) nogr seed(15465)
+boottest trt4, rep($bootstrap_reps) level(95) nogr seed(15465)
 **randomization inf: permuntation test, pval
-ritest  trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) strata(districtID) seed(546): reg nonmmtotamt_cust_t1 nonmmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
-ritest  trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps(1000) strata(districtID) seed(546): reg totamt_cust_t1 totamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
+ritest  trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) strata(districtID) seed(546): reg nonmmtotamt_cust_t1 nonmmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
+ritest  trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) strata(districtID) seed(546): reg totamt_cust_t1 totamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
 **mht: implement Romano-Wolf (2005) procedure, pval
-rwolf mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trt2 trt3 trt4) reps(1000) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 3 sales measures: momo; non-momo; total + bus exit)
+rwolf mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (all 3 sales measures: momo; non-momo; total + bus exit)
 **attrition bounds
 **1. [Lee Bounds]**
 foreach x of varlist trt2 trt3 trt4 {
