@@ -4,8 +4,10 @@ Date: 6/20/2024
 
 */
 
+** Initialize
 clear all
 set graphics off
+set seed 100001 // from scripts: demand, revenues
 
 ** set globals
 if c(username) == "yazenkashlan" {
@@ -22,9 +24,6 @@ if c(username) == "______" {
 	global dta_loc "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud"
 	global do_loc "" // enter do file location
 }
-
-
-set seed 100001 // from scripts: demand, revenues
 
 
 ** install programs

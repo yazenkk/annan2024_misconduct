@@ -593,15 +593,6 @@ tab under_bbelief_fc
 **Get unique vender (aka Mkt) ID?
 egen universalid = concat(loccode vendor_id)
 
-** [insert note]
-sum c8q6, d //above median - preserve variance
-gen trustNo=(c8q6<=3)
-gen trustYes=(c8q6>3)
-tab trustNo 
-tab trustYes
-sum trustNo trustYes
-ttesti 1275 0.62 0.48 779 0.37 0.48 //pval=0.000
-
 
 saveold "$dta_loc_repl/01_intermediate/Mkt_fieldData_census", replace
 

@@ -1,7 +1,9 @@
 /*
 Combine baseline and raw datasets
 
-Source: Commands_Test_f_evaluation.do
+Source: Commands_Test_f_evaluation_consumers.do
+		The output dataset is also generated in Commands_Test_f_evaluation
+		but that is outdated.
 Input: 
 	- Customer
 	- Mkt_census_xtics_+_interventions_localized
@@ -15,11 +17,12 @@ Output:
 
 
 
-*Customers?
+
+*Customer analysis?
+set seed 100001
 **************
 ***************
-
-use "$dta_loc_repl/00_raw_anon/Customer.dta", clear
+use "$dta_loc_repl/01_intermediate/CustomersData.dta", clear
 
 *hist c1a2
 *hist c1b2
@@ -37,9 +40,18 @@ merge m:m loccode customer_id using "$dta_loc_repl/01_intermediate/Mkt_census_xt
 *keep if _merge ==3
 *drop if _n>950
 
-*drop if date_of_interview == 10052020
-drop if date_of_interview == 11052020
-*drop if date_of_interview == 14052020
+**attrition stats: numbers
+tab intervention
+gen dropouts = (_merge==2)
+tab intervention if dropouts==0
+*get mean=% and SD=%?
+gen ins=(dropouts==0)
+tabstat ins, stat(mean sd n) by(intervention)
+tabstat dropouts, stat(mean sd n) by(intervention)
+
+
+
+*drop if missing(c1a2)
 
 
 tab intervention
@@ -67,33 +79,31 @@ egen xloc =group(loccodex)
 *tab xloc
 
 
-*distplot c0a //customers answer quicker than vendors/business (as expected)
+*distplot c0a, saving("distplot_ccalls", replace) //customers answer quicker than vendors/business (as expected)
+*hist c0a, percent xtitle("Customers: Number of phone call times before answering survey")
+*gr export "/Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/FFPhone in 2020/_impact-evaluation/customer_calltimeS.eps", replace
 
 
-*
-**Validy: Attrition?
 **(1) differential attrition/ drop outs?
 tab _merge
-gen dropouts = (_merge==2)
-ciplot dropouts, by(trtment) title("differential attrition?")
-ciplot dropouts, by(trt) title("differential attrition?")
+*ciplot dropouts, by(trtment) title("differential attrition?")
+*ciplot dropouts, by(trt) title("differential attrition?")
 bys trtment: sum dropouts 
 dis 0.23-0.18 //control has 5pp higher attrition, responserate for treatment=0.82=82% 
 tab dropouts if trtment==0
 tab dropouts if trtment==1
 **so trim 0.05/0.82 = 6.1% of treatment group
 **764 responses, so triming 46 customers
-/* YK commented out 7/6/2024. Figure out where y is from
-gen item= y if trtment==1
-gen iranklo_a =rank(item) if trtment==1, unique
-gen iranklo_b =rank(-item) if trtment==1, unique
-gen yupper= y
-replace yupper=. if trtment==1 & iranklo_a<=46
-gen ylower= y
-replace ylower=. if trtment==1 & iranklo_b<=46
-areg ylower trtment, a(districtID) robust
-areg yupper trtment, a(districtID) robust
-*/
+
+*gen item= y if trtment==1
+*gen iranklo_a =rank(item) if trtment==1, unique
+*gen iranklo_b =rank(-item) if trtment==1, unique
+*gen yupper= y
+*replace yupper=. if trtment==1 & iranklo_a<=46
+*gen ylower= y
+*replace ylower=. if trtment==1 & iranklo_b<=46
+*areg ylower trtment, a(districtID) robust
+*areg yupper trtment, a(districtID) robust
 
 
 bys trt: sum dropouts 
@@ -125,13 +135,13 @@ reg migrate_score_c dropouts, cluster(loccode)
 
 **poverty?
 reg c2q1 dropouts, cluster(loccode)
-reg c2q2 dropouts, cluster(loccode)
+*reg c2q2 dropouts, cluster(loccode)
 reg c2q3 dropouts, cluster(loccode)
 reg c2q4 dropouts, cluster(loccode)
 reg c2q5 dropouts, cluster(loccode)
-reg c2q6 dropouts, cluster(loccode)
-reg c2q7 dropouts, cluster(loccode)
-reg c2q8 dropouts, cluster(loccode)
+*reg c2q6 dropouts, cluster(loccode)
+*reg c2q7 dropouts, cluster(loccode)
+*reg c2q8 dropouts, cluster(loccode)
 reg c2q9 dropouts, cluster(loccode)
 reg c2q10 dropouts, cluster(loccode)
 reg c_pov_likelihood dropouts, cluster(loccode)
@@ -164,7 +174,7 @@ reg wklyTotUseVol dropouts, cluster(loccode)
 reg wklyNobUsage_nonM dropouts, cluster(loccode)
 reg wklyTotUseVol_nonM dropouts, cluster(loccode)
 **get distribution effects-main? which bound is more likely?
-// sqreg wklyTotUseVol dropouts, q(.25 .5 .75)
+*sqreg wklyTotUseVol dropouts, q(.25 .5 .75)
 
 
 *3c borrow + save behavior?
@@ -173,7 +183,7 @@ gen likelysaveMMoney =c5q5
 reg likelyborrowMMoney dropouts, cluster(loccode)
 reg likelysaveMMoney dropouts, cluster(loccode)
 **get distribution effects-main? which bound is more likely?
-// sqreg likelysaveMMoney dropouts, q(.25 .5 .75)
+*sqreg likelysaveMMoney dropouts, q(.25 .5 .75)
 
 /* 
 reg wklyNobBorrow dropouts, cluster(loccode)
@@ -188,60 +198,55 @@ probit dropouts cfemale cakan cmarried cage cEducAny cselfemployed cselfIncome c
 test cfemale cmarried cakan cage cEducAny cselfemployed cselfIncome cMMoneyregistered
 
 
-**Validity? Triming/bounds and Weighting exercises?
 
-
-
-
-
-**measurements...
+**Measurements...
 gen mmUser_t1 = (c1a1 > 0) if _merge==3
 gen mmUser_t0=(c4q3==1)
 replace mmUser_t0=. if missing(c4q3)
 
+
 gen mmtotnob_t1 = c1a1
 gen mmtotnob_t0 = c4q11a
-replace mmtotnob_t0=. if missing(c4q11a)
 
-gen log_mmtotamt_t1 = log(c1a2+1)
-gen mmtotamt_t0 = c4q11b
-replace mmtotamt_t0=. if missing(c4q11b)
+
+gen log_mmtotamt_t1 = log(c1a2+1) if !missing(c1a2)
+gen log_mmtotamt_t0=log(c4q11b+1) if !missing(c4q11b)
+
 
 gen mmtotamt_t1 = c1a2
-
+gen mmtotamt_t0 = c4q11b
+*hist mmtotamt_t1, discrete
 
 
 gen nonmmUser_t1 = (c1b1 > 0) if _merge==3
 gen nonmmUser_t0=(c4q18a > 0)
 replace nonmmUser_t0=. if missing(c4q18a)
 
+
 gen nonmmtotnob_t1 = c1b1
 gen nonmmtotnob_t0 = c4q18a
-replace nonmmtotnob_t0=. if missing(c4q18a)
 
-gen log_nonmmtotamt_t1 = log(c1b2+1)
+
+gen log_nonmmtotamt_t1 = log(c1b2+1) if !missing(c1b2)
+gen log_nonmmtotamt_t0 = log(c4q18b+1) if !missing(c4q18b)
+
+
+gen nonmmtotamt_t1 = c1b2
 gen nonmmtotamt_t0 = c4q18b
-replace nonmmtotamt_t0=. if missing(c4q18b)
 
-
-/**per capita?
-gen pc_c1a = c1a2/c1a1
-gen pc_wklyTotUseVol=wklyTotUseVol/wklyNobUsage
-gen pc_c1b = c1b2/c1b1
-gen pc_wklyTotUseVol_nonM=wklyTotUseVol_nonM/wklyNobUsage_nonM
-*/
 
 gen save_t1 =(c3>2) if _merge==3
 gen save_t0 =(c4q5==1)
 replace save_t0=. if missing(c4q5)
 
+
 gen indebt_t1 =(c2>2) if _merge==3
 gen indebt_t0 =(c5q1>2)
 replace indebt_t0=. if missing(c5q1)
 
-
 *tab districtID, gen(districtID)
 egen locfes = group(loccode)
 *tab locfes, gen(locfes)
+
 
 save "$dta_loc_repl/01_intermediate/Customer_+_Mktcensus_+_Interventions.dta", replace  //good? yes
