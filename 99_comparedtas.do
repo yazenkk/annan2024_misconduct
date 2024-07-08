@@ -23,13 +23,7 @@ program define cf_id
 	cf _all using `compare_dta', verbose
 end
 
-** dtas
-local private : dir "$dta_loc_repl/01_intermediate" files "*.dta"
 
-foreach dta in `private' {
-	dis "`dta'"
-
-}
 
 ** stats? datasets
 local dta "ofdrate_mktadminTransactData"  							// Looks good
@@ -49,12 +43,14 @@ local dta "analyzed_EndlineAuditData"  								// Looks good
  	use "$dta_loc_repl/00_Raw/`dta'", clear 
 	cf _all using "$dta_loc/FINAL AUDIT DATA/_Francis/`dta'.dta", verbose
 	
+cls
 local dta "mkt_aiVendorBetter"  									// Looks good
  	use "$dta_loc_repl/01_intermediate/`dta'", clear 
 	isid loccode
 	sort loccode
 	cf_id, dta("$dta_loc/FINAL AUDIT DATA/_Francis/`dta'.dta") id("loccode")
 	
+cls
 local dta "ofdrate_mktAudit_endline"  								// Looks good. Original file doesn't drop duplicate vars
 	cls
 // 	use "$dta_loc/FINAL AUDIT DATA/_Francis/`dta'.dta", clear

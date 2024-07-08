@@ -18,8 +18,9 @@ gen belief=1
 drop _merge
 keep if sample_repMkt==1
 bys loccode vendor: keep if _n==1
-saveold "$dta_loc_repl/01_intermediate/repMkt_w_VendorXtics", replace
 
+tempfile repMkt_w_VendorXtics
+save 	`repMkt_w_VendorXtics'
 
 
 	
@@ -31,7 +32,7 @@ bys loccode vendor: gen xx=_N
 tab xx
 tab login
 
-merge 1:1 loccode vendor using "$dta_loc_repl/01_intermediate/repMkt_w_VendorXtics"
+merge 1:1 loccode vendor using `repMkt_w_VendorXtics'
 keep if _merge ==3
 
 tab login

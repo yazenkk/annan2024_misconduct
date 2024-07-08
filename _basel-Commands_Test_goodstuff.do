@@ -4,17 +4,11 @@ Title:
 Input:
 	- data-Mgt/Stats?/_M_all_2_18.dta (merged raw data: M?+_M1)
 	- data-Mgt/Stats?/_CM_all_2_18.dta (merged raw data: CM?+_CM1)
-	- sampling?/sel_9Distr_137Local_List
 	
 Output:
 	Data:
-		- _CM_all_2_18.dta
-		- _M_all_2_18.dta
-		- _M_all_2_18 copy.dta (no source)
 		- Mkt_fieldData.dta/csv
 		- Mkt_fieldData_census.dta
-		- repMkt
-		- repMkt_w_xtics
 		
 	Graphs:
 		- FFPhone in 2020/_impact-evaluation/ai_customerVsvendor_graph.eps
@@ -47,10 +41,10 @@ sum MktPerLocal // 1 to 12 with avg=5 merchants
 
 **Next, add customers?
 gen locality_name= ln
-gen vendor_id= vendor
+gen vendor_id= vendor // only unique within loccode (locality)
 gen interviewer =interviewer_v
 
-merge 1:m distcode loccode vendor_id using  "$dta_loc_repl/00_raw_anon/_CM_all_2_18.dta"
+merge 1:m distcode loccode vendor_id using "$dta_loc_repl/00_raw_anon/_CM_all_2_18.dta"
 
 
 *keep if (_merge==3)

@@ -62,7 +62,7 @@ sum dropouts if trt_pool==0
 reg dropouts trt_pool, r
 reg dropouts i.trt, r
 
-
+** Figure B.5 ------------------------------------------------------------------
 distplot v0a //customers answer quicker than vendors/business (as expected)
 hist v0a, gap(10) percent xtitle("Vendors: Number of phone call times before answering survey")
 gr export "$output_loc/main_results/vendor_calltimeS.eps", replace
@@ -170,7 +170,7 @@ rwolf mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trt
 **attrition bounds
 **1. [Lee Bounds]**
 leebounds mmtotamt_cust_t1 trtment, level(95) cieffect tight() 
-leebounds bus_exit trtment, level(95) cieffect tight() 
+// leebounds bus_exit trtment, level(95) cieffect tight() 
 **2. [Behajel et al. Bounds]**
 gen attempts= v0a
 bys trtment: tab attempts

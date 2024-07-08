@@ -23,62 +23,11 @@ Output:
 	- data-Mgt/Stats?/InterventionsLocalitiesList.dta
 
 */
-use "$dta_loc_repl/01_intermediate/analyzed_EndlineAuditData.dta", clear
-
-/*
-*(1) voxdev blogpost
-bys trt: sum fd
-quietly eststo Control: mean fd if trt==0
-quietly eststo Treatment: mean fd if trt==1
-coefplot Control Treatment, vertical xlabel("") xtitle(Misconduct indicator) ytitle(Mean) recast(bar) barwidth(0.25) fcolor(*.5) ciopts(recast(rcap)) citop citype(logit) level(95) graphregion(color(white)) ylab(,nogrid)
-gr export /Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/slides/results/gr_misconduct.eps, replace
-gr save /Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/slides/results/gr_misconduct, replace
-
-gr combine ///
-"/Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/slides/results/gr_misconduct.gph" ///
-"/Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/slides/results/gr_conduct_perceptions.gph"
-gr export /Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/_xREPUTATION/slides/results/gr_misconduct_plus_perceptions.eps, replace
-*/
 
 
-/*
-adudropouts/ attrition?
-bys xv_localityy xv_vendorr: keep if _merge==3 & _n==1 //129 out of 130 rep vendors reached: attrition of just 0.8%
-tab treatment //ctr 31, pt 31, mr 32, joint 34< 35
-*/
+use "$dta_loc_repl/00_Raw_anon/analyzed_EndlineAuditData.dta", clear
 
-
-*ADD ff TO Balance Table  - AUDIT + SHOCK OUTCOMES
-use "$dta_loc_repl/01_intermediate/Mkt_census_xtics_+_interventions_localized.dta", clear
-gen ge01 = districtName
-keep intervention  locality_name ge01
-bys ge01 locality_name: keep if _n==1
-saveold "$dta_loc_repl/01_intermediate/InterventionsLocalitiesList.dta", replace
-
-use "$dta_loc_repl/01_intermediate/adminTransactData", clear
-merge m:1 ge01 locality_name using "$dta_loc_repl/01_intermediate/InterventionsLocalitiesList.dta", generate(_merge_bal)
-gen trt=0
-replace trt=1 if intervention=="PriceTransparency, PT"
-replace trt=2 if intervention=="MKtMonitoring, MM"
-replace trt=3 if intervention=="joint: PT+MM"
-
-egen strataFE = group(ge01)
-*reg fYes_T strataFE i.trt  if _merge==3, cluster(ge02)
-replace sv_fAmt_T =0 if fYes_T==0
-reg sv_fAmt_T i.strataFE i.trt if _merge==3, cluster(ge02)
-
-gen udeath_t0=(c6q1a==1) 
-gen urevenue_t0=(c6q1b==1)
-gen usickness_t0=(c6q1c==1)
-gen uweather_t0=(c6q1d==1) 
-gen uprices_t0=(c6q1e==1)
-gen ushocks_t0=(c6q1f==1)
-gen ushocks_exp_t0 = (udeath_t0==1 | urevenue_t0==1 | usickness_t0==1 | uweather_t0==1 | uprices_t0==1 | ushocks_t0==1)
-*reg ushocks_exp_t0 strataFE i.trt if _merge==3, r
-
-
-
-** Table 2 (? confirm) ---------------------------------------------------------------------
+** Table 2 ---------------------------------------------------------------------
 *Main Results: DIRECT EFFECTS*
 gen ihs_fdamt = asinh(fdamt) //NOTE: fdamt recoded as 0 if fd=0 (if no overcharging occurs), so, no material diff b/n (ii) fdamt and (iii) ihs_fdamt
 egen xbar = mean(trt)
@@ -114,7 +63,7 @@ test _b[trt2] + _b[trt3] =_b[trt4]
 
 
 
-** Table 7 (? confirm) ---------------------------------------------------------------------
+** Table 7 ---------------------------------------------------------------------
 *SPILLOVERS - untreated vendors: note: no baseline X-s here (we only tracked them at endline)
 egen uniqueLocalityID=group(ge01 ge02) //NOTE: uniqueVendorID = xv_locality, throughout
 sum fd fdamt ihs_fdamt if trt==0 & _merge==1
@@ -268,7 +217,7 @@ foreach x of varlist trt2 trt3 trt4 {
 
 ** (1) Heterogeneity: Vendor Competition & Gender
 *Result: much effects on programs in more competitive local markets (as measure by -HHI)
-use "$dta_loc_repl/01_intermediate/analyzed_EndlineAuditData.dta", clear
+use "$dta_loc_repl/00_Raw/analyzed_EndlineAuditData.dta", clear
 egen uniqueVendorID=group(ge01 ge02 ge03) //NOTE: uniqueVendorID = xv_locality, throughout
 
 drop _merge
@@ -290,6 +239,7 @@ gen high_e_comp=e_comp>=.0008718
 pwcorr e_comp comp MktPerLocal, sig
 sum HHI comp, d
 
+** Table C.11 ------------------------------------------------------------------
 **trim to minimize extreme influences**
 reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt comp c.trt#c.comp if HHI<1 & HHI>0, r cluster(uniqueVendorID) level(95) // simple interaction
 reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt comp c.trt#c.comp if HHI<1 & HHI>0, r cluster(uniqueVendorID) level(95) // simple interaction
@@ -309,7 +259,7 @@ reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q
 
 
 ** (2) Heterogeneity: Illiteracy + Bundled stores
-use "$dta_loc_repl/01_intermediate/analyzed_EndlineAuditData.dta", clear
+use "$dta_loc_repl/00_Raw/analyzed_EndlineAuditData.dta", clear
 drop _merge
 merge m:m ge02 using "$dta_loc_repl/01_intermediate/mkt_aiVendorBetter.dta"
 keep if _merge==3

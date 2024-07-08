@@ -1,7 +1,11 @@
 /*
 Prepare data by gender
 
-[Change path of sampling? data]
+Input: 
+	- Mkt_fieldData_census
+	- sel_9Distr_137Local_List
+Output:
+	- pct_female_Mktcensus/Star
 
 */
 
@@ -14,7 +18,7 @@ merge m:1 localityCode_j using "$dta_loc_repl/00_Raw_anon/sel_9Distr_137Local_Li
 keep if _merge==3
 
 **all vendors per locality =137 all here**
-bys districtName loccode vendor_id: keep if _n==1
+bys regionDistrictCode_j loccode vendor_id: keep if _n==1
 
 **%of Female v's? Say, at least 3 vendors in locality
 bys loccode: egen pct_female = mean(mfemale)
@@ -23,7 +27,7 @@ bys loccode: replace pct_female = pct_female*100
 bys loccode: gen sN =_N
 replace pct_female=. if sN <2
 twoway histogram pct_female, frac ytitle("Fraction of localities") xtitle("% Female vendors per locality")
-*gr export "$dta_loc/_project/pct_female_hist.eps", replace
+gr export "$output_loc/baseline/pct_female_hist.eps", replace
 
 
 **Competition, hhi
@@ -39,7 +43,7 @@ gen ge03 =vn
 gen double loccodee= loccode
 
 keep pct_female HHI mfemale loccode loccodee sN ge01 ge02 ge03  
-keep pct_female HHI mfemale loccode sN
+// keep pct_female HHI mfemale loccode sN
 *bys loccode: keep if _n==1
 
 saveold "$dta_loc_repl/01_intermediate/pct_female_Mktcensus", replace

@@ -6,6 +6,7 @@ Input:
 Output:
 	- riskiesTomake_list
 
+Note: not used in JPE analysis
 */
 
 
