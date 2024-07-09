@@ -35,7 +35,7 @@ if c(username) == "______" {
 ** raw data prep
 do "$do_loc/_baselother-sampling" 		// generate Treatments_4gps_9dist
 
-** Manual fixes to merchants and customers data
+** ManualMerchants and customers data
 do "$do_loc/_baselother-customer" 		// generate CustomersData data
 do "$do_loc/_baselother-merchant" 		// generate MerchantsData data
 

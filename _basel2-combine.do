@@ -31,7 +31,7 @@ save 	`Mkt_census_xtics_int_lclzd'
 *Customer analysis?
 **************
 ***************
-use "$dta_loc_repl/01_intermediate/CustomersData.dta", clear
+use "$dta_loc_repl/00_raw_anon/Customer_corrected.dta", clear
 merge m:m ge02 ge04 using `Mkt_census_xtics_int_lclzd'
 
 ** replace loccode for convenience
@@ -259,7 +259,7 @@ save "$dta_loc_repl/02_final/Customer_+_Mktcensus_+_Interventions.dta", replace 
 ** Merchants
 **************
 ***************
-use "$dta_loc_repl/01_intermediate/MerchantsData.dta", clear
+use "$dta_loc_repl/00_raw_anon/Merchant_corrected.dta", clear
 
 gen duration_min = end_time-start_time
 

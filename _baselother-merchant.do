@@ -10,7 +10,7 @@ Output:
 
 
 
-use "$dta_loc_repl/00_raw_anon/Merchant.dta", clear
+use "$dta_loc_repl/00_raw/Merchant.dta", clear
 **Kwamina's data adjustments? fix data quality issues I
 replace v1a2 = 300 if date_of_interview == 10052020
 replace v1a2 = 800 if (date_of_interview == 14052020 & vendorphone=="phone")
@@ -35,4 +35,4 @@ replace v1b2 = 1500 if (date_of_interview == 15052020)
 replace v1b2 = 1800 if (date_of_interview == 22042020)
 
 replace v1b2 = round(v1b2/1.35)
-saveold "$dta_loc_repl/01_intermediate/MerchantsData.dta", replace
+saveold "$dta_loc_repl/00_raw/Merchant_corrected.dta", replace

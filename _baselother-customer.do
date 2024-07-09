@@ -9,7 +9,7 @@ Output:
 */
 
 
-use "$dta_loc_repl/00_raw_anon/Customer.dta", clear
+use "$dta_loc_repl/00_raw/Customer.dta", clear
 
 **Kwamena data - fix data quality issues
 replace c1a1 = . if date_of_interview == 11052020
@@ -38,4 +38,4 @@ clonevar c4i = c4
 replace c4=1 if c4i==2
 replace c4=2 if c4i==1
 drop c8ai c4i
-saveold "$dta_loc_repl/01_intermediate/CustomersData.dta", replace
+saveold "$dta_loc_repl/00_raw/Customer_corrected.dta", replace

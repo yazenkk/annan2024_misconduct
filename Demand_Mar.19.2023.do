@@ -18,12 +18,12 @@ Output:
 
 use "$dta_loc_repl/02_final/Customer_+_Mktcensus_+_Interventions.dta", clear
 
-
+gen districtID = ge01
 
 *Attrition - Test for Significance by Treatment Program
 sum dropouts if trt_pool==0
-reg dropouts trt_pool, cluster(loccodex)
-reg dropouts i.trt, cluster(loccodex)
+reg dropouts trt_pool, cluster(ge02)
+reg dropouts i.trt, cluster(ge02)
 
 *distplot c0a, saving("distplot_ccalls", replace) //customers answer quicker than vendors/business (as expected)
 hist c0a, percent xtitle("Customers: Number of phone call times before answering survey")

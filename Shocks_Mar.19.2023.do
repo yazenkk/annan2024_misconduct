@@ -13,6 +13,7 @@ Output:
 ***************
 use "$dta_loc_repl/02_final/Customer_+_Mktcensus_+_Interventions.dta", clear
 
+gen districtID = ge01
 
 **unmitigated shocks?
 gen udeath=(c21a==1) if _merge==3
@@ -62,35 +63,35 @@ sum c_pov_likelihood_t0 c_pov_likelihood_t1
 
 ** Table 9+10 ---------------------------------------------------------------------
 sum ushocks_exp_t1 revenue_t1 health_t1 hhexpense_t1 c_pov_likelihood_t1 if trtment==0
-regress ushocks_exp_t1 ushocks_exp_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(loccodex) level(95)
-regress revenue_t1 urevenue_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(loccodex) level(95)
-regress health_t1 usickness_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(loccodex) level(95)
-regress hhexpense_t1 ushocks_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(loccodex) level(95)
-regress c_pov_likelihood_t1 c_pov_likelihood_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(loccodex) level(95)
+regress ushocks_exp_t1 ushocks_exp_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(ge02) level(95)
+regress revenue_t1 urevenue_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(ge02) level(95)
+regress health_t1 usickness_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(ge02) level(95)
+regress hhexpense_t1 ushocks_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(ge02) level(95)
+regress c_pov_likelihood_t1 c_pov_likelihood_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trtment if _merge==3, cluster(ge02) level(95)
 
 
 tab trt, gen(trt)
-regress ushocks_exp_t1 ushocks_exp_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if _merge==3, cluster(loccodex) level(95)
+regress ushocks_exp_t1 ushocks_exp_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if _merge==3, cluster(ge02) level(95)
 test _b[trt2]=_b[trt4]
 test _b[trt3]=_b[trt4]
 test _b[trt2]=_b[trt3]
 test _b[trt2] + _b[trt3] =_b[trt4]
-regress revenue_t1 urevenue_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if _merge==3, cluster(loccodex) level(95)
+regress revenue_t1 urevenue_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if _merge==3, cluster(ge02) level(95)
 test _b[trt2]=_b[trt4]
 test _b[trt3]=_b[trt4]
 test _b[trt2]=_b[trt3]
 test _b[trt2] + _b[trt3] =_b[trt4]
-regress health_t1 usickness_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if _merge==3, cluster(loccodex) level(95)
+regress health_t1 usickness_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if _merge==3, cluster(ge02) level(95)
 test _b[trt2]=_b[trt4]
 test _b[trt3]=_b[trt4]
 test _b[trt2]=_b[trt3]
 test _b[trt2] + _b[trt3] =_b[trt4]
-regress hhexpense_t1 ushocks_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if _merge==3, cluster(loccodex) level(95)
+regress hhexpense_t1 ushocks_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if _merge==3, cluster(ge02) level(95)
 test _b[trt2]=_b[trt4]
 test _b[trt3]=_b[trt4]
 test _b[trt2]=_b[trt3]
 test _b[trt2] + _b[trt3] =_b[trt4]
-regress c_pov_likelihood_t1 c_pov_likelihood_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if _merge==3, cluster(loccodex) level(95)
+regress c_pov_likelihood_t1 c_pov_likelihood_t0 i.districtID cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome trt2 trt3 trt4 if _merge==3, cluster(ge02) level(95)
 test _b[trt2]=_b[trt4]
 test _b[trt3]=_b[trt4]
 test _b[trt2]=_b[trt3]
