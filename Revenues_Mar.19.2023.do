@@ -24,7 +24,7 @@ gen districtID= district_code
 
 merge m:m districtID ln using "$dta_loc_repl/01_intermediate/Mkt_census_xtics_+_interventions_localized.dta"
 *keep if _merge ==3
-bys districtName ln: keep if _n==1  //only vendors + dropouts
+bys districtName ln: keep if _n==1  //only vendors + dropouts (130 obs)
 
 **attrition stats: numbers
 tab intervention
