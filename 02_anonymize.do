@@ -63,7 +63,7 @@ foreach dta in `private_1' `private_2' {
 																		cn *Phone* m1q0d m1q9a m1q9b c1q8a c1q8b m5q2 c7q2 locality_name c1q0b ge01_orig ge02_orig ge03_orig ///
 																		ffaudits_id xvID xv_locality xv_localityy xv_vendor xv_vendorr loccodex vendor_id districtID loccode ///
 																		universalid
-	else if "`dta'" == "Customer.dta" 					local anon_list ccaller_id ccaller_name custphone customer_name clocality_name cdistrict_name
+	else if "`dta'" == "Customer.dta" 					local anon_list ccaller_id ccaller_name custphone customer_name clocality_name cdistrict_name customer2020_id
 	else if "`dta'" == "FFaudit.dta" 					local anon_list *gps* ge01_orig ge02_orig ge03_orig ///
 																		ffaudits_id
 	else if "`dta'" == "interventionsTomake_list_local.dta" local anon_list districtName ln vn vDescribe cn cDescribe *Phone* loccode loccodex
@@ -146,7 +146,6 @@ foreach dta in `private_1' `private_2' {
 		replace ge02 = "0"+ge02 if strlen(ge02) == 12
 		replace ge01 = "0"+ge01 if strlen(ge01) == 3
 		order ge01 ge02 ge04
-		drop customer2020_id
 	}
 	if "`dta'" == "interventionsTomake_list_local.dta" {
 		tostring loccode, gen(ge02) format("%17.0f") // ge02

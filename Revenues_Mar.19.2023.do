@@ -18,7 +18,7 @@ distplot v0a //customers answer quicker than vendors/business (as expected)
 hist v0a, gap(10) percent xtitle("Vendors: Number of phone call times before answering survey")
 gr export "$output_loc/main_results/vendor_calltimeS.eps", replace
 
-
+gen districtID = ge01
 
 **control means?
 sum mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1 if trtment==0

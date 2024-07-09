@@ -23,7 +23,7 @@ drop _merge
 merge m:1 ge01 ge02 using "$dta_loc_repl/01_intermediate/ofdrate_mktAudit_endline.dta"
 *merge m:1 ge01 ge02 using "$dta_loc/FINAL AUDIT DATA/_Francis/MisconObj_Endline.dta"
 *drop if missing(_customer2020_id)
-gen dropout_belief = missing(ge04)
+gen dropout_belief = missing(customer2020_id) // PII but used as marker
 tab dropout_belief
 
 gen districtID = ge01
@@ -76,7 +76,7 @@ test 1.trt+2.trt=3.trt
 
 ** Figure 1 --------------------------------------------------------------------
 *q.1: beliefs shifted in right direction, yes - graphically?
-bys cdistrict_name clocality_name: egen mx = mean(honestVendors1) if dropout_belief==0
+bys ge01 ge02: egen mx = mean(honestVendors1) if dropout_belief==0
 bys trt: sum mx
 cdfplot mx if (trt==0 | trt==1 | trt==2 | trt==3), by(trtment) opt1(lc() lp(solid dash)) xtitle("Share that perceive vendors are honest") ytitle("Cumulative Probability") legend(pos(7) row(1) stack label(1 "Control") label(2 "Any treatment"))
 gr export "$output_loc/main_results/te_belief_all_graph.eps", replace
