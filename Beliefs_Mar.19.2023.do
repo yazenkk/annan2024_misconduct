@@ -15,18 +15,18 @@ Output:
 */
 
 **Consumers subjective beliefs: shifts + updates*
-use "$dta_loc_repl/01_intermediate/Customer_+_Mktcensus_+_Interventions.dta", clear
-gen ge01 =cdistrict_name 
-gen ge02 =clocality_name 
-gen ge03 =vn
+use "$dta_loc_repl/02_final/Customer_+_Mktcensus_+_Interventions.dta", clear
+
 drop _merge
 *drop if missing(_customer2020_id)
 **bring in audit-objective endline data: "use sep 06 fd data"
 merge m:1 ge01 ge02 using "$dta_loc_repl/01_intermediate/ofdrate_mktAudit_endline.dta"
 *merge m:1 ge01 ge02 using "$dta_loc/FINAL AUDIT DATA/_Francis/MisconObj_Endline.dta"
 *drop if missing(_customer2020_id)
-gen dropout_belief = missing(_customer2020_id)
+gen dropout_belief = missing(ge04)
 tab dropout_belief
+
+gen districtID = ge01
 
 **views now about misconduct in dxn of info assignments?
 **e.g., perceive misconduct is low? "correctly" perceive others in locality perceive misconduct low?

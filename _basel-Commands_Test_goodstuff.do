@@ -34,9 +34,10 @@ use "$dta_loc_repl/00_raw_anon/_M_all_2_18.dta", clear
 
 tab vendor, miss
 
+
 **number M per local?
-bys loccode: gen MktPerLocal = _N
-// hist MktPerLocal
+bys ge02: gen MktPerLocal = _N
+hist MktPerLocal
 sum MktPerLocal // 1 to 12 with avg=5 merchants
 
 **Next, add customers?
@@ -44,8 +45,11 @@ gen locality_name= ln
 gen vendor_id= vendor // only unique within loccode (locality)
 gen interviewer =interviewer_v
 
-merge 1:m distcode loccode vendor_id using "$dta_loc_repl/00_raw_anon/_CM_all_2_18.dta"
+merge 1:m ge01 ge02 ge03 using "$dta_loc_repl/00_raw_anon/_CM_all_2_18.dta"
 
+drop loccode vendor_id
+gen loccode = ge02
+gen vendor_id= ge03 // only unique within loccode (locality)
 
 *keep if (_merge==3)
 egen Mkt = group(loccode vendor_id)
@@ -587,6 +591,8 @@ tab under_bbelief_fc
 **Get unique vender (aka Mkt) ID?
 egen universalid = concat(loccode vendor_id)
 
+drop loccode vendor_id
+order ge01 ge02 ge03 ge04
 
 saveold "$dta_loc_repl/01_intermediate/Mkt_fieldData_census", replace
 

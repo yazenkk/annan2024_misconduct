@@ -7,8 +7,9 @@ Date: 6/20/2024
 ** Initialize
 clear all
 set graphics off
-set seed 100001 // from scripts: demand, revenues
-global bootstrap_reps 100
+global myseed 100001
+set seed $myseed // from scripts: demand, revenues
+global bootstrap_reps 1000
 
 
 ** set globals
@@ -30,11 +31,12 @@ if c(username) == "______" {
 
 ** install programs
 // do "$do_loc/01_programs"
-do "$do_loc/02_anonymize"
 
 ** raw data prep
 do "$do_loc/_baselother-sampling" 		// generate Treatments_4gps_9dist
 
+** Anonymize datasets
+do "$do_loc/02_anonymize"
 
 ** baseline data prep
 do "$do_loc/_basel-Commands_Test_goodstuff"
@@ -51,8 +53,7 @@ do "$do_loc/_baselother-merchant" 		// generate MerchantsData data
 
 ** combine
 do "$do_loc/_basel2-adminTransactData" 	// generate adminTransactData and ofdrate_mktadminTransactData
-do "$do_loc/_basel2-combine" 			// combine int + mkt census
-do "$do_loc/_basel2-combine2" 			// combine int + mkt census + customer (commented out sqreg and gen. item=y)
+do "$do_loc/_basel2-combine" 			// combine int + mkt census + customer/merchant (commented out sqreg and gen. item=y)
 do "$do_loc/_basel2-mkt_ai" 		 	// generate mkt_aiVendorBetter
 do "$do_loc/_baselother-FinalAuditData" // generate ofdrate_mktAudit_endline
 

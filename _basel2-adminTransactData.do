@@ -17,7 +17,7 @@ use "$dta_loc_repl/01_intermediate/repMkt_w_xtics", clear
 gen belief=1
 drop _merge
 keep if sample_repMkt==1
-bys loccode vendor: keep if _n==1
+bys ge02 ge03: keep if _n==1
 
 tempfile repMkt_w_VendorXtics
 save 	`repMkt_w_VendorXtics'
@@ -25,22 +25,20 @@ save 	`repMkt_w_VendorXtics'
 
 	
 use "$dta_loc_repl/00_raw_anon/FFaudit.dta", clear
-gen double loccode =ffaudits_id
-gen double vendor =ffaq3
 
-bys loccode vendor: gen xx=_N
+bys ge02 ge03: gen xx=_N
 tab xx
 tab login
 
-merge 1:1 loccode vendor using `repMkt_w_VendorXtics'
+merge 1:1 ge02 ge03 using `repMkt_w_VendorXtics'
 keep if _merge ==3
 
 tab login
 gen gender_auditor=.
-replace gender_auditor = 1 if (login==11) //becky
-replace gender_auditor = 1 if (login==21) //derby
-replace gender_auditor = 0 if (login==31) //kofi
-replace gender_auditor = 0 if (login==41) //sammy
+replace gender_auditor = 1 if (login==11) 
+replace gender_auditor = 1 if (login==21) 
+replace gender_auditor = 0 if (login==31) 
+replace gender_auditor = 0 if (login==41) 
 tab gender_auditor
 
 
@@ -59,7 +57,7 @@ gen gmatch=(female==gender_auditor)
 replace gmatch=. if missing(female)
 
 **correctly: reshape data from wide to long -- randomization of transactions
-reshape long ffaq5_ ffaq6_ ffaq8_ ffaq0_, i(ffaudits_id) j(transact)  string
+reshape long ffaq5_ ffaq6_ ffaq8_ ffaq0_, i(ge02) j(transact)  string
 
 **liquidy shortfalls?
 tab ffaq0_ //47% of transactions unsuccessful
@@ -67,7 +65,7 @@ tab status //reason: 11% of transactions=no cash in wallet
 
 **fin misconduct or fin-fraud?
 egen distrFes = group(ge01)
-egen vFes = group(loccode) //within-person?
+egen vFes = group(ge02) //within-person?
 egen trFes = group(transact) //within-transaction?
 
 **some xtics?

@@ -10,94 +10,14 @@ Output:
 	-[regressions]
 */
 
-**************
-***************
-use "$dta_loc_repl/01_intermediate/MerchantsData.dta", clear
+use "$dta_loc_repl/02_final/Merchants_+_Mktcensus_+_Interventions.dta", clear
 
-gen duration_min = end_time-start_time
-*hist duration_min, disc xlabel(0(1)60, angle(vertical) labsize(vsmall)) title(Merchants -interview duration)
-*hist v1a2
-*hist v1b2
-gen districtName = district_name 
-gen ln = locality_name1
-gen districtID= district_code 
-
-merge m:m districtID ln using "$dta_loc_repl/01_intermediate/Mkt_census_xtics_+_interventions_localized.dta"
-*keep if _merge ==3
-bys districtName ln: keep if _n==1  //only vendors + dropouts
-
-**attrition stats: numbers
-tab intervention
-gen dropouts = (_merge==2)
-tab intervention if dropouts==0
-*get mean=% and SD=%?
-gen ins=(dropouts==0)
-tabstat ins, stat(mean sd n) by(intervention)
-tabstat dropouts, stat(mean sd n) by(intervention)
-
-**define treatment indicators
-tab intervention
-gen trtment = (intervention != "Control")
-
-gen trtment_mm =.
-replace trtment_mm=1 if (intervention == "MKtMonitoring, MM")
-replace trtment_mm=0 if (intervention == "Control")
-
-gen trtment_pt=.
-replace trtment_pt=1 if (intervention == "PriceTransparency, PT")
-replace trtment_pt=0 if (intervention == "Control")
-
-gen trtment_mmpt=.
-replace trtment_mmpt=1 if (intervention == "joint: PT+MM")
-replace trtment_mmpt=0 if (intervention == "Control")
-
-gen trt=0
-replace trt=1 if intervention=="PriceTransparency, PT"
-replace trt=2 if intervention=="MKtMonitoring, MM"
-replace trt=3 if intervention=="joint: PT+MM"
-
-*Attrition - Test for Significance by Treatment Program
-gen trt_pool = (trt !=0)
-sum dropouts if trt_pool==0
-reg dropouts trt_pool, r
-reg dropouts i.trt, r
 
 ** Figure B.5 ------------------------------------------------------------------
 distplot v0a //customers answer quicker than vendors/business (as expected)
 hist v0a, gap(10) percent xtitle("Vendors: Number of phone call times before answering survey")
 gr export "$output_loc/main_results/vendor_calltimeS.eps", replace
 
-
-tab date_of_interview
-tab date_of_interview, missing
-
-
-*get measurements?
-***momo sales? I
-gen mmtotamt_cust_t1 = v1a2
-gen mmtotamt_cust_t0 = m2q4b
-gen log_mmtotamt_cust_t1 = ln(v1a2)
-gen log_mmtotamt_cust_t0=ln(m2q4b)
-
-***non-momo sales? II
-gen nonmmtotamt_cust_t1 = v1b2
-gen nonmmtotamt_cust_t0 = dailyTotMoney_nonM
-gen log_nonmmtotamt_cust_t1 = ln(v1b2)
-gen log_nonmmtotamt_cust_t0=ln(dailyTotMoney_nonM)
-
-
-**Total sales-combined momo+nonmomo? III
-gen totamt_cust_t1 = mmtotamt_cust_t1+nonmmtotamt_cust_t1
-gen totamt_cust_t0 = mmtotamt_cust_t0+nonmmtotamt_cust_t0
-gen log_totamt_cust_t1 = ln(totamt_cust_t1)
-gen log_totamt_cust_t0 = ln(totamt_cust_t0)
-
-**exits? IV
-gen bus_exit = dropouts
-
-gen migrateDesire= (m5q1==1)
-gen migratein1yr = (m5q3 <3)
-gen migratepermanent = (m5q4 ==2)
 
 
 **control means?

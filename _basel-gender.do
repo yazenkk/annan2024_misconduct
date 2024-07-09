@@ -12,19 +12,19 @@ Output:
 
 **Mkt census: Get percent of femal vendors per locality; competition measure=hhi?
 use "$dta_loc_repl/01_intermediate/Mkt_fieldData_census", clear
-gen double localityCode_j=loccode
+// gen double localityCode_j=loccode
 drop _merge
-merge m:1 localityCode_j using "$dta_loc_repl/00_Raw_anon/sel_9Distr_137Local_List"
+merge m:1 ge02 using "$dta_loc_repl/00_Raw_anon/sel_9Distr_137Local_List"
 keep if _merge==3
 
 **all vendors per locality =137 all here**
-bys regionDistrictCode_j loccode vendor_id: keep if _n==1
+bys ge01 ge02 ge03: keep if _n==1
 
 **%of Female v's? Say, at least 3 vendors in locality
-bys loccode: egen pct_female = mean(mfemale)
-bys loccode: replace pct_female = pct_female*100
+bys ge02: egen pct_female = mean(mfemale)
+bys ge02: replace pct_female = pct_female*100
 
-bys loccode: gen sN =_N
+bys ge02: gen sN =_N
 replace pct_female=. if sN <2
 twoway histogram pct_female, frac ytitle("Fraction of localities") xtitle("% Female vendors per locality")
 gr export "$output_loc/baseline/pct_female_hist.eps", replace
@@ -32,17 +32,17 @@ gr export "$output_loc/baseline/pct_female_hist.eps", replace
 
 **Competition, hhi
 gen dailyTotMoney2=m2q4b //can use monthly sale: m1q8--correlates very well? 
-bys loccode: egen double sumdSales = sum(dailyTotMoney2)
-bys loccode: gen double shsqrd = (dailyTotMoney2/sumdSales)^2 
-bys loccode: egen double HHI=sum(shsqrd)
+bys ge02: egen double sumdSales = sum(dailyTotMoney2)
+bys ge02: gen double shsqrd = (dailyTotMoney2/sumdSales)^2 
+bys ge02: egen double HHI=sum(shsqrd)
 *hist HHI //clean later? yes. drop missings etc..
 
-ge ge01 =districtName
-gen ge02 =localityName 
-gen ge03 =vn
-gen double loccodee= loccode
+// gen ge01 =regionDistrictCode_j
+// gen ge02 =localityCode_j 
+// gen ge03 =vn
+// gen double loccodee= loccode
 
-keep pct_female HHI mfemale loccode loccodee sN ge01 ge02 ge03  
+keep pct_female HHI mfemale sN ge01 ge02 ge03 // loccode loccodee
 // keep pct_female HHI mfemale loccode sN
 *bys loccode: keep if _n==1
 
