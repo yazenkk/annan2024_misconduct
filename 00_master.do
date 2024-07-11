@@ -9,7 +9,7 @@ clear all
 set graphics off
 global myseed 100001
 set seed $myseed // from scripts: demand, revenues
-global bootstrap_reps 1000
+global bootstrap_reps 100
 
 
 ** set globals
@@ -32,20 +32,20 @@ if c(username) == "______" {
 ** install programs
 // do "$do_loc/01_programs"
 
-** raw data prep
-do "$do_loc/_baselother-sampling" 		// generate Treatments_4gps_9dist
+** raw data prep (PII)
+do "$do_loc/_baselother-sampling" 		// generate Treatments_4gps_9dist and sel_9Distr_137Local_List
 
-** Manual fixes to merchants and customers data
+** Manual fixes to merchants and customers data (PII)
 do "$do_loc/_baselother-customer" 		// generate CustomersData data
 do "$do_loc/_baselother-merchant" 		// generate MerchantsData data
 
-** Anonymize datasets
-do "$do_loc/02_anonymize"
+** Anonymize datasets (PII)
+do "$do_loc/02_anonymize" // generates 10 files in 00_raw_anon
 
 ** baseline data prep
-do "$do_loc/_basel-Commands_Test_goodstuff"
-do "$do_loc/_basel-gender"
-do "$do_loc/_basel-repMkt"
+do "$do_loc/_basel-Commands_Test_goodstuff" // generate Mkt_fieldData_census
+do "$do_loc/_basel-gender" 					// generate pct_female_Mktcensus[Star]
+do "$do_loc/_basel-repMkt" 					// generate repMkt_w[_xtics]
 
 ** treatment assigmnent
 do "$do_loc/_basel-interventions1" 		// generate ONLY_4TrtGroups_9dist
@@ -53,8 +53,8 @@ do "$do_loc/_basel-interventions2" 		// generate interventionsTomake_list_local
 
 
 ** combine
-do "$do_loc/_basel2-adminTransactData" 	// generate adminTransactData and ofdrate_mktadminTransactData
-do "$do_loc/_basel2-combine" 			// combine int + mkt census + customer/merchant (commented out sqreg and gen. item=y)
+do "$do_loc/_basel2-adminTransactData" 	// generate [ofdrate_]mktadminTransactData
+do "$do_loc/_basel2-combine" 			// combine customer/merchant + int + mkt census (commented out sqreg and gen. item=y)
 do "$do_loc/_basel2-mkt_ai" 		 	// generate mkt_aiVendorBetter
 do "$do_loc/_baselother-FinalAuditData" // generate ofdrate_mktAudit_endline
 

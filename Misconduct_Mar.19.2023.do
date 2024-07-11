@@ -217,7 +217,7 @@ foreach x of varlist trt2 trt3 trt4 {
 
 ** (1) Heterogeneity: Vendor Competition & Gender
 *Result: much effects on programs in more competitive local markets (as measure by -HHI)
-use "$dta_loc_repl/00_Raw/analyzed_EndlineAuditData.dta", clear
+use "$dta_loc_repl/00_Raw_anon/analyzed_EndlineAuditData.dta", clear
 egen uniqueVendorID=group(ge01 ge02 ge03) //NOTE: uniqueVendorID = xv_locality, throughout
 
 drop _merge
@@ -227,7 +227,7 @@ merge m:m ge01 ge02 ge03 using "$dta_loc_repl/01_intermediate/pct_female_Mktcens
 drop _merge
 *districtName localityName localityCode
 gen double localityCode_j = loccodee 
-merge m:m localityCode_j using "$dta_loc_repl/01_intermediate/Treatments_4gps_9dist"
+merge m:m localityCode_j using "$dta_loc_repl/00_Raw_anon/Treatments_4gps_9dist"
 
 *COMPETITION
 *br loccodee localityCode_j loccode
@@ -259,7 +259,7 @@ reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q
 
 
 ** (2) Heterogeneity: Illiteracy + Bundled stores
-use "$dta_loc_repl/00_Raw/analyzed_EndlineAuditData.dta", clear
+use "$dta_loc_repl/00_Raw_anon/analyzed_EndlineAuditData.dta", clear
 drop _merge
 merge m:m ge02 using "$dta_loc_repl/01_intermediate/mkt_aiVendorBetter.dta"
 keep if _merge==3
