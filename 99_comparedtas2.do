@@ -87,3 +87,35 @@ sum ge02 ge03 // 336
 // yupp. the problem distorting the randomizatio is all the way back here.
 
 
+// the merge quality between M and CM is better once we use ge0*.
+// But I include more obs so the randomization is ruined.
+
+
+** _M_all_2_18 -------------------------------------------------------
+local path "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication"
+use "`path'/data/00_raw_anon/_M_all_2_18.dta", clear
+count if !mi(distcode) & !mi(loccode) & !mi(vendor) // 393
+sum distcode loccode vendor // 393
+
+// cf _all using "`path'/data_test/01_intermediate/Mkt_fieldData_census.dta", verbose
+
+use "`path'/data_test/00_raw_anon/_M_all_2_18.dta", clear
+count if !mi(ge01) & !mi(ge02) & !mi(ge03) // 393
+sum ge01 ge02 ge03 // 393
+
+// same
+
+
+** _CM_all_2_18 -------------------------------------------------------
+local path "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication"
+use "`path'/data/00_raw_anon/_CM_all_2_18.dta", clear
+count if !mi(distcode) & !mi(loccode) & !mi(vendor_id) & !mi(custcode) // 1998
+order distcode loccode vendor_id custcode  // 1998
+sum distcode loccode vendor_id custcode  // 1998
+
+// cf _all using "`path'/data_test/01_intermediate/Mkt_fieldData_census.dta", verbose
+
+use "`path'/data_test/00_raw_anon/_CM_all_2_18.dta", clear
+count if !mi(ge01) & !mi(ge02) & !mi(ge03) & !mi(ge04) // 1933
+sum ge01 ge02 ge03 ge04 // 1933
+
