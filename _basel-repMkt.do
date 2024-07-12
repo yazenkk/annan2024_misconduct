@@ -54,7 +54,10 @@ preserve
 	bys loccode vendor_id: keep if _n==1
 
 	set seed 12345
-	bys loccode: gen rand_num = uniform()
+	bys loccode (vendor_id): gen rand_num = uniform()
+// 	tostring loccode, gen(ge02temp) format("%17.0f")
+// 	order rand_num
+// 	e // rand_num is sorted implicitly vendor_id in addition to loccode
 	bys loccode: gen x = _N
 	by loccode (rand_num), sort: gen sample_repMkt = _n==x
 	tab sample_repMkt, miss
