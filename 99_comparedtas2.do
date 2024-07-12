@@ -81,8 +81,8 @@ sum loccode vendor_id // 332
 // cf _all using "`path'/data_test/01_intermediate/Mkt_fieldData_census.dta", verbose
 
 use "`path'/data_test/01_intermediate/repMkt.dta", clear
-count if !mi(ge02) & !mi(ge03) // 336
-sum ge02 ge03 // 336
+count if !mi(ge02) & !mi(ge03) // 334
+sum ge02 ge03 // 334
 
 // yupp. the problem distorting the randomizatio is all the way back here.
 
