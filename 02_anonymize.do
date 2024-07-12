@@ -56,10 +56,8 @@ foreach dta in `private_1' `private_2' {
 	use "$dta_loc_repl/00_raw/`dta'", clear 
 	
 	if 		"`dta'" == "sel_9Distr_137Local_List.dta" 	local anon_list districtName localityName
-	else if "`dta'" == "_CM_all_2_18.dta" 				local anon_list c1q0a1 c1q0a2 c1q0a3 c1q0b c1q4a c1q8a c1q8b cn c3q2 c7q2 locality_name ///
-																		loccode
-	else if "`dta'" == "_M_all_2_18.dta"	 			local anon_list m1q0a m1q0b m1q0c m1q0d m1q9a m1q9b m5q2 ln vn ///
-																		loccode
+	else if "`dta'" == "_CM_all_2_18.dta" 				local anon_list c1q0a1 c1q0a2 c1q0a3 c1q0b c1q4a c1q8a c1q8b cn c3q2 c7q2 locality_name // loccode																		
+	else if "`dta'" == "_M_all_2_18.dta"	 			local anon_list m1q0a m1q0b m1q0c m1q0d m1q9a m1q9b m5q2 ln vn // loccode
 	else if "`dta'" == "analyzed_EndlineAuditData.dta" 	local anon_list *gps* m1q0a m1q0b m1q0c c1q0a1 c1q0a2 c1q0a3 login nq5 districtName ln vn vDescribe ///
 																		cn *Phone* m1q0d m1q9a m1q9b c1q8a c1q8b m5q2 c7q2 locality_name c1q0b ge01_orig ge02_orig ge03_orig ///
 																		ffaudits_id xvID xv_locality xv_localityy xv_vendor xv_vendorr loccodex vendor_id districtID loccode ///
@@ -79,9 +77,11 @@ foreach dta in `private_1' `private_2' {
 		replace ge02 = "0"+ge02 if strlen(ge02) == 12
 		tostring vendor, gen(vendor_str) format("%17.0f") // ge03
 		replace vendor_str = "0"+vendor_str if strlen(vendor_str) == 1
-		gen ge03 =  ge02+"0"+vendor_str, after(vn) 
+		gen ge03 =  ge02+"0"+vendor_str, after(vendor) 
+		gen test = strlen(ge03)
 		gen ge01 = substr(ge02, 1, 4) // ge01
 		order ge01 ge02 ge03
+		assert strlen(ge01) == 4 & strlen(ge02) == 13 & strlen(ge03) == 16 
 		
 		** get ge01 and ge02 from sampling data
 		preserve
@@ -103,7 +103,7 @@ foreach dta in `private_1' `private_2' {
 	if "`dta'" == "_CM_all_2_18.dta" {
 		tostring loccode, gen(ge02) format("%17.0f") // ge02
 		replace ge02 = "0"+ge02 if strlen(ge02) == 12
-		tostring vendor, gen(vendor_str) format("%17.0f") // ge03
+		tostring vendor_id, gen(vendor_str) format("%17.0f") // ge03
 		replace vendor_str = "0"+vendor_str if strlen(vendor_str) == 1
 		gen ge03 =  ge02+"0"+vendor_str
 		tostring custcode, gen(custcode_str) format("%17.0f") // ge04
@@ -112,6 +112,7 @@ foreach dta in `private_1' `private_2' {
 		gen ge04 = ge02+custcode_str
 		gen ge01 = substr(ge02, 1, 4) // ge01
 		order ge01 ge02 ge03 ge04
+		assert strlen(ge01) == 4 & strlen(ge02) == 13 & strlen(ge03) == 16 & strlen(ge04) == 16 
 	}
 	if "`dta'" == "analyzed_EndlineAuditData.dta" {
 		** bring in ge0* from _M*.dta above
@@ -297,6 +298,7 @@ save "$dta_loc_repl/00_raw/crosswalk_ge04", replace
 
 
 
+
 ** -----------------------------------------------------------------------------
 ** replace ge0x with anonymized version
 local anonymized : dir "$dta_loc_repl/00_raw_anon" files "*.dta"
@@ -304,6 +306,8 @@ foreach dta in `anonymized' {
 	use "$dta_loc_repl/00_raw_anon/`dta'", clear 
 	local obs = `=_N'
 
+// 	if "`dta'" == "_CM_all_2_18.dta" pause
+		
 	cap list ge01 
 	if _rc == 0 {
 		merge m:1 ge01 ge02 using "$dta_loc_repl/00_raw/crosswalk_ge012", gen(_mge012) keep(1 3)
@@ -326,6 +330,7 @@ foreach dta in `anonymized' {
 	cap rename ge0*_anon ge0*
 	save "$dta_loc_repl/00_raw_anon/`dta'", replace
 }
+
 
 
 

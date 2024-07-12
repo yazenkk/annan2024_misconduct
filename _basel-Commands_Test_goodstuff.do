@@ -45,7 +45,7 @@ gen locality_name= ln
 gen vendor_id= vendor // only unique within loccode (locality)
 gen interviewer =interviewer_v
 
-merge 1:m ge01 ge02 ge03 using "$dta_loc_repl/00_raw_anon/_CM_all_2_18.dta"
+merge 1:m distcode ge03 using "$dta_loc_repl/00_raw_anon/_CM_all_2_18.dta" // distcode drops three vendors
 
 drop loccode vendor_id
 gen loccode = ge02

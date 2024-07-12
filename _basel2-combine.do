@@ -19,7 +19,7 @@ Output:
 **I--Mkt Census xtics + Interventions (localized)?
 use "$dta_loc_repl/01_intermediate/Mkt_fieldData_census", clear
 drop _merge
-merge m:1 ge02 ge03 ge04 using "$dta_loc_repl/01_intermediate/interventionsTomake_list_local" //customers match subsumes vednors//
+merge m:1 ge03 ge04 using "$dta_loc_repl/01_intermediate/interventionsTomake_list_local" //customers match subsumes vednors//
 keep if _merge==3
 drop _merge
 tempfile Mkt_census_xtics_int_lclzd
@@ -32,7 +32,7 @@ save 	`Mkt_census_xtics_int_lclzd'
 **************
 ***************
 use "$dta_loc_repl/00_raw_anon/Customer_corrected.dta", clear
-merge 1:1 ge02 ge04 using `Mkt_census_xtics_int_lclzd'
+merge 1:1 ge04 using `Mkt_census_xtics_int_lclzd'
 
 ** generate loccode for convenience
 gen loccode = ge02
