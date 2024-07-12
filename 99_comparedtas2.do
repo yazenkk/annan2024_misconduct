@@ -121,5 +121,5 @@ use "`path'/data_test/00_raw_anon/_CM_all_2_18.dta", clear
 count if !mi(ge01) & !mi(ge02) & !mi(ge03) & !mi(ge04) // 1933
 sum ge01 ge02 ge03 ge04 // 1933
 
-	CONTINUE HERE. 1933 vendors (ge03) in my data. Need 1988.
+	CONTINUE HERE. 1933 vendors (ge03) in my data. Need 1998.
 
