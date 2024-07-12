@@ -51,7 +51,7 @@ tab CustPer_w_Mkt
 
 **get "rep market" per each locality?
 preserve 
-	bys ge02 ge03: keep if _n==1
+	bys ge03: keep if _n==1
 
 	set seed 12345
 	bys ge02: gen rand_num = uniform()
@@ -69,6 +69,13 @@ preserve
 	**more cleaning? 3 more drops...no info
 	drop if market_to_drop == 1
 	tab sample_repMkt, miss //130 loc or repMkts now...
+	
+		** bring in non-anonymized markets. What's the difference?
+		rename ge0* ge0*_anon
+		merge 1:1 ge03_anon using "$dta_loc_repl/00_raw/crosswalk_ge03", keep (1 3)
+		merge 1:1 ge03 using "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication/data_test/01_intermediate/repMkt"
+		// CONTINUE HERE
+		
 	save "$dta_loc_repl/01_intermediate/repMkt", replace
 restore
 
