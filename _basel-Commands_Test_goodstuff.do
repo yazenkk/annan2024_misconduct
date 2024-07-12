@@ -30,7 +30,7 @@ Output:
 
 
 *TROUBLE FOR VENDORS UP?
-use "$dta_loc_repl/00_raw_anon/_M_all_2_18.dta", clear 
+use "$dta_loc_repl/00_raw_anon/_M_all_2_18_corrected.dta", clear 
 
 tab vendor, miss
 

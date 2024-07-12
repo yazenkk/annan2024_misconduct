@@ -43,13 +43,15 @@ end
 
 ** Handle dtas
 local private_1 : dir "$dta_loc_repl/00_raw" files "_*.dta"
+local exclude1 _M_all_2_18.dta
+local private_1 : list private_1 - exclude1
 local private_2 : dir "$dta_loc_repl/00_raw" files "*.dta"
 local private_2 : list private_2 - private_1
-local exclude crosswalk_ge012.dta crosswalk_ge03.dta crosswalk_ge04.dta ///
-			  Merchant.dta Customer.dta
-local private_2 : list private_2 - exclude
-// dis `"`private_1'"'
-// dis `"`private_2'"'
+local exclude2 crosswalk_ge012.dta crosswalk_ge03.dta crosswalk_ge04.dta ///
+			   Merchant.dta Customer.dta _M_all_2_18.dta
+local private_2 : list private_2 - exclude2
+dis `"`private_1'"'
+dis `"`private_2'"'
 
 foreach dta in `private_1' `private_2' {
 	dis "`dta'"
@@ -57,7 +59,7 @@ foreach dta in `private_1' `private_2' {
 	
 	if 		"`dta'" == "sel_9Distr_137Local_List.dta" 	local anon_list districtName localityName
 	else if "`dta'" == "_CM_all_2_18.dta" 				local anon_list c1q0a1 c1q0a2 c1q0a3 c1q0b c1q4a c1q8a c1q8b cn c3q2 c7q2 locality_name // loccode																		
-	else if "`dta'" == "_M_all_2_18.dta"	 			local anon_list m1q0a m1q0b m1q0c m1q0d m1q9a m1q9b m5q2 ln vn // loccode
+	else if "`dta'" == "_M_all_2_18_corrected.dta"	 	local anon_list m1q0a m1q0b m1q0c m1q0d m1q9a m1q9b m5q2 ln vn // loccode
 	else if "`dta'" == "analyzed_EndlineAuditData.dta" 	local anon_list *gps* m1q0a m1q0b m1q0c c1q0a1 c1q0a2 c1q0a3 login nq5 districtName ln vn vDescribe ///
 																		cn *Phone* m1q0d m1q9a m1q9b c1q8a c1q8b m5q2 c7q2 locality_name c1q0b ge01_orig ge02_orig ge03_orig ///
 																		ffaudits_id xvID xv_locality xv_localityy xv_vendor xv_vendorr loccodex vendor_id districtID loccode ///
@@ -72,7 +74,7 @@ foreach dta in `private_1' `private_2' {
 	
 	
 	** convert id variables to ge*
-	if "`dta'" == "_M_all_2_18.dta" {
+	if "`dta'" == "_M_all_2_18_corrected.dta" {
 		tostring loccode, gen(ge02) format("%17.0f") // ge02
 		replace ge02 = "0"+ge02 if strlen(ge02) == 12
 		tostring vendor, gen(vendor_str) format("%17.0f") // ge03
@@ -280,7 +282,7 @@ duplicates drop
 save "$dta_loc_repl/00_raw/crosswalk_ge012", replace
 
 ** anonymize ge03
-use "$dta_loc_repl/00_raw_anon/_M_all_2_18", clear
+use "$dta_loc_repl/00_raw_anon/_M_all_2_18_corrected", clear
 anonymize_ge0x, var(ge03)
 sort ge03
 keep ge0*

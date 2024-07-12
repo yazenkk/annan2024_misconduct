@@ -63,12 +63,11 @@ preserve
 	*by loccode (rand_num), sort: gen sample_repMkt = _n==1
 	*tab sample_repMkt, miss
 
-	keep ln ge02 ge03 vn Mkt rand_num sample_repMkt* m1q9a m1q9b m1q0d worse_pov_FemaleV worse_incomeGp_FemaleV worse_incomeGp_FemaleV15 base_belief_overcharge ocbase_belief_overcharge fcbase_belief_overcharge mcbase_belief_overcharge under_bbelief under_bbelief_fc
+	keep ln ge02 ge03 vn Mkt rand_num sample_repMkt* m1q9a m1q9b m1q0d worse_pov_FemaleV worse_incomeGp_FemaleV worse_incomeGp_FemaleV15 base_belief_overcharge ocbase_belief_overcharge fcbase_belief_overcharge mcbase_belief_overcharge under_bbelief under_bbelief_fc market_to_drop
 	*keep ln loccode vendor_id vn cn Mkt rand_num sample_repMkt m1q9a c1q8a m1q9b c1q8b m1q0d c1q0b
 
 	**more cleaning? 3 more drops...no info
-	drop if (m1q0d=="")
-	drop if (m1q0d=="PABI" | m1q0d=="XXX" | vn=="XXXXXX")
+	drop if market_to_drop == 1
 	tab sample_repMkt, miss //130 loc or repMkts now...
 	save "$dta_loc_repl/01_intermediate/repMkt", replace
 restore

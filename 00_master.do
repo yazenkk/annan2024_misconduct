@@ -36,8 +36,9 @@ if c(username) == "______" {
 do "$do_loc/_baselother-sampling" 		// generate Treatments_4gps_9dist and sel_9Distr_137Local_List
 
 ** Manual fixes to merchants and customers data (PII)
-do "$do_loc/_baselother-customer" 		// generate CustomersData data
-do "$do_loc/_baselother-merchant" 		// generate MerchantsData data
+do "$do_loc/_baselother-customer" 		// generate Customer_corrected data
+do "$do_loc/_baselother-merchant" 		// generate Merchant_corrected data
+do "$do_loc/_baselother-_M" 			// generate _M_all_2_18_corrected data
 
 ** Anonymize datasets (PII)
 do "$do_loc/02_anonymize" // generates 10 files in 00_raw_anon
