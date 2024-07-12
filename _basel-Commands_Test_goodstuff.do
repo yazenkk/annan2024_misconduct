@@ -47,9 +47,9 @@ gen interviewer =interviewer_v
 
 merge 1:m distcode ge03 using "$dta_loc_repl/00_raw_anon/_CM_all_2_18.dta" // distcode drops three vendors
 
-drop loccode vendor_id
-gen loccode = ge02
-gen vendor_id= ge03 // only unique within loccode (locality)
+drop vendor_id	
+// replace loccode = loccode - 6000000000 // obfuscate loccode
+gen vendor_id= ge03 if !mi(vendor) // only unique within loccode (locality)
 
 *keep if (_merge==3)
 egen Mkt = group(loccode vendor_id)
@@ -591,7 +591,7 @@ tab under_bbelief_fc
 **Get unique vender (aka Mkt) ID?
 egen universalid = concat(loccode vendor_id)
 
-drop loccode vendor_id
+// drop loccode vendor_id
 order ge01 ge02 ge03 ge04
 
 saveold "$dta_loc_repl/01_intermediate/Mkt_fieldData_census", replace

@@ -27,7 +27,7 @@ drop _merge
 
 **Get mkt summaries & restrictions?
 bys ge02: gen CustPerLocal= _N
-hist CustPerLocal //dis: tot no of cust per local
+hist CustPerLocal // dis: tot no of cust per local
 sum CustPerLocal // 1 to 47 with avg=20.8<21 customers
 
 egen count_loccode=group(ge02)
@@ -47,23 +47,36 @@ bys ge02 ge03: gen CustPer_w_Mkt = _N
 hist CustPer_w_Mkt //dis: tot no of within-Cust per mkt
 tab CustPer_w_Mkt
 
+preserve
+	use "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication/data/01_intermediate/repMkt", clear
+	tostring loccode, gen(ge02) format("%17.0f") // ge02
+	replace ge02 = "0"+ge02 if strlen(ge02) == 12
+	tostring vendor_id, gen(vendor_str) format("%17.0f") // ge03
+	replace vendor_str = "0"+vendor_str if strlen(vendor_str) == 1
+	gen ge03 =  ge02+"0"+vendor_str
+	order ge*
+	
+	tempfile orig_dta
+	save 	`orig_dta'
 
+restore
 
 **get "rep market" per each locality?
-preserve 
+// preserve 
 	bys ge03: keep if _n==1
 
 	set seed 12345
-	bys ge02: gen rand_num = uniform()
-	bys ge02: gen x = _N
-	by ge02 (rand_num), sort: gen sample_repMkt = _n==x
+	bys loccode (vendor_id): gen rand_num = uniform()
+// 	bys ge02: gen rand_num = uniform()
+	bys loccode: gen x = _N
+	by loccode (rand_num), sort: gen sample_repMkt = _n==x
 	tab sample_repMkt, miss
 
 	*gen rand_num = uniform()
 	*by loccode (rand_num), sort: gen sample_repMkt = _n==1
 	*tab sample_repMkt, miss
 
-	keep ln ge02 ge03 vn Mkt rand_num sample_repMkt* m1q9a m1q9b m1q0d worse_pov_FemaleV worse_incomeGp_FemaleV worse_incomeGp_FemaleV15 base_belief_overcharge ocbase_belief_overcharge fcbase_belief_overcharge mcbase_belief_overcharge under_bbelief under_bbelief_fc market_to_drop
+	keep ln loccode ge02 ge03 vn Mkt rand_num sample_repMkt* m1q9a m1q9b m1q0d worse_pov_FemaleV worse_incomeGp_FemaleV worse_incomeGp_FemaleV15 base_belief_overcharge ocbase_belief_overcharge fcbase_belief_overcharge mcbase_belief_overcharge under_bbelief under_bbelief_fc market_to_drop
 	*keep ln loccode vendor_id vn cn Mkt rand_num sample_repMkt m1q9a c1q8a m1q9b c1q8b m1q0d c1q0b
 
 	**more cleaning? 3 more drops...no info
@@ -71,13 +84,23 @@ preserve
 	tab sample_repMkt, miss //130 loc or repMkts now...
 	
 		** bring in non-anonymized markets. What's the difference?
+		keep ln loccode ge02 ge03 vn Mkt rand_num sample_repMkt*  market_to_drop
+		foreach var in sample_repMkt vn ln rand_num {
+			rename `var' `var'_orig 			
+		}
 		rename ge0* ge0*_anon
-		merge 1:1 ge03_anon using "$dta_loc_repl/00_raw/crosswalk_ge03", keep (1 3)
-		merge 1:1 ge03 using "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication/data_test/01_intermediate/repMkt"
-		// CONTINUE HERE
+		merge 1:1 ge03_anon using "$dta_loc_repl/00_raw/crosswalk_ge03", gen(_mcross) keep(1 3) 
+		merge 1:1 ge03 using `orig_dta', keepusing(sample_repMkt m1q0d vn ln rand_num)
+		order sample_repMkt*
+		gen diff = sample_repMkt != sample_repMkt_orig, after(sample_repMkt)
+		order rand*
+		gen diff_rand = rand_num != rand_num_orig, after(rand_num)
+		tab diff
+		sort loccode
+e
 		
 	save "$dta_loc_repl/01_intermediate/repMkt", replace
-restore
+// restore
 
 **QUEST: ***balance achieved -- DIFF from population?
 merge m:1 ge02 ge03 using "$dta_loc_repl/01_intermediate/repMkt.dta"
