@@ -208,6 +208,7 @@ foreach dta in `private_1' `private_2' {
 		rename sample_loccode loccode_sampling
 	}
 	
+	
 	cap label var ge01 "District code (4-digit)"
 	cap label var ge02 "Locality code (12-digit)"
 	cap label var ge03 "Vendor/merchant code (3-digit)"

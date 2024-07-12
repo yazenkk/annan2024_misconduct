@@ -20,7 +20,6 @@ Outpu:
 
 use "$dta_loc_repl/01_intermediate/Mkt_fieldData_census", clear
 
-
 **1: get representative Mkt (per locality)
 keep if (_merge==3) //only Merchant-Customer pairs that merged right? b/c can't study just 1
 drop _merge
@@ -63,19 +62,18 @@ restore
 
 **get "rep market" per each locality?
 // preserve 
-	bys loccode vendor_id: keep if _n==1
+	bys loccode_sampling vendor_id: keep if _n==1
 	set seed 12345
-	bys loccode: gen rand_num = uniform()
-// 	bys ge02: gen rand_num = uniform()
-	bys ge02: gen x = _N
-	by ge02 (rand_num), sort: gen sample_repMkt = _n==x
+	bys loccode_sampling: gen rand_num = uniform()
+	bys loccode_sampling: gen x = _N
+	by loccode_sampling (rand_num), sort: gen sample_repMkt = _n==x
 	tab sample_repMkt, miss
 
 	*gen rand_num = uniform()
 	*by loccode (rand_num), sort: gen sample_repMkt = _n==1
 	*tab sample_repMkt, miss
 
-	keep ln loccode ge02 ge03 vn Mkt rand_num sample_repMkt* m1q9a m1q9b m1q0d worse_pov_FemaleV worse_incomeGp_FemaleV worse_incomeGp_FemaleV15 base_belief_overcharge ocbase_belief_overcharge fcbase_belief_overcharge mcbase_belief_overcharge under_bbelief under_bbelief_fc market_to_drop
+	keep ln loccode_sampling ge02 ge03 vn Mkt rand_num sample_repMkt* m1q9a m1q9b m1q0d worse_pov_FemaleV worse_incomeGp_FemaleV worse_incomeGp_FemaleV15 base_belief_overcharge ocbase_belief_overcharge fcbase_belief_overcharge mcbase_belief_overcharge under_bbelief under_bbelief_fc market_to_drop
 	*keep ln loccode vendor_id vn cn Mkt rand_num sample_repMkt m1q9a c1q8a m1q9b c1q8b m1q0d c1q0b
 
 	**more cleaning? 3 more drops...no info
@@ -95,7 +93,7 @@ restore
 		order rand*
 		gen diff_rand = rand_num != rand_num_orig, after(rand_num)
 		tab diff
-		sort loccode
+		sort loccode_sampling
 		assert diff_rand == 0 & diff == 0
 		count if sample_repMkt == 1
 		assert r(N) == 130 // 130 markets sampled
