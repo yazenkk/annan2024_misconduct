@@ -188,6 +188,7 @@ foreach dta in `private_1' `private_2' {
 		replace ge02 = "0"+ge02 if strlen(ge02) == 12
 		replace ge01 = "0"+ge01 if strlen(ge01) == 3
 		order ge01 ge02
+		gen districtID = regionDistrictCode_j // for sampling in interventions1.do
 		drop localityCode_j regionDistrictCode_j
 	}
 	
@@ -206,6 +207,22 @@ foreach dta in `private_1' `private_2' {
 		restore
 		drop loccode
 		rename sample_loccode loccode_sampling
+	}
+	** obfuscate districtID
+	capture list districtID
+	if _rc == 0 {
+		format districtID %12.0f
+		gen double sample_districtID = districtID - 250
+		format sample_districtID %12.0f
+		order districtID sample_districtID
+		preserve
+			keep sample_districtID districtID
+			duplicates drop
+			isid sample_districtID 
+			isid districtID
+		restore
+		drop districtID
+		rename sample_districtID districtID_sampling
 	}
 	
 	cap label var ge01 "District code (4-digit)"

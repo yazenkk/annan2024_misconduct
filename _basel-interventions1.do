@@ -1,5 +1,5 @@
 /*
-Generate treatment datasets
+Interventions at the market-level (generated here)
 
 Input:
 	- repMkt
@@ -34,7 +34,8 @@ order ge01 districtName ge02 ln vn ge03 vDescribe sample_repMkt
 tab ge01
 tab districtName
 
-randtreat, generate(treatment) replace unequal(1/4 1/4 1/4 1/4) strata(ge01) misfits(wstrata) setseed(12345)
+// randtreat, generate(treatment) replace unequal(1/4 1/4 1/4 1/4) strata(ge01) misfits(wstrata) setseed(12345)
+randtreat, generate(treatment) replace unequal(1/4 1/4 1/4 1/4) strata(districtID) misfits(wstrata) setseed(12345)
 tab treatment, miss
 tab ge01 treatment
 save "$dta_loc_repl/01_intermediate/ONLY_4TrtGroups_9dist", replace
