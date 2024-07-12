@@ -350,6 +350,8 @@ foreach dta in `anonymized' {
 	}
 	cap list ge03 
 	if _rc == 0 {
+// 		if "`dta'" == "_CM_all_2_18.dta" pause
+
 		merge m:1 ge01 ge02 ge03 using "$dta_loc_repl/00_raw/crosswalk_ge03", gen(_mge03) keep(1 3)
 	}
 	cap list ge04
