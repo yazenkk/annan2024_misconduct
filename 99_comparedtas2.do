@@ -83,8 +83,8 @@ sum loccode vendor_id // 332
 // cf _all using "`path'/data_test/01_intermediate/Mkt_fieldData_census.dta", verbose
 
 use "`path'/data_test/01_intermediate/repMkt.dta", clear
-count if !mi(ge02) & !mi(ge03) // 334
-sum ge02 ge03 // 334
+count if !mi(ge02) & !mi(ge03) // 332
+sum ge02 ge03 // 332
 
 // yupp. the problem distorting the randomizatio is all the way back here.
 
@@ -120,4 +120,6 @@ sum distcode loccode vendor_id custcode  // 1998
 use "`path'/data_test/00_raw_anon/_CM_all_2_18.dta", clear
 count if !mi(ge01) & !mi(ge02) & !mi(ge03) & !mi(ge04) // 1933
 sum ge01 ge02 ge03 ge04 // 1933
+
+	CONTINUE HERE. 1933 vendors (ge03) in my data. Need 1988.
 
