@@ -59,7 +59,7 @@ foreach dta in `private_1' `private_2' {
 	
 	if 		"`dta'" == "sel_9Distr_137Local_List.dta" 	local anon_list // districtName localityName
 	else if "`dta'" == "_CM_all_2_18.dta" 				local anon_list c1q0a1 c1q0a2 c1q0a3 c1q0b c1q4a c1q8a c1q8b cn c3q2 c7q2 locality_name // loccode																		
-	else if "`dta'" == "_M_all_2_18_corrected.dta"	 	local anon_list m1q0a m1q0b m1q0c m1q0d m1q9a m1q9b m5q2 ln // loccode vn
+	else if "`dta'" == "_M_all_2_18_corrected.dta"	 	local anon_list m1q0a m1q0b m1q0c m1q0d m1q9a m1q9b m5q2 ln  // loccode
 	else if "`dta'" == "analyzed_EndlineAuditData.dta" 	local anon_list *gps* m1q0a m1q0b m1q0c c1q0a1 c1q0a2 c1q0a3 login nq5 districtName ln vn vDescribe ///
 																		cn *Phone* m1q0d m1q9a m1q9b c1q8a c1q8b m5q2 c7q2 locality_name c1q0b ///
 																		xv_vendor xv_vendorr vendor_id /// districtID loccode loccodex ffaudits_id xvID xv_locality xv_localityy

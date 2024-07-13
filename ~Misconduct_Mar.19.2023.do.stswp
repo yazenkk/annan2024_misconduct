@@ -240,6 +240,7 @@ drop _merge
 merge m:m text_ge01 text_ge02 text_ge03 using `genderdta', gen(_mg)
 sort ge*
 keep if _mg  ==3
+drop _merge 
 gen orig_merge = 1
 
 
