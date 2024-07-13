@@ -39,7 +39,7 @@ gen ge03 =vn
 gen double loccodee= loccode
 
 keep pct_female HHI mfemale loccode loccodee sN ge01 ge02 ge03  
-keep pct_female HHI mfemale loccode sN
+// keep pct_female HHI mfemale loccode sN
 *bys loccode: keep if _n==1
 
 saveold "$dta_loc_repl/01_intermediate/pct_female_Mktcensus", replace

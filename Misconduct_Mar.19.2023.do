@@ -310,7 +310,7 @@ reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q
 
 
 ** (2) Heterogeneity: Illiteracy + Bundled stores
-use "$dta_loc_repl/01_intermediate/analyzed_EndlineAuditData.dta", clear
+use "$dta_loc_repl/00_raw_anon/analyzed_EndlineAuditData.dta", clear
 drop _merge
 merge m:m ge02 using "$dta_loc_repl/01_intermediate/mkt_aiVendorBetter.dta"
 keep if _merge==3
