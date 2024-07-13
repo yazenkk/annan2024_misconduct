@@ -120,7 +120,7 @@ foreach dta in `private_1' `private_2' {
 	if "`dta'" == "analyzed_EndlineAuditData.dta" {
 			assert vendor==vendor_id
 			drop vendor
-			rename ge* text_ge* // text versions
+			rename ge*  // text versions
 			order ffaudits_id xvID vendor_id loccode loccodex xv_locality xv_localityy distcode districtID districtName 
 			tostring loccode, gen(loccode_str) format("%15.0f") // ge02?
 			drop loccode loccode_str // problematic

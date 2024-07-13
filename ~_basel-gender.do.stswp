@@ -38,7 +38,7 @@ bys ge02: egen double HHI=sum(shsqrd)
 *hist HHI //clean later? yes. drop missings etc..
 
 // gen ge01 =districtName
-// gen ge02 =localityName 
+// gen ge02 =localityCode_j 
 // gen ge03 =vn
 // gen double loccodee= loccode
 
