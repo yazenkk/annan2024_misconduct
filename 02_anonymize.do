@@ -208,6 +208,7 @@ foreach dta in `private_1' `private_2' {
 		drop loccode
 		rename sample_loccode loccode_sampling
 	}
+
 	** obfuscate districtID
 	capture list districtID
 	if _rc == 0 {
@@ -224,6 +225,7 @@ foreach dta in `private_1' `private_2' {
 		drop districtID
 		rename sample_districtID districtID_sampling
 	}
+
 	
 	cap label var ge01 "District code (4-digit)"
 	cap label var ge02 "Locality code (12-digit)"
@@ -283,24 +285,27 @@ capture program drop anonymize_ge0x
 program define anonymize_ge0x
 	syntax, var(string)
 	
-	** randomly sort categorical variable
-	cap drop rand
-	set seed $myseed
-	gen rand = runiform(), after(`var')
-	byso `var' (rand) : gen rand_grp = rand[1]
-	order rand_grp, after(rand)
-	sort rand_grp rand
+// 	** randomly sort categorical variable
+// 	cap drop rand
+// 	set seed $myseed
+// 	gen rand = runiform(), after(`var')
+// 	byso `var' (rand) : gen rand_grp = rand[1]
+// 	order rand_grp, after(rand)
+// 	sort rand_grp rand
+//	
+// 	** generate rank
+// 	egen `var'_anon = rank(rand_grp), track
+// 	order `var'_anon, after(`var')
+// 	tostring `var'_anon, gen(`var'_anon2)
+// 	encode `var'_anon2, gen(`var'_anon3)
+// 	label drop `var'_anon3
+// 	drop `var'_anon `var'_anon2
+// 	rename `var'_anon3 `var'_anon
+// 	order `var'_anon, after(`var')
+// 	drop rand*
 	
-	** generate rank
-	egen `var'_anon = rank(rand_grp), track
-	order `var'_anon, after(`var')
-	tostring `var'_anon, gen(`var'_anon2)
-	encode `var'_anon2, gen(`var'_anon3)
-	label drop `var'_anon3
-	drop `var'_anon `var'_anon2
-	rename `var'_anon3 `var'_anon
-	order `var'_anon, after(`var')
-	drop rand*
+	encode `var', gen(`var'_anon)
+	label drop `var'_anon
 	
 end
 

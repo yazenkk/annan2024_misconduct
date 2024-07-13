@@ -30,7 +30,6 @@ label var sample_repMkt "indicator for randomly selected vendor to represent a l
 
 
 order ge01 districtName ge02 ln vn ge03 vDescribe sample_repMkt
-order ge01 districtName ge02 ln vn ge03 vDescribe sample_repMkt
 tab ge01
 tab districtName
 

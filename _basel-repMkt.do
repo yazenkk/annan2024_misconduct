@@ -36,7 +36,7 @@ egen local_by_vendor = group(ge02 ge03)
 tab local_by_vendor, miss //480-> 337 (315?) a drop
 tab Mkt, miss //480-> 337 (315?) a drop
 
-bys ge02: gen mktFip = group(ge03)
+// bys ge02: gen mktFip = group(ge03)
 
 hist MktPerLocal //dis: tot no of Mkt(/merch) per local
 sum MktPerLocal // 1 to 12 with avg=3.2<4 merchants

@@ -26,6 +26,7 @@ merge m:1 ge01 ge02 using "$dta_loc_repl/01_intermediate/ofdrate_mktAudit_endlin
 gen dropout_belief = missing(customer2020_id) // PII but used as marker
 tab dropout_belief
 
+// encode ge01, gen(districtID)
 gen districtID = ge01
 
 **views now about misconduct in dxn of info assignments?
