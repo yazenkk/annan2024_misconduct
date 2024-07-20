@@ -34,7 +34,8 @@ merge m:1 text_ge01 text_ge02 using "$dta_loc_repl/01_intermediate/ofdrate_mktad
 
 
 
-** compare mine with non-anonymized
+** -----------------------------------------------------------------------------
+** ofdrate_mktadminTransactData
 use "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication/data/01_intermediate/ofdrate_mktadminTransactData.dta", clear
 count if fdH0_t0 != . // 106
 
@@ -57,5 +58,19 @@ Anon:
 */
 
 
+** -----------------------------------------------------------------------------
+** repMkt_w_xtics
+use "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication/data/01_intermediate/repMkt_w_xtics.dta", clear
+sum vendor loccode // 1921
+use "$dta_loc_repl/01_intermediate/repMkt_w_xtics.dta", clear
+sum *ge0* // 1921
+
+
+** -----------------------------------------------------------------------------
+** FFaudit
+use "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication/data/00_raw_anon/FFaudit.dta", clear
+sum ffaudits_id ffaq3 // 129
+use "$dta_loc_repl/00_raw_anon/FFaudit.dta", clear
+sum *ge0* // 129
 
 
