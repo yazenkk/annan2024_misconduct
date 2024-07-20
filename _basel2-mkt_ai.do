@@ -28,7 +28,10 @@ bys ge02: gen mkt_aiVendorBetter = (mkt_m_corrects2>mkt_c_corrects2) if !missing
 
 bys ge02: gen x=_N
 rename locality_name locality_nameBase
-keep mkt_aigap mkt_aiVendorBetter mkt_c_corrects2 mkt_m_corrects2 mkt_c_fracAnyEduc mkt_c_avgEducLevel mkt_c_fracprimandlesssEduc ge02 locality_nameBase ln x // loccode
+keep mkt_aigap mkt_aiVendorBetter mkt_c_corrects2 mkt_m_corrects2 ///
+	 mkt_c_fracAnyEduc mkt_c_avgEducLevel mkt_c_fracprimandlesssEduc ///
+	 text_ge02 locality_nameBase x // loccode ln
 
+// drop if text_ge02 == .
 
 saveold "$dta_loc_repl/01_intermediate/mkt_aiVendorBetter.dta", replace

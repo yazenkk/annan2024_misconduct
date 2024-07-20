@@ -302,22 +302,25 @@ replace ge02 = . if clocality_name == ""
 replace ge03 = . if vn == ""
 drop _merge
 
+
 *bring in audit objective misconduct data
-merge m:1 ge01 ge02 using "$dta_loc_repl/01_intermediate/ofdrate_mktadminTransactData.dta"
+merge m:1 text_ge01 text_ge02 using "$dta_loc_repl/01_intermediate/ofdrate_mktadminTransactData.dta"
 
 *keep if _merge==3
 gen bias=(iThink != fdH0_t0) if !missing(iThink)
-bys ge01 ge02: egen bias_mkt = mean(bias) 
+bys text_ge01 text_ge02: egen bias_mkt = mean(bias) 
 sum bias_mkt, d
+e
 *drop xB
 gen xB=(bias_mkt>0.9375) //bias: above median misrates at per market
 sum ihs_mmtotamt_t1 mmUser_t1 if trtment==0
 
 ** Table C.17 ------------------------------------------------------------------
 *pooled?
+
 reg ihs_mmtotamt_t1 i.districtID ihs_mmtotamt_t0 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome c.trtment if xB==1, cluster(loccode) level(95)
 reg ihs_mmtotamt_t1 i.districtID ihs_mmtotamt_t0 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome c.trtment if xB==0, cluster(loccode) level(95)
-
+e
 reg mmUser_t1 i.districtID mmUser_t0 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome c.trtment if xB==1, cluster(loccode) level(95)
 reg mmUser_t1 i.districtID mmUser_t0 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome c.trtment if xB==0, cluster(loccode) level(95)
 

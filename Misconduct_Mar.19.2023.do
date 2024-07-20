@@ -177,8 +177,8 @@ ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(distr
 *mht: implement Romano-Wolf (2005) procedure, pval
 rwolf fd fdamt ihs_fdamt, indepvar(trt trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.distXtrXdateFes) //family (misconduct: 0/1, amount)
 *attrition bounds-lee
-leebounds fd trt, level(95) cieffect tight() 
-leebounds fdamt trt, level(95) cieffect tight() 
+leebounds fd trt, level(95) cieffect tight()
+leebounds fdamt trt, level(95) cieffect tight()
 *attrition bounds-Behajel et al: denote "all obs selected" or Not applicable here (no phone calls or repeat visits allowed)
 *restore
 
@@ -220,9 +220,13 @@ foreach x of varlist trt2 trt3 trt4 {
 use "$dta_loc_repl/00_Raw_anon/analyzed_EndlineAuditData.dta", clear
 gen uniqueVendorID = ge03 //NOTE: uniqueVendorID = ge02, throughout
 drop _merge
+// 		keep text_ge0*
+// 		duplicates drop
+// 		dis _N // 207
 
 
 
+/*
 ** original merge
 // 	keep ge0* text_ge0*
 	preserve
@@ -230,6 +234,9 @@ drop _merge
 		gen text_ge01 = districtName 
 		gen text_ge02 = localityName
 		gen text_ge03 = vn
+// 		keep text_ge0*
+// 		duplicates drop
+// 		dis _N // 406
 		order ge01 text_ge01 ge02 text_ge02 ge03 text_ge03  
 		keep ge01 text_ge01 ge02 text_ge02 ge03 text_ge03 HHI
 		
@@ -241,7 +248,29 @@ merge m:m text_ge01 text_ge02 text_ge03 using `genderdta', gen(_mg)
 sort ge*
 keep if _mg  ==3
 gen orig_merge = 1
+*/
 
+
+** original merge with anonymized text_ge0*
+// 	keep ge0* text_ge0*
+	preserve
+		use "$dta_loc_repl/01_intermediate/pct_female_MktcensusStar", clear
+// 		keep text_ge0*
+// 		duplicates drop
+// 		dis _N // 406
+// 		order ge01 text_ge01 ge02 text_ge02 ge03 text_ge03  
+// 		keep ge01 text_ge01 ge02 text_ge02 ge03 text_ge03 HHI
+		order text_ge01 text_ge02 text_ge03  
+		keep text_ge01 text_ge02 text_ge03 HHI
+		
+		tempfile genderdta
+		save	`genderdta'
+	restore
+
+merge m:m text_ge01 text_ge02 text_ge03 using `genderdta', gen(_mg)
+sort ge*
+keep if _mg  ==3
+gen orig_merge = 1
 
 
 /*
@@ -327,7 +356,7 @@ reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q
 ** (2) Heterogeneity: Illiteracy + Bundled stores
 use "$dta_loc_repl/00_Raw_anon/analyzed_EndlineAuditData.dta", clear
 drop _merge
-merge m:1 ge02 using "$dta_loc_repl/01_intermediate/mkt_aiVendorBetter.dta"
+merge m:m text_ge02 using "$dta_loc_repl/01_intermediate/mkt_aiVendorBetter.dta"
 keep if _merge==3
 
 gen bundle=(m3q1==2) if !missing(m3q1) //bundle shops
@@ -340,7 +369,7 @@ gen busInexperience = (m2q1b<12) //inexperienced vendors
 *note: doesnt matter sv_fAmt_T / fYes_T
 gen mkt_c_corrects2No=1-mkt_c_corrects2
 gen mkt_c_fracAnyEducNo=1-mkt_c_fracAnyEduc
-pwcorr mkt_c_fracprimandlesssEduc mkt_c_fracAnyEducNo mkt_c_corrects2No,sig //positively corrected: incorrectness & less/no formal educ
+pwcorr mkt_c_fracprimandlesssEduc mkt_c_fracAnyEducNo mkt_c_corrects2No, sig // positively corrected: incorrectness & less/no formal educ
 
 gen sv_fAmt_T0 = sv_fAmt_T
 replace sv_fAmt_T0=0 if fYes_T==0

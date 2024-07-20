@@ -18,6 +18,7 @@ gen belief=1
 drop _merge
 keep if sample_repMkt==1
 bys ge02 ge03: keep if _n==1
+drop text* // text_ge* vars used below from FFaudit data
 
 tempfile repMkt_w_VendorXtics
 save 	`repMkt_w_VendorXtics'
@@ -138,12 +139,13 @@ tab fYes_T
 gen sv_fAmt_T0 = sv_fAmt_T
 replace sv_fAmt_T0=0 if fYes_T==0
 
-bys ge01 ge02: egen obj_fd_t0 = mean(fYes_T) //continuous, measure mkt=rep.vendor
+** These calculations, unlike merges above, are done using text IDs
+bys text_ge01 text_ge02: egen obj_fd_t0 = mean(fYes_T) //continuous, measure mkt=rep.vendor
 replace obj_fd_t0 = obj_fd_t0*100 
-bys ge01 ge02: egen obj_fdamt_t0 = mean(sv_fAmt_T0) //continuous, mkt=rep.vendor
+bys text_ge01 text_ge02: egen obj_fdamt_t0 = mean(sv_fAmt_T0) //continuous, mkt=rep.vendor
 pwcorr obj_fd_t0 obj_fdamt_t0, sig
 
-bys ge01 ge02: keep if _n==1
+bys text_ge01 text_ge02: keep if _n==1
 hist obj_fd_t0, frac
 hist obj_fdamt_t0, frac
 sum obj_fd_t0 obj_fdamt_t0, d
@@ -151,6 +153,8 @@ gen fdH0_t0 = (obj_fd_t0>0) if !missing(obj_fd_t0) //binary measure (above 0%)
 gen fdH1_t0 = (obj_fd_t0>20) if !missing(obj_fd_t0) //binary (above median=20% vs endl=14.2%)
 gen fdamtH0_t0 = (obj_fdamt_t0>0) if !missing(obj_fdamt_t0)
 gen fdamtH1_t0 = (obj_fdamt_t0>0.708) if !missing(obj_fdamt_t0) //(above median=0.708ghS vs endl=0.412ghS)
-keep ge01 ge02 obj_fd_t0 obj_fdamt_t0 fdH* fdamtH*
+keep text_ge01 text_ge02 obj_fd_t0 obj_fdamt_t0 fdH* fdamtH*
+isid text_ge01 text_ge02
+
 saveold "$dta_loc_repl/01_intermediate/ofdrate_mktadminTransactData", replace
 

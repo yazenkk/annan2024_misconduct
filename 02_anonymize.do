@@ -57,15 +57,15 @@ foreach dta in `private_1' `private_2' {
 	dis "`dta'"
 	use "$dta_loc_repl/00_raw/`dta'", clear 
 	
-	if 		"`dta'" == "sel_9Distr_137Local_List.dta" 	local anon_list // districtName localityName
+	if 		"`dta'" == "sel_9Distr_137Local_List.dta" 	local anon_list districtName localityName //
 	else if "`dta'" == "_CM_all_2_18.dta" 				local anon_list c1q0a1 c1q0a2 c1q0a3 c1q0b c1q4a c1q8a c1q8b cn c3q2 c7q2 locality_name // loccode																		
-	else if "`dta'" == "_M_all_2_18_corrected.dta"	 	local anon_list m1q0a m1q0b m1q0c m1q0d m1q9a m1q9b m5q2 ln // loccode vn
-	else if "`dta'" == "analyzed_EndlineAuditData.dta" 	local anon_list *gps* m1q0a m1q0b m1q0c c1q0a1 c1q0a2 c1q0a3 login nq5 districtName ln vn vDescribe ///
+	else if "`dta'" == "_M_all_2_18_corrected.dta"	 	local anon_list m1q0a m1q0b m1q0c m1q0d m1q9a m1q9b m5q2 ln vn // loccode 
+	else if "`dta'" == "analyzed_EndlineAuditData.dta" 	local anon_list *gps* m1q0a m1q0b m1q0c c1q0a1 c1q0a2 c1q0a3 login nq5 districtName ln vn vDescribe /// 
 																		cn *Phone* m1q0d m1q9a m1q9b c1q8a c1q8b m5q2 c7q2 locality_name c1q0b ///
 																		xv_vendor xv_vendorr vendor_id /// districtID loccode loccodex ffaudits_id xvID xv_locality xv_localityy
 																		universalid
 	else if "`dta'" == "Customer_corrected.dta" 		local anon_list ccaller_id ccaller_name custphone customer_name clocality_name cdistrict_name customer2020_id
-	else if "`dta'" == "FFaudit.dta" 					local anon_list *gps* ge01_orig ge02_orig ge03_orig ///
+	else if "`dta'" == "FFaudit.dta" 					local anon_list *gps* ge03_orig /// ge01_orig ge02_orig 
 																		ffaudits_id
 	else if "`dta'" == "interventionsTomake_list_local.dta" local anon_list districtName ln vn vDescribe cn cDescribe *Phone* loccode loccodex
 	else if "`dta'" == "Merchant_corrected.dta" 		local anon_list caller_id caller_name1 vendorphone vendor_name locality_name1 district_name
@@ -100,6 +100,9 @@ foreach dta in `private_1' `private_2' {
 			tempfile vendor_crosswalk
 			save 	`vendor_crosswalk'
 		restore 
+		
+		gen text_ge02 = ln // to be anonymized later		
+		gen text_ge03 = vn // to be anonymized later		
 		
 	}
 	if "`dta'" == "_CM_all_2_18.dta" {
@@ -178,6 +181,10 @@ foreach dta in `private_1' `private_2' {
 		replace ge02 = "0"+ge02 if strlen(ge02) == 12
 		replace ge01 = "0"+ge01 if strlen(ge01) == 3
 		order ge01 ge02 ge04
+		
+		gen text_ge01 = cdistrict_name // to be anonymized later
+		gen text_ge02 = clocality_name // to be anonymized later
+		
 	}
 	if "`dta'" == "interventionsTomake_list_local.dta" {
 		tostring loccode, gen(ge02) format("%17.0f") // ge02
@@ -206,6 +213,7 @@ foreach dta in `private_1' `private_2' {
 		order ge01 ge02 ge03
 		
 		// one vendor has name "0"
+		rename (ge01_orig ge02_orig) (text_ge01 text_ge02)
 	}
 	if "`dta'" == "Treatments_4gps_9dist.dta" {
 		tostring regionDistrictCode_j, gen(ge01) format("%17.0f") // ge01
@@ -222,6 +230,9 @@ foreach dta in `private_1' `private_2' {
 		order ge01 ge02
 		gen districtID = regionDistrictCode_j // for sampling in interventions1.do
 		drop localityCode_j regionDistrictCode_j
+		
+		gen text_ge01 = strtrim(districtName) // to be anonymized later
+		gen text_ge02 = localityName // to be anonymized later
 	}
 	
 	** obfuscate loccode
@@ -407,8 +418,70 @@ foreach dta in `anonymized' {
 
 
 
+** -----------------------------------------------------------------------------
+** Create map between text_ge0* and anonymized versions of these
 
 
+** anonymize ge01 and ge02
+use "$dta_loc_repl/00_raw_anon/sel_9Distr_137Local_List", clear
+anonymize_ge0x, var(text_ge01)
+anonymize_ge0x, var(text_ge02)
+sort text_ge01 text_ge02
+keep text_ge01* text_ge02*
+duplicates drop
+save "$dta_loc_repl/00_raw/crosswalk_text_ge012", replace
+
+** anonymize ge03
+use "$dta_loc_repl/00_raw_anon/_M_all_2_18_corrected", clear
+anonymize_ge0x, var(text_ge03)
+sort text_ge03
+keep text_ge0*
+duplicates drop
+save "$dta_loc_repl/00_raw/crosswalk_text_ge03", replace
 
 
+** -----------------------------------------------------------------------------
+** replace ge0x with anonymized version
+use "$dta_loc_repl/00_raw_anon/sel_9Distr_137Local_List", clear
+	merge m:1 text_ge01 text_ge02 using "$dta_loc_repl/00_raw/crosswalk_text_ge012", gen(_mtextge012) keep(1 3)
+	cap drop text_ge01 
+	cap drop text_ge02 
+	cap drop text_ge03 
+	cap rename text_ge0*_anon text_ge0*
+save "$dta_loc_repl/00_raw_anon/sel_9Distr_137Local_List", replace
+
+use "$dta_loc_repl/00_raw_anon/_M_all_2_18_corrected", clear
+	merge m:m text_ge02 using "$dta_loc_repl/00_raw/crosswalk_text_ge012", gen(_mtextge012) keep(1 3)
+	merge m:1 text_ge03 using "$dta_loc_repl/00_raw/crosswalk_text_ge03", gen(_mtextge03) keep(1 3)
+	cap drop text_ge01 
+	cap drop text_ge02 
+	cap drop text_ge03 
+	cap rename text_ge0*_anon text_ge0*
+save "$dta_loc_repl/00_raw_anon/_M_all_2_18_corrected", replace
+
+use "$dta_loc_repl/00_raw_anon/analyzed_EndlineAuditData", clear
+	merge m:1 text_ge01 text_ge02 using "$dta_loc_repl/00_raw/crosswalk_text_ge012", gen(_mtextge012) keep(1 3)
+	merge m:1 text_ge03 using "$dta_loc_repl/00_raw/crosswalk_text_ge03", gen(_mtextge03) keep(1 3)
+	cap drop text_ge01 
+	cap drop text_ge02 
+	cap drop text_ge03 
+	cap rename text_ge0*_anon text_ge0*
+save "$dta_loc_repl/00_raw_anon/analyzed_EndlineAuditData", replace
+
+use "$dta_loc_repl/00_raw_anon/Customer_corrected", clear
+	merge m:1 text_ge01 text_ge02 using "$dta_loc_repl/00_raw/crosswalk_text_ge012", gen(_mtextge012) keep(1 3)
+	cap drop text_ge01 
+	cap drop text_ge02 
+	cap drop text_ge03 
+	cap rename text_ge0*_anon text_ge0*
+save "$dta_loc_repl/00_raw_anon/Customer_corrected", replace
+
+
+use "$dta_loc_repl/00_raw_anon/FFaudit", clear
+	merge m:1 text_ge01 text_ge02 using "$dta_loc_repl/00_raw/crosswalk_text_ge012", gen(_mtextge012) keep(1 3)
+	cap drop text_ge01 
+	cap drop text_ge02 
+	cap drop text_ge03 
+	cap rename text_ge0*_anon text_ge0*
+save "$dta_loc_repl/00_raw_anon/FFaudit", replace
 
