@@ -297,9 +297,9 @@ gen i =(iHave==1 | iThink==1) if !missing(c4q17) | !missing(c8q3)
 sum iHave i _clocalpFraud  cfAttempts  iThink
 
 **1. base up-biased beliefs about misconduct
-replace ge01 = . if cdistrict_name == ""
-replace ge02 = . if clocality_name == ""
-replace ge03 = . if vn == ""
+replace text_ge01 = . if cdistrict_name == ""
+replace text_ge02 = . if clocality_name == ""
+// replace ge03 = . if vn == ""
 drop _merge
 
 
