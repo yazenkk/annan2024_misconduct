@@ -65,7 +65,7 @@ foreach dta in `private_1' `private_2' {
 																		xv_vendor xv_vendorr vendor_id /// districtID loccode loccodex ffaudits_id xvID xv_locality xv_localityy
 																		universalid
 	else if "`dta'" == "Customer_corrected.dta" 		local anon_list ccaller_id ccaller_name custphone customer_name clocality_name cdistrict_name customer2020_id
-	else if "`dta'" == "FFaudit.dta" 					local anon_list *gps* ge03_orig /// ge01_orig ge02_orig 
+	else if "`dta'" == "FFaudit.dta" 					local anon_list *gps* /// ge01_orig ge02_orig ge03_orig
 																		ffaudits_id
 	else if "`dta'" == "interventionsTomake_list_local.dta" local anon_list districtName ln vn vDescribe cn cDescribe *Phone* loccode loccodex
 	else if "`dta'" == "Merchant_corrected.dta" 		local anon_list caller_id caller_name1 vendorphone vendor_name locality_name1 district_name
@@ -147,7 +147,6 @@ foreach dta in `private_1' `private_2' {
 			order ge01 ge02 ge03
 			drop ffaudits_id ge03_wrong
 			
-		
 // 		** bring in ge0* from _M*.dta above
 // 		merge m:1 vn using `vendor_crosswalk', gen(_mmap3) keep(1 3) // ge01/2/3
 // 		rename (ge01 ge02 ge03) (ge01_orig ge02_orig ge03_orig)
@@ -206,14 +205,14 @@ foreach dta in `private_1' `private_2' {
 		tostring ffaudits_id, gen(ge02) format("%17.0f") // ge02
 		replace ge02 = "0"+ge02 if strlen(ge02) == 12
 		gen ge01 = substr(ge02, 1, 4) // ge01
-		** get ge03 from sampling data
-		rename ge03_orig vn
-		merge m:1 vn using `vendor_crosswalk', gen(_mmap3) keep(1 3) keepusing(ge03_new) // ge01/2/3
-		rename (vn ge03_new) (ge03_orig ge03)
+		tostring ffaq3, gen(vendor_str) format("%17.0f") // ge03
+		replace vendor_str = "0"+vendor_str if strlen(vendor_str) == 1
+		gen ge03 =  ge02+"0"+vendor_str, after(vendor_str) 
+		
 		order ge01 ge02 ge03
 		
 		// one vendor has name "0"
-		rename (ge01_orig ge02_orig) (text_ge01 text_ge02)
+		rename (ge01_orig ge02_orig ge03_orig) (text_ge01 text_ge02 text_ge03)
 	}
 	if "`dta'" == "Treatments_4gps_9dist.dta" {
 		tostring regionDistrictCode_j, gen(ge01) format("%17.0f") // ge01
@@ -234,7 +233,7 @@ foreach dta in `private_1' `private_2' {
 		gen text_ge01 = strtrim(districtName) // to be anonymized later
 		gen text_ge02 = localityName // to be anonymized later
 	}
-	
+
 	** obfuscate loccode
 	capture list loccode
 	if _rc == 0 {
@@ -439,7 +438,7 @@ keep text_ge0*
 duplicates drop
 save "$dta_loc_repl/00_raw/crosswalk_text_ge03", replace
 
-e
+
 ** -----------------------------------------------------------------------------
 ** replace ge0x with anonymized version
 use "$dta_loc_repl/00_raw_anon/sel_9Distr_137Local_List", clear
