@@ -56,6 +56,7 @@ do "$do_loc/_followups-organized_surveys"
 version 18
 
 ** Main analysis
+do "$do_loc/_BalanceTest_stratadummies.do" // quick
 do "$do_loc/Beliefs_Mar.19.2023.do"
 do "$do_loc/Demand_Mar.19.2023.do"
 do "$do_loc/Misconduct_Mar.19.2023.do"
