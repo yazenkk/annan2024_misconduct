@@ -96,9 +96,6 @@ gen walkTimeMMoney= c4q2b
 gen MMoneyUser=(c4q3==1)
 replace MMoneyUser=. if missing(c4q3)
 
-*3c borrow + save behavior?
-gen likelyborrowMMoney =c5q1
-gen likelysaveMMoney =c5q5
 
 
 *keep if sample_repMkt==1
