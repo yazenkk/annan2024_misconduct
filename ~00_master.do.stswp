@@ -38,7 +38,7 @@ do "$do_loc/_baselother-_M" 			// generate _M_all_2_18_corrected data
 
 ** Anonymize datasets (PII)
 do "$do_loc/02_anonymize" // generates 10 files in 00_raw_anon
-** PII -------------------------------------------------------------------------
+** -----------------------------------------------------------------------------
 
 ** baseline data prep
 do "$do_loc/_basel-Commands_Test_goodstuff" // generate Mkt_fieldData_census
@@ -48,6 +48,7 @@ do "$do_loc/_basel-repMkt" 					// generate repMkt_w[_xtics]
 ** treatment assigmnent
 do "$do_loc/_basel-interventions1" 		// generate ONLY_4TrtGroups_9dist
 do "$do_loc/_basel-interventions2" 		// generate interventionsTomake_list_local
+
 
 ** combine
 do "$do_loc/_basel2-adminTransactData" 	// generate [ofdrate_]mktadminTransactData
