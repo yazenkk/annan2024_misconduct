@@ -178,7 +178,7 @@ restore
 gen trtmentXfdH0= trtment*fdH0 if dropout_belief==0
 rwolf dhonestVendors1 honestVendors1 if dropout_belief==0, indepvar(trtment trt2 trt3 trt4 trtmentXfdH0 fdH0) reps($bootstrap_reps) seed(124) controls(i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (1=beliefs & 2=update)
 *attrition bounds
-leebounds dhonestVendors1 trtmentXfdH0, level(95) cieffect tight() 
+cap leebounds dhonestVendors1 trtmentXfdH0, level(95) cieffect tight() 
 
 *SEPARATE-update (dishonesty)
 **************
@@ -201,9 +201,9 @@ gen trt3XfdH0= trt3*fdH0 if dropout_belief==0
 gen trt4XfdH0= trt4*fdH0 if dropout_belief==0
 rwolf dhonestVendors1 honestVendors1 if dropout_belief==0, indepvar(trtment trt2 trt3 trt4 trt2XfdH0 trt3XfdH0 trt4XfdH0 fdH0) reps($bootstrap_reps) seed(124) controls(i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome) //family (1=beliefs & 2=update)
 *attrition bounds
-leebounds dhonestVendors1 trt2XfdH0, level(95) cieffect tight() 
-leebounds dhonestVendors1 trt2XfdH0, level(95) cieffect tight() 
-leebounds dhonestVendors1 trt2XfdH0, level(95) cieffect tight() 
+cap leebounds dhonestVendors1 trt2XfdH0, level(95) cieffect tight() 
+cap leebounds dhonestVendors1 trt2XfdH0, level(95) cieffect tight() 
+cap leebounds dhonestVendors1 trt2XfdH0, level(95) cieffect tight() 
 
 
 

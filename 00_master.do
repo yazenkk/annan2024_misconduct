@@ -9,7 +9,7 @@ clear all
 set graphics off
 global myseed 100001
 set seed $myseed // from scripts: demand, revenues
-global bootstrap_reps 100
+global bootstrap_reps 1000
 
 
 ** set globals
@@ -64,10 +64,10 @@ do "$do_loc/_followups-organized_surveys"
 version 18
 
 ** Main analysis
-do "$do_loc/Beliefs_Mar.19.2023.do"
-do "$do_loc/Demand_Mar.19.2023.do"
-do "$do_loc/Misconduct_Mar.19.2023.do"
-do "$do_loc/Revenues_Mar.19.2023.do"
-do "$do_loc/Shocks_Mar.19.2023.do"
+do "$do_loc/Beliefs_Mar.19.2023.do" // 1-ish minute
+do "$do_loc/Demand_Mar.19.2023.do" // 5-ish minutes?
+do "$do_loc/Misconduct_Mar.19.2023.do" // 5-ish minutes?
+do "$do_loc/Revenues_Mar.19.2023.do" // 3-ish minutes?
+do "$do_loc/Shocks_Mar.19.2023.do" // 2-ish minutes
 
 

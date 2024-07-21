@@ -137,7 +137,7 @@ foreach x of varlist trt2 trt3 trt4 {
 }
 *
 foreach x of varlist trt2 trt3 trt4 {
-	leebounds bus_exit `x', level(95) cieffect tight() 
+	cap leebounds bus_exit `x', level(95) cieffect tight() 
 }
 *
 /* dropped to save table space
@@ -228,7 +228,7 @@ rwolf nonmmtotamt_cust_t1 totamt_cust_t1, indepvar(trtment trt2 trt3 trt4) reps(
 leebounds nonmmtotamt_cust_t1 trtment, level(95) cieffect tight() 
 leebounds totamt_cust_t1 trtment, level(95) cieffect tight() 
 **2. [Behajel et al. Bounds]**
-gen attempts= v0a
+// gen attempts= v0a
 bys trtment: tab attempts
 **with 4 or less phone /contact attempts: ctr has 96% response rate, trt has 94% response rate
 **use number of attempts - "effort" to rank & bound te

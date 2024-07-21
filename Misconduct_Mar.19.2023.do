@@ -114,9 +114,9 @@ boottest trt, rep($bootstrap_reps) level(95) nogr
 reg ihs_fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt, r cluster(uniqueVendorID) level(95)
 boottest trt, rep($bootstrap_reps) level(95) nogr
 *randomization inf: permuntation test, pval
-ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
-ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
-ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg ihs_fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
+ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueVendorID) strata(ge01) seed(546): reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
+ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueVendorID) strata(ge01) seed(546): reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
+ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueVendorID) strata(ge01) seed(546): reg ihs_fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt
 *mht: implement Romano-Wolf (2005) procedure, pval: *[allows for arbitrary dependence and corrects for familywise error rate (FWER) (see: Clarke, Romano, and Wolf (2020))]**
 rwolf fd fdamt ihs_fdamt, indepvar(trt trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1) //family (misconduct: 0/1, amount)
 *attrition bounds
@@ -139,9 +139,9 @@ boottest trt2, rep($bootstrap_reps) level(95) nogr
 boottest trt3, rep($bootstrap_reps) level(95) nogr
 boottest trt4, rep($bootstrap_reps) level(95) nogr
 *randomization inf: permutation test, pval
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueVendorID) strata(districtID) seed(546): reg ihs_fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueVendorID) strata(ge01) seed(546): reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueVendorID) strata(ge01) seed(546): reg fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueVendorID) strata(ge01) seed(546): reg ihs_fdamt i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4
 *mht: implement Romano-Wolf (2005) procedure, pval
 rwolf fd fdamt ihs_fdamt, indepvar(trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1) //family (misconduct: 0/1, amount)
 *attrition bounds
@@ -172,8 +172,8 @@ boottest trt, rep($bootstrap_reps) level(95) nogr
 reg fdamt i.distXtrXdateFes trt, r cluster(uniqueLocalityID) level(95)
 boottest trt, rep($bootstrap_reps) level(95) nogr
 *randomization inf: permutation test, pval
-ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fd i.distXtrXdateFes trt
-ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes trt
+ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(ge01) seed(546): reg fd i.distXtrXdateFes trt
+ritest trt _b[trt], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(ge01) seed(546): reg fdamt i.distXtrXdateFes trt
 *mht: implement Romano-Wolf (2005) procedure, pval
 rwolf fd fdamt ihs_fdamt, indepvar(trt trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.distXtrXdateFes) //family (misconduct: 0/1, amount)
 *attrition bounds-lee
@@ -194,8 +194,8 @@ boottest trt2, rep($bootstrap_reps) level(95) nogr seed(15465)
 boottest trt3, rep($bootstrap_reps) level(95) nogr seed(15465)
 boottest trt4, rep($bootstrap_reps) level(95) nogr seed(15465)
 *randomization inf: permutation test, pval
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fd i.distXtrXdateFes trt2 trt3 trt4
-ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(districtID) seed(546): reg fdamt i.distXtrXdateFes trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(ge01) seed(546): reg fd i.distXtrXdateFes trt2 trt3 trt4
+ritest trt2 trt3 trt4 _b[trt2] _b[trt3] _b[trt4], reps($bootstrap_reps) cluster(uniqueLocalityID) strata(ge01) seed(546): reg fdamt i.distXtrXdateFes trt2 trt3 trt4
 *mht: implement Romano-Wolf (2005) procedure, pval
 rwolf fd fdamt ihs_fdamt, indepvar(trt trt2 trt3 trt4) reps($bootstrap_reps) seed(124) controls(i.distXtrXdateFes) //family (misconduct: 0/1, amount)
 

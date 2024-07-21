@@ -289,7 +289,7 @@ gen ge01 = substr(ge02, 1, 3) // ge01
 tostring ge01, replace
 order ge01 ge02 
 // vn and ge03 not used and seems messy (OSIEM not in vn in other dtas)
-qui anonymize, anon_list(districtName ln vn vDescribe *Phone*)
+qui anonymize, anon_list(districtName ln vn vDescribe *Phone* loccode loccodex)
 save "$dta_loc_repl/00_raw_anon/organized_surveys_cVENDORS_xlsx", replace
 
 
