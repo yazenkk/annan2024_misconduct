@@ -220,46 +220,9 @@ foreach x of varlist trt2 trt3 trt4 {
 use "$dta_loc_repl/00_Raw_anon/analyzed_EndlineAuditData.dta", clear
 gen uniqueVendorID = ge03 //NOTE: uniqueVendorID = ge02, throughout
 drop _merge
-// 		keep text_ge0*
-// 		duplicates drop
-// 		dis _N // 207
 
-
-
-/*
-** original merge
-// 	keep ge0* text_ge0*
 	preserve
 		use "$dta_loc_repl/01_intermediate/pct_female_MktcensusStar", clear
-		gen text_ge01 = districtName 
-		gen text_ge02 = localityName
-		gen text_ge03 = vn
-// 		keep text_ge0*
-// 		duplicates drop
-// 		dis _N // 406
-		order ge01 text_ge01 ge02 text_ge02 ge03 text_ge03  
-		keep ge01 text_ge01 ge02 text_ge02 ge03 text_ge03 HHI
-		
-		tempfile genderdta
-		save	`genderdta'
-	restore
-
-merge m:m text_ge01 text_ge02 text_ge03 using `genderdta', gen(_mg)
-sort ge*
-keep if _mg  ==3
-gen orig_merge = 1
-*/
-
-
-** original merge with anonymized text_ge0*
-// 	keep ge0* text_ge0*
-	preserve
-		use "$dta_loc_repl/01_intermediate/pct_female_MktcensusStar", clear
-// 		keep text_ge0*
-// 		duplicates drop
-// 		dis _N // 406
-// 		order ge01 text_ge01 ge02 text_ge02 ge03 text_ge03  
-// 		keep ge01 text_ge01 ge02 text_ge02 ge03 text_ge03 HHI
 		order text_ge01 text_ge02 text_ge03  
 		keep text_ge01 text_ge02 text_ge03 HHI
 		
@@ -273,55 +236,10 @@ keep if _mg  ==3
 gen orig_merge = 1
 
 
-/*
-** Blind immitation of merge above
-merge m:m ge01 ge02 ge03 using "$dta_loc_repl/01_intermediate/pct_female_MktcensusStar", ///
-	gen(_mg) keepusing(ge01 districtName ge02 localityName ge03 vn  )
-*/
-
-
-/*
-** Ideal merge. Collapse gender to locality level first
-	preserve
-		use "$dta_loc_repl/01_intermediate/pct_female_MktcensusStar", clear
-		keep ge01 ge02 HHI
-		duplicates drop
-		tempfile genderdta
-		save	`genderdta'
-	restore
-merge m:1 ge01 ge02 using `genderdta', gen(_mg)
-*/
-
-
-
-/*
-** Ideal merge using PII
-	preserve
-		use "$dta_loc_repl/01_intermediate/pct_female_MktcensusStar", clear
-		gen text_ge01 = districtName 
-		gen text_ge02 = localityName
-		gen text_ge03 = vn
-		order ge01 text_ge01 ge02 text_ge02 ge03 text_ge03  
-		keep ge01 text_ge01 ge02 text_ge02 ge03 text_ge03 HHI
-
-		keep text_ge01 text_ge02 HHI
-		duplicates drop
-		tempfile genderdta
-		save	`genderdta'
-	restore
-merge m:1 text_ge01 text_ge02 using `genderdta'
-sort ge*
-*/
-
-
-
-
-
 **NOTE: loccodee = correct, loccode=incorrect
 *br loccodex loccode loccodee
 drop _mg
 *districtName localityName localityCode
-// merge m:m ge02 using "$dta_loc_repl/00_Raw_anon/Treatments_4gps_9dist" // should be m:1
 merge m:1 ge02 using "$dta_loc_repl/00_Raw_anon/Treatments_4gps_9dist" // ideal merge
 
 *COMPETITION

@@ -69,7 +69,7 @@ foreach dta in `private_1' `private_2' {
 																		ffaudits_id
 	else if "`dta'" == "interventionsTomake_list_local.dta" local anon_list districtName ln vn vDescribe cn cDescribe *Phone* loccode loccodex
 	else if "`dta'" == "Merchant_corrected.dta" 		local anon_list caller_id caller_name1 vendorphone vendor_name locality_name1 district_name
-	else if "`dta'" == "Treatments_4gps_9dist.dta" 		local anon_list localityName districtName regionDistrictCode localityCode geo_dist regionDistrictCode_j localityCode_j
+	else if "`dta'" == "Treatments_4gps_9dist.dta" 		local anon_list localityName districtName regionDistrictCode localityCode geo_dist regionDistrictCode_j
 	else local anon_list
 	
 	

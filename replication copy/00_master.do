@@ -1,6 +1,6 @@
 /*
 Master file for _annan_MRIxrev01_May.21.2023.pdf
-Date: 6/20/2024
+Date: 7/21/2024
 
 */
 
@@ -14,31 +14,19 @@ global bootstrap_reps 1000
 
 ** set globals
 if c(username) == "yazenkashlan" {
-	global dta_loc 		"/Users/yazenkashlan/Dropbox/_rGroup-finfraud"
-	global dta_loc_repl "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication/data_test"
+	global dta_loc_repl "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication/data_final"
 	global do_loc 		"/Users/yazenkashlan/Documents/GitHub/annan2024_misconduct"
 	global output_loc 	"/Users/yazenkashlan/Documents/GitHub/annan2024_misconduct/output"
 }
 if c(username) == "______" {
-	global dta_loc "/Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud"
-	global do_loc "" // enter do file location
+	** enter local do file locations
+	global dta_loc ""
+	global do_loc "" 
+	global output_loc ""
 }
 
 ** install programs
 // do "$do_loc/01_programs"
-
-** PII -------------------------------------------------------------------------
-** raw data prep (PII)
-do "$do_loc/_baselother-sampling" 		// generate Treatments_4gps_9dist and sel_9Distr_137Local_List
-
-** Manual fixes to merchants and customers data (PII)
-do "$do_loc/_baselother-customer" 		// generate Customer_corrected data
-do "$do_loc/_baselother-merchant" 		// generate Merchant_corrected data
-do "$do_loc/_baselother-_M" 			// generate _M_all_2_18_corrected data
-
-** Anonymize datasets (PII)
-do "$do_loc/02_anonymize" // generates 10 files in 00_raw_anon
-** -----------------------------------------------------------------------------
 
 ** baseline data prep
 do "$do_loc/_basel-Commands_Test_goodstuff" // generate Mkt_fieldData_census
@@ -48,7 +36,6 @@ do "$do_loc/_basel-repMkt" 					// generate repMkt_w[_xtics]
 ** treatment assigmnent
 do "$do_loc/_basel-interventions1" 		// generate ONLY_4TrtGroups_9dist
 do "$do_loc/_basel-interventions2" 		// generate interventionsTomake_list_local
-
 
 ** combine
 do "$do_loc/_basel2-adminTransactData" 	// generate [ofdrate_]mktadminTransactData
