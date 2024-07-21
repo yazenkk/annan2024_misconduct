@@ -75,3 +75,12 @@ merge m:1 ge02 ge03 using "$dta_loc_repl/01_intermediate/repMkt.dta"
 ** save
 save "$dta_loc_repl/01_intermediate/repMkt_w_xtics", replace
 
+
+** -----------------------------------------------------------------------------
+** Source: Commands_Test_f.do
+
+*keep if sample_repMkt==1
+keep if _merge==3
+drop _merge
+save "$dta_loc_repl/01_intermediate/Mkt_fieldData_sample_repMkt", replace
+

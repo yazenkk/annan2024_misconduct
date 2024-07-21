@@ -23,11 +23,6 @@ if c(username) == "______" {
 	global dta_loc "/Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud"
 	global do_loc "" // enter do file location
 }
-if c(username) == "______" {
-	global dta_loc "/Users/fa2316/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud"
-	global do_loc "" // enter do file location
-}
-
 
 ** install programs
 // do "$do_loc/01_programs"
@@ -59,11 +54,13 @@ do "$do_loc/_basel2-combine" 			// combine customer/merchant + int + mkt census 
 do "$do_loc/_basel2-mkt_ai" 		 	// generate mkt_aiVendorBetter
 do "$do_loc/_baselother-FinalAuditData" // generate ofdrate_mktAudit_endline
 
+
 version 10
 do "$do_loc/_followups-organized_surveys"
 version 18
 
 ** Main analysis
+do "$do_loc/_BalanceTest_stratadummies.do" // quick
 do "$do_loc/Beliefs_Mar.19.2023.do" // 1-ish minute
 do "$do_loc/Demand_Mar.19.2023.do" // 5-ish minutes?
 do "$do_loc/Misconduct_Mar.19.2023.do" // 5-ish minutes?
