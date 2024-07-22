@@ -23,9 +23,7 @@ Output:
 		- _wklyTotUseVol_nonM.eps
 		- _xdevsKdensStr.eps
 		- _xdevsKdensAsy.eps
-		
-[Confirm: separate data prep from analysis?]
-	
+			
 */
 
 
@@ -266,6 +264,7 @@ cdfplot fq_mm_corrects if !missing(cfemale), by(cfemale) opt1(lc(blue red)) xtit
 ttest c_deviations == m_deviations, unpaired
 
 
+** Figure B.7 ------------------------------------------------------------------
 **Asymmetric Tnformation Test**
 bys loccode: egen mkt_m_corrects = mean(m_corrects)
 bys loccode: egen mkt_c_corrects = mean(c_corrects)
@@ -304,6 +303,7 @@ generate lowmiscon90 = misconduct - invttail(n-1,0.05)*(sd / sqrt(n))
 *graph twoway (bar meanwrite race) (rcap hiwrite lowrite race), by(se) // (YK: change to SE. meanwrite DNE)
 
 gen catt=(cat=="true") if !missing(cat)
+
 ** Figure B.10 ----------------------------------------------------------------
 graph hbar misconduct, over(cat, sort(1)) bar(1, color(black)) bar(2, color(gs8)) nofill asyvars ///
  blabel(group, position(inside) format(%4.2f) box fcolor(white) lcolor(white)) ytitle("Misconduct Incidence: Share of transactions overcharged", size(small)) blabel(bar) ///

@@ -23,9 +23,6 @@ Output:
 		- _wklyTotUseVol_nonM.eps
 		- _xdevsKdensStr.eps
 		- _xdevsKdensAsy.eps
-		
-[Confirm: separate data prep from analysis?]
-	
 */
 
 
@@ -266,6 +263,7 @@ cdfplot fq_mm_corrects if !missing(cfemale), by(cfemale) opt1(lc(blue red)) xtit
 ttest c_deviations == m_deviations, unpaired
 
 
+** Figure B.7 ------------------------------------------------------------------
 **Asymmetric Tnformation Test**
 bys loccode: egen mkt_m_corrects = mean(m_corrects)
 bys loccode: egen mkt_c_corrects = mean(c_corrects)

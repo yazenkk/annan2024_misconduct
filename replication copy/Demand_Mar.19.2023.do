@@ -20,11 +20,13 @@ use "$dta_loc_repl/02_final/Customer_+_Mktcensus_+_Interventions.dta", clear
 
 gen districtID = ge01
 
+** Table B.6 -------------------------------------------------------------------
 *Attrition - Test for Significance by Treatment Program
 sum dropouts if trt_pool==0
 reg dropouts trt_pool, cluster(ge02)
 reg dropouts i.trt, cluster(ge02)
 
+** Figure B.5 ------------------------------------------------------------------
 *distplot c0a, saving("distplot_ccalls", replace) //customers answer quicker than vendors/business (as expected)
 hist c0a, percent xtitle("Customers: Number of phone call times before answering survey")
 gr export "$output_loc/main_results/customer_calltimeS.eps", replace
@@ -127,7 +129,7 @@ test _b[2.trt]=_b[3.trt]
 test _b[1.trt]=_b[2.trt]
 test _b[1.trt] + _b[2.trt] =_b[3.trt]
 
-*4 (YK: Where is this reported?)
+*4
 **construct index pooling all directional outcomes ff. Kling et al. (2007)**
 factor ihs_mmtotamt_t1 mmUser_t1 save_t1
 predict score_MMoneyDd_t1

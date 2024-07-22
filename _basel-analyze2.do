@@ -20,7 +20,7 @@ Output:
 	- regressions
 */
 
-use Mkt_fieldData_census, clear
+use "$dta_loc_repl/01_intermediate/Mkt_fieldData_census", clear
 
 gen useTimesWeek = c4q11a
 replace useTimesWeek=. if useTimesWeek==99
@@ -37,33 +37,33 @@ reg useEverWeek cfemale
 reg useTimesWeek cfemale
 reg useVolWeek cfemale
  
-areg cMMoneyregistered cfemale, absorb(loccode)
-areg useEverWeek cfemale, absorb(loccode)
-areg useTimesWeek cfemale, absorb(loccode) 
-areg useVolWeek cfemale, absorb(loccode)
+areg cMMoneyregistered cfemale, absorb(ge02)
+areg useEverWeek cfemale, absorb(ge02)
+areg useTimesWeek cfemale, absorb(ge02) 
+areg useVolWeek cfemale, absorb(ge02)
 
-areg cMMoneyregistered c.cfemale##c.cmarried, absorb(loccode)
-areg useEverWeek c.cfemale##c.cmarried, absorb(loccode)
-areg useTimesWeek c.cfemale##c.cmarried, absorb(loccode) 
-areg useVolWeek c.cfemale##c.cmarried, absorb(loccode)
+areg cMMoneyregistered c.cfemale##c.cmarried, absorb(ge02)
+areg useEverWeek c.cfemale##c.cmarried, absorb(ge02)
+areg useTimesWeek c.cfemale##c.cmarried, absorb(ge02) 
+areg useVolWeek c.cfemale##c.cmarried, absorb(ge02)
 **females customers sig less likely to use (extensive 4pp + intensive GHS100) yet similar account ownserhip of M-Money
 **Could? may be driven by gender imbalance in vendorship (fewer female vendors), incl other factors
 **competition in vendorship won't address this per se if gender is not balanced
 **seeing more women vendors provides useful market info, promotes communication and then more trust-building (new tech)
 
 **only-F vs only-M vs only-Mix
-bys loccode: egen pct_female = mean(mfemale)
-bys loccode: replace pct_female = pct_female*100
+bys ge02: egen pct_female = mean(mfemale)
+bys ge02: replace pct_female = pct_female*100
 
 hist pct_female, disc
-bys loccode: gen onlyMalev = (pct_female==0)
-bys loccode: gen onlyFemalev = (pct_female==100)
-bys loccode: gen onlyMix = (pct_female>0 & pct_female<100)
+bys ge02: gen onlyMalev = (pct_female==0)
+bys ge02: gen onlyFemalev = (pct_female==100)
+bys ge02: gen onlyMix = (pct_female>0 & pct_female<100)
 
-areg useVolWeek c.cfemale##c.cmarried, absorb(loccode)
-areg useVolWeek c.cfemale##c.cmarried if onlyMalev==1, absorb(loccode)
-areg useVolWeek c.cfemale##c.cmarried if onlyFemalev==1, absorb(loccode)
-areg useVolWeek c.cfemale##c.cmarried if onlyMix==1, absorb(loccode)
+areg useVolWeek c.cfemale##c.cmarried, absorb(ge02)
+areg useVolWeek c.cfemale##c.cmarried if onlyMalev==1, absorb(ge02)
+areg useVolWeek c.cfemale##c.cmarried if onlyFemalev==1, absorb(ge02)
+areg useVolWeek c.cfemale##c.cmarried if onlyMix==1, absorb(ge02)
 
 
 

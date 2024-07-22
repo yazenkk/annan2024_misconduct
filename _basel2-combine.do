@@ -10,9 +10,6 @@ Input:
 Output:
 	- Customer_+_Mktcensus_+_Interventions
 	
-[Confirm where variable y comes from]
-[Remove unneeded comments/lines]
-
 */
 
 ** -----------------------------------------------------------------------------
@@ -46,7 +43,7 @@ gen dropouts = (_merge==2)
 tab intervention if dropouts==0
 *get mean=% and SD=%?
 gen ins=(dropouts==0)
-tabstat ins, stat(mean sd n) by(intervention)
+tabstat ins, stat(mean sd n) by(intervention) // Table B.5
 tabstat dropouts, stat(mean sd n) by(intervention)
 
 
@@ -272,7 +269,7 @@ gen dropouts = (_merge==2)
 tab intervention if dropouts==0
 *get mean=% and SD=%?
 gen ins=(dropouts==0)
-tabstat ins, stat(mean sd n) by(intervention)
+tabstat ins, stat(mean sd n) by(intervention) // Table B.5
 tabstat dropouts, stat(mean sd n) by(intervention)
 
 **define treatment indicators

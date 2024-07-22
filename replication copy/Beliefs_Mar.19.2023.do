@@ -2,8 +2,6 @@
 JPE2023-Annan
 y = beliefs*
 
-Title: ?
-
 Input:
 	- FFPhone in 2020/Customer_+_Mktcensus_+_Interventions.dta
 	- FINAL AUDIT DATA/_Francis/ofdrate_mktAudit_endline.dta

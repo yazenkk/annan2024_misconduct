@@ -27,7 +27,6 @@ Output:
 		- managers_qForecast.gph
 		- managers_pXqForecast.eps		
 		
-[Confirm how to run statsby command]
 */
 
 
@@ -96,6 +95,7 @@ gr export "$output_loc/followup/vendors_beliefs_prices_graph.eps", replace
 
 
 
+** Figure C.1 ------------------------------------------------------------------
 **(b)cVendors predictions of mkt-level te(p,d) of information interventions
 ***************************************************************************
 *QT1_1 (0/1 overcharge?) 
@@ -227,6 +227,7 @@ restore
 clear all
 use "$dta_loc_repl/00_raw_anon/organized_surveys_MANAGERS", clear
 
+** Figure B.11 -----------------------------------------------------------------
 *1. Why pre-experment overcharging? we advance a number of hypothesis 
 gr bar (sum) QL1_1-QL1_9 //here: top 1-4: uninformed consumers>misguided vendor beliefs>limited campaings>low commissions>competition>low perceived cost
 *key 1: vendors top 4 ranking preserved (e.g., uninformed consumers #1), except that misguided beliefs now ranked much higher (#2), all else equal
@@ -247,6 +248,7 @@ gr combine "$output_loc/followup/managers_misconduct_hypothesis_graph.gph" ///
 gr export "$output_loc/followup/managersXvendors_misconduct_hypothesis_graph.eps", replace
 
 
+** Figure C.2 ------------------------------------------------------------------
 *2a...then why MTN hasnt - survey evidence?
 gr bar QL2_1 QL2_2 QL2_3 QL2_4 //top 1: Too costly (+ lack of workable sol that can scale in rural areas[evaluated in sect YY])
 *key 1: rankings fully preserved, same across vendors and mamagers
@@ -266,6 +268,7 @@ gr combine "$output_loc/followup/managers_inadequateCampaigns_hypotheses_graph.g
 gr export "$output_loc/followup/managersXvendors_inadequateCampaigns_hypotheses_graph.eps", replace
 
 
+** Figure C.2 ------------------------------------------------------------------
 **2b. why MTN hasnt....Or manager's hasnt [formal evaluation]
 **(a) Managers predictions of mkt-level te(p,d) of information interventions
 ****************************************************************************

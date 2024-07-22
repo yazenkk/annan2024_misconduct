@@ -1,15 +1,6 @@
 /*
 Prepare market data
 
-	*
-	**II. audit Trials?
-	*Audit sample selection
-	**representative? locality (subsumes district)
-	*(We don't cluster --only 2x2 design-- to reject more often)
-
-	[^refine original note]
-
-
 Input:
 	- Mkt_fieldData_census
 Outpu:

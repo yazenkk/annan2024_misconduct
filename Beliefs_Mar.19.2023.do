@@ -2,8 +2,6 @@
 JPE2023-Annan
 y = beliefs*
 
-Title: ?
-
 Input:
 	- FFPhone in 2020/Customer_+_Mktcensus_+_Interventions.dta
 	- FINAL AUDIT DATA/_Francis/ofdrate_mktAudit_endline.dta
@@ -21,7 +19,6 @@ drop _merge
 *drop if missing(_customer2020_id)
 **bring in audit-objective endline data: "use sep 06 fd data"
 merge m:1 ge01 ge02 using "$dta_loc_repl/01_intermediate/ofdrate_mktAudit_endline.dta"
-*merge m:1 ge01 ge02 using "$dta_loc/FINAL AUDIT DATA/_Francis/MisconObj_Endline.dta"
 *drop if missing(_customer2020_id)
 gen dropout_belief = missing(customer2020_id) // PII but used as marker
 tab dropout_belief
