@@ -12,6 +12,12 @@ Output:
 
 use "$dta_loc_repl/02_final/Merchants_+_Mktcensus_+_Interventions.dta", clear
 
+** Table B.7 -------------------------------------------------------------------
+*Attrition - Test for Significance by Treatment Program
+sum dropouts if trt_pool==0
+reg dropouts trt_pool, r
+reg dropouts i.trt, r
+
 
 ** Figure B.5 ------------------------------------------------------------------
 distplot v0a //customers answer quicker than vendors/business (as expected)
@@ -22,6 +28,7 @@ gen districtID = ge01
 
 **control means?
 sum mmtotamt_cust_t1 bus_exit nonmmtotamt_cust_t1 totamt_cust_t1 if trtment==0
+
 
 ** Table 6 ---------------------------------------------------------------------
 regress mmtotamt_cust_t1 mmtotamt_cust_t0 i.districtID mage mmarried makan mselfemployed m2q1a i.m3q1 trtment, r

@@ -62,7 +62,6 @@ version 18
 
 ** Main analysis
 do "$do_loc/_BalanceTest_stratadummies.do" // quick
-
 do "$do_loc/Beliefs_Mar.19.2023.do" // 1-ish minute
 do "$do_loc/Demand_Mar.19.2023.do" // 5-ish minutes?
 do "$do_loc/Misconduct_Mar.19.2023.do" // 5-ish minutes?

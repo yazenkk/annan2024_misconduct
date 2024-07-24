@@ -122,6 +122,7 @@ reg honestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed
 reg honestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome i.trt##c.hfdH0 if dropout_belief==0, level(90) r cluster(uniqueLocalityID)
 */
 
+** Table C.3 -------------------------------------------------------------------
 *Robustness checks - Inference, Multiple Testing, Attrition, LASSO Estimation
 *POOLED-belief (honesty)
 **************
@@ -158,6 +159,7 @@ leebounds honestVendors1 trt3, level(95) cieffect tight()
 leebounds honestVendors1 trt4, level(95) cieffect tight() 
 
 
+** Table C.4 -------------------------------------------------------------------
 *POOLED-update (dishonesty)
 ****************
 *wild cluster bootstrap, pval
