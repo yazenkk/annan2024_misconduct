@@ -10,7 +10,7 @@ set graphics off
 global myseed 100001
 set seed $myseed // from scripts: demand, revenues
 global bootstrap_reps 1000
-
+version 18
 
 ** set globals
 if c(username) == "yazenkashlan" {
