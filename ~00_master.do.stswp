@@ -49,7 +49,7 @@ do "$do_loc/_basel-repMkt" 					// generate repMkt_w[_xtics]
 do "$do_loc/_basel-interventions1" 		// generate ONLY_4TrtGroups_9dist
 do "$do_loc/_basel-interventions2" 		// generate interventionsTomake_list_local
 
-** more data prep
+** combine
 do "$do_loc/_basel2-adminTransactData" 	// generate [ofdrate_]mktadminTransactData
 do "$do_loc/_basel2-combine" 			// combine customer/merchant + int + mkt census (commented out sqreg and gen. item=y)
 do "$do_loc/_basel2-mkt_ai" 		 	// generate mkt_aiVendorBetter
