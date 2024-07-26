@@ -14,6 +14,7 @@ Output:
 use "$dta_loc_repl/01_intermediate/Mkt_fieldData_census", clear
 // gen double localityCode_j=loccode
 drop _merge
+// drop text_ge01 text_ge02
 merge m:1 ge02 using "$dta_loc_repl/00_Raw_anon/sel_9Distr_137Local_List"
 keep if _merge==3
 

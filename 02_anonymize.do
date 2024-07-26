@@ -440,7 +440,7 @@ save "$dta_loc_repl/00_raw/crosswalk_text_ge03", replace
 
 
 ** -----------------------------------------------------------------------------
-** replace ge0x with anonymized version
+** replace text_ge0x with anonymized version
 use "$dta_loc_repl/00_raw_anon/sel_9Distr_137Local_List", clear
 	merge m:1 text_ge01 text_ge02 using "$dta_loc_repl/00_raw/crosswalk_text_ge012", gen(_mtextge012) keep(1 3)
 	cap drop text_ge01 
