@@ -230,7 +230,8 @@ foreach dta in `private_1' `private_2' {
 		gen districtID = regionDistrictCode_j // for sampling in interventions1.do
 		drop localityCode_j regionDistrictCode_j
 		
-		gen text_ge01 = strtrim(districtName) // to be anonymized later
+// 		gen text_ge01 = strtrim(districtName) // to be anonymized later
+		gen text_ge01 = districtName // to be anonymized later
 		gen text_ge02 = localityName // to be anonymized later
 	}
 

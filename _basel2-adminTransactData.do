@@ -152,7 +152,8 @@ gen fdH1_t0 = (obj_fd_t0>20) if !missing(obj_fd_t0) //binary (above median=20% v
 gen fdamtH0_t0 = (obj_fdamt_t0>0) if !missing(obj_fdamt_t0)
 gen fdamtH1_t0 = (obj_fdamt_t0>0.708) if !missing(obj_fdamt_t0) //(above median=0.708ghS vs endl=0.412ghS)
 keep text_ge01 text_ge02 obj_fd_t0 obj_fdamt_t0 fdH* fdamtH*
-isid text_ge01 text_ge02
+// drop if text_ge01 == . // drop missing to ensure vars are IDs
+// isid text_ge01 text_ge02
 
 saveold "$dta_loc_repl/01_intermediate/ofdrate_mktadminTransactData", replace
 
