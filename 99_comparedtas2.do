@@ -123,3 +123,17 @@ sum ge01 ge02 ge03 ge04 // 1933
 
 	CONTINUE HERE. 1933 vendors (ge03) in my data. Need 1998.
 
+
+** pct_female_MktcensusStar ----------------------------------------------
+local path "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication"
+use "`path'/data/01_intermediate/pct_female_MktcensusStar.dta", clear
+sum HHI 
+
+use "`path'/data_test/01_intermediate/pct_female_MktcensusStar.dta", clear
+count if !mi(ge01) & !mi(ge02) & !mi(ge04) // 1033
+sum HHI 
+
+// Not a good match. Why? Check upstream steps
+
+	
+	
