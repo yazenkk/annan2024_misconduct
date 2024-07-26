@@ -12,9 +12,9 @@ use "$dta_loc_repl/01_intermediate/adminTransactData", clear
 
 ** Figure B.6 ------------------------------------------------------------------
 ciplot fYes_T, level(90) by(tranType) xlabel(, angle(55) labsize(small)) yline(0, lp(dash)) xline(22 30, lp(dash) lc(black)) ytitle("Probability (Misconduct)", size(small)) xtitle("Transaction Group") note("")
-gr export "/Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/misconduct_yesB.eps", replace
+gr export "$output_loc/main_results/misconduct_yesB.eps", replace
 ciplot sv_fAmt_T, level(90) by(tranType) xlabel(, angle(55) labsize(small)) yline(0, lp(dash)) xline(22 30, lp(dash) lc(black)) ytitle("Amount-misconduct (GHS)", size(small)) xtitle("Transaction Group") note("")
-gr export "/Users/fannan/Dropbox/research_projs/fraud-monitors/_rGroup-finfraud/_project/misconduct_amtB.eps", replace
+gr export "$output_loc/main_results/misconduct_amtB.eps", replace
 
 
 

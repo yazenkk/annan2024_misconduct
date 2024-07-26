@@ -42,7 +42,7 @@ bys ge02: egen double HHI=sum(shsqrd)
 // gen ge03 =vn
 // gen double loccodee= loccode
 
-keep pct_female HHI mfemale sN text_ge01 text_ge02 text_ge03 districtName localityName vn // loccode loccodee
+keep pct_female HHI mfemale sN text_ge01 text_ge02 text_ge03 ge0* districtName localityName vn // loccode loccodee
 // keep pct_female HHI mfemale loccode sN
 *bys loccode: keep if _n==1
 

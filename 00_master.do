@@ -9,8 +9,9 @@ clear all
 set graphics off
 global myseed 100001
 set seed $myseed // from scripts: demand, revenues
-global bootstrap_reps 1000
-version 14
+global bootstrap_reps 100
+version 18
+version
 
 ** set globals
 if c(username) == "yazenkashlan" {
@@ -29,12 +30,12 @@ if c(username) == "______" {
 
 ** PII -------------------------------------------------------------------------
 ** raw data prep (PII)
-do "$do_loc/_baselother-sampling" 		// generate Treatments_4gps_9dist and sel_9Distr_137Local_List
+// do "$do_loc/_baselother-sampling" 		// generate Treatments_4gps_9dist and sel_9Distr_137Local_List
 
 ** Manual fixes to merchants and customers data (PII)
-do "$do_loc/_baselother-customer" 		// generate Customer_corrected data
-do "$do_loc/_baselother-merchant" 		// generate Merchant_corrected data
-do "$do_loc/_baselother-_M" 			// generate _M_all_2_18_corrected data
+// do "$do_loc/_baselother-customer" 		// generate Customer_corrected data
+// do "$do_loc/_baselother-merchant" 		// generate Merchant_corrected data
+// do "$do_loc/_baselother-_M" 			// generate _M_all_2_18_corrected data
 
 ** Anonymize datasets (PII)
 do "$do_loc/02_anonymize" // generates 10 files in 00_raw_anon
@@ -54,23 +55,29 @@ do "$do_loc/_basel2-adminTransactData" 	// generate [ofdrate_]mktadminTransactDa
 do "$do_loc/_basel2-combine" 			// combine customer/merchant + int + mkt census (commented out sqreg and gen. item=y)
 do "$do_loc/_basel2-mkt_ai" 		 	// generate mkt_aiVendorBetter
 do "$do_loc/_baselother-FinalAuditData" // generate ofdrate_mktAudit_endline
-do "$do_loc/_followups-organized_surveys"
 
-** Main analysis
-do "$do_loc/_BalanceTest_stratadummies.do" // quick
-
-do "$do_loc/Beliefs_Mar.19.2023.do" // 1-ish minute
-do "$do_loc/Demand_Mar.19.2023.do" // 5-ish minutes?
-do "$do_loc/Misconduct_Mar.19.2023.do" // 5-ish minutes?
-do "$do_loc/Revenues_Mar.19.2023.do" // 3-ish minutes?
-do "$do_loc/Shocks_Mar.19.2023.do" // 2-ish minutes
-
-** Additional analysis
-do "$do_loc/_basel-analyze1.do" // quick
-do "$do_loc/_basel-analyze3.do" // quick
-do "$do_loc/_basel-analyze4.do" // quick
-do "$do_loc/_endl-analyze1.do" // quick
-
+// version 14
+// do "$do_loc/_followups-organized_surveys"
+// version 18
+//
+// log using "$do_loc/annan2024_log.log", replace
+//
+// ** Main analysis
+// do "$do_loc/_BalanceTest_stratadummies.do" // quick
+//
+// do "$do_loc/Beliefs_Mar.19.2023.do" // 1-ish minute
+// do "$do_loc/Demand_Mar.19.2023.do" // 5-ish minutes?
+// do "$do_loc/Misconduct_Mar.19.2023.do" // 5-ish minutes?
+// do "$do_loc/Revenues_Mar.19.2023.do" // 3-ish minutes?
+// do "$do_loc/Shocks_Mar.19.2023.do" // 2-ish minutes
+//
+// ** Additional analysis
+// do "$do_loc/_basel-analyze1.do" // quick
+// do "$do_loc/_basel-analyze3.do" // quick
+// do "$do_loc/_basel-analyze4.do" // quick
+// do "$do_loc/_endl-analyze1.do" // quick
+//
+// log close
 
 
 
