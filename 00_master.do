@@ -10,7 +10,7 @@ set graphics off
 global myseed 100001
 set seed $myseed // from scripts: demand, revenues
 global bootstrap_reps 100
-version 18
+version 14
 version
 
 ** set globals
