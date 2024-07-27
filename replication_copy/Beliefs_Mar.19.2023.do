@@ -206,6 +206,7 @@ cap leebounds dhonestVendors1 trt2XfdH0, level(95) cieffect tight()
 
 
 
+** Table C.15 ------------------------------------------------------------------
 *Appendix: DIRECT LINK  - directly link belief update induced by treatments with quantities
 *******************************************************************************************
 gen predictingfd=(dhonestVendors1==fdH1) if (!missing(dhonestVendors1) | !missing(fdH1)) //0-1 indicator for matches

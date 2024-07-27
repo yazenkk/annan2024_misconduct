@@ -254,6 +254,9 @@ gen high_e_comp=e_comp>=.0008718
 pwcorr e_comp comp MktPerLocal, sig
 sum HHI comp, d
 
+sum fd if trt == 0
+sum fdamt if trt == 0
+
 ** Table C.11-12 ---------------------------------------------------------------
 **trim to minimize extreme influences**
 reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt comp c.trt#c.comp if HHI<1 & HHI>0, r cluster(uniqueVendorID) level(95) // simple interaction
