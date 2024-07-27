@@ -17,7 +17,7 @@ version 14
 if c(username) == "yazenkashlan" {
 	global dta_loc_repl "/Users/yazenkashlan/Library/CloudStorage/OneDrive-Personal/Documents/personal/Berk/03_Work/Francis/Replication/data_final"
 	global do_loc 		"/Users/yazenkashlan/Documents/GitHub/annan2024_misconduct/replication_copy"
-	global output_loc 	"/Users/yazenkashlan/Documents/GitHub/annan2024_misconduct/replication_copy/output"
+	global output_loc 	"/Users/yazenkashlan/Documents/GitHub/annan2024_misconduct/replication copy/output"
 }
 if c(username) == "______" {
 	** enter local do file locations

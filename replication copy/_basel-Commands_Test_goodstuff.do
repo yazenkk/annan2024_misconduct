@@ -23,6 +23,7 @@ Output:
 		- _wklyTotUseVol_nonM.eps
 		- _xdevsKdensStr.eps
 		- _xdevsKdensAsy.eps
+			
 */
 
 
@@ -302,6 +303,7 @@ generate lowmiscon90 = misconduct - invttail(n-1,0.05)*(sd / sqrt(n))
 *graph twoway (bar meanwrite race) (rcap hiwrite lowrite race), by(se) // (YK: change to SE. meanwrite DNE)
 
 gen catt=(cat=="true") if !missing(cat)
+
 ** Figure B.10 ----------------------------------------------------------------
 graph hbar misconduct, over(cat, sort(1)) bar(1, color(black)) bar(2, color(gs8)) nofill asyvars ///
  blabel(group, position(inside) format(%4.2f) box fcolor(white) lcolor(white)) ytitle("Misconduct Incidence: Share of transactions overcharged", size(small)) blabel(bar) ///

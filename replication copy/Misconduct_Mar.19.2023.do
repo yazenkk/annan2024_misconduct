@@ -103,6 +103,7 @@ test _b[trt2] + _b[trt3] =_b[trt4]
 
 
 
+** Table C.1 -------------------------------------------------------------------
 *Robustness checks [DIRECT EFFECTS] - Inference, Multiple Testing, Attrition, LASSO Estimation
 *REPRESENTATIVE VENDOR
 *POOLED
@@ -124,6 +125,7 @@ leebounds fd trt, level(95) cieffect tight()
 leebounds fdamt trt, level(95) cieffect tight() 
 leebounds ihs_fdamt trt, level(95) cieffect tight() 
 
+** Table C.2 -------------------------------------------------------------------
 *SEPARATE*
 *wild cluster bootstrap, pval
 reg fd i.distXtrXdateFes fYes_T mage mmarried makan mselfemployed m2q1a i.m3q1 trt2 trt3 trt4, r cluster(uniqueVendorID) level(95)
@@ -160,7 +162,7 @@ leebounds ihs_fdamt trt4, level(95) cieffect tight()
 
 
 
-
+** Table C.8 -------------------------------------------------------------------
 *Robustness checks [SPILLOVER EFFECTS] - Inference, Multiple Testing, Attrition, LASSO Estimation
 *UNTREATED VENDORS
 *preserve

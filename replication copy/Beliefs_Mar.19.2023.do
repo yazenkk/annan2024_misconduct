@@ -19,7 +19,6 @@ drop _merge
 *drop if missing(_customer2020_id)
 **bring in audit-objective endline data: "use sep 06 fd data"
 merge m:1 ge01 ge02 using "$dta_loc_repl/01_intermediate/ofdrate_mktAudit_endline.dta"
-*merge m:1 ge01 ge02 using "$dta_loc/FINAL AUDIT DATA/_Francis/MisconObj_Endline.dta"
 *drop if missing(_customer2020_id)
 gen dropout_belief = missing(customer2020_id) // PII but used as marker
 tab dropout_belief
@@ -123,6 +122,7 @@ reg honestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed
 reg honestVendors1 i.districtID i.c8q3 cfemale cage cmarried cakan cselfemployed cEducAny cselfIncome i.trt##c.hfdH0 if dropout_belief==0, level(90) r cluster(uniqueLocalityID)
 */
 
+** Table C.3 -------------------------------------------------------------------
 *Robustness checks - Inference, Multiple Testing, Attrition, LASSO Estimation
 *POOLED-belief (honesty)
 **************
@@ -159,6 +159,7 @@ leebounds honestVendors1 trt3, level(95) cieffect tight()
 leebounds honestVendors1 trt4, level(95) cieffect tight() 
 
 
+** Table C.4 -------------------------------------------------------------------
 *POOLED-update (dishonesty)
 ****************
 *wild cluster bootstrap, pval
@@ -205,7 +206,6 @@ cap leebounds dhonestVendors1 trt2XfdH0, level(95) cieffect tight()
 
 
 
-** Table C.15 ------------------------------------------------------------------
 *Appendix: DIRECT LINK  - directly link belief update induced by treatments with quantities
 *******************************************************************************************
 gen predictingfd=(dhonestVendors1==fdH1) if (!missing(dhonestVendors1) | !missing(fdH1)) //0-1 indicator for matches

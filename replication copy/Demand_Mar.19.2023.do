@@ -20,6 +20,11 @@ use "$dta_loc_repl/02_final/Customer_+_Mktcensus_+_Interventions.dta", clear
 
 gen districtID = ge01
 
+** Figure B.4 ------------------------------------------------------------------
+*hist mmtotamt_t1, discrete
+hist mmtotamt_t1
+
+
 ** Table B.6 -------------------------------------------------------------------
 *Attrition - Test for Significance by Treatment Program
 sum dropouts if trt_pool==0
